@@ -5,6 +5,7 @@ into real-world organ transport, drug delivery, and cold chain optimization.
 
 Run: streamlit run sage_logistics_app.py
 """
+
 # pyre-ignore-all-errors
 import streamlit as st
 import numpy as np
@@ -18,11 +19,12 @@ st.set_page_config(
     page_title="SAGE Logistics Optimizer",
     page_icon="🧬",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded",
 )
 
 # --- CUSTOM CSS FOR PREMIUM LOOK ---
-st.markdown("""
+st.markdown(
+    """
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
     
@@ -133,7 +135,9 @@ st.markdown("""
         margin: 0.5rem 0;
     }
 </style>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
 
 # ═══════════════════════════════════════════════════════════
 # DOMAIN DATA
@@ -142,16 +146,40 @@ st.markdown("""
 # --- Organ Transport ---
 ORGANS = {
     "Kidney": {"t_viable": 24.0, "threshold": 0.70, "emoji": "🫘", "color": "#64ffda"},
-    "Liver":  {"t_viable": 12.0, "threshold": 0.75, "emoji": "🟤", "color": "#ffd93d"},
-    "Heart":  {"t_viable": 4.0,  "threshold": 0.85, "emoji": "❤️", "color": "#e94560"},
-    "Lung":   {"t_viable": 6.0,  "threshold": 0.80, "emoji": "🫁", "color": "#4cc9f0"},
+    "Liver": {"t_viable": 12.0, "threshold": 0.75, "emoji": "🟤", "color": "#ffd93d"},
+    "Heart": {"t_viable": 4.0, "threshold": 0.85, "emoji": "❤️", "color": "#e94560"},
+    "Lung": {"t_viable": 6.0, "threshold": 0.80, "emoji": "🫁", "color": "#4cc9f0"},
 }
 
 TRANSPORT_MODES = {
-    "🚑 Ground Ambulance": {"speed": 100, "cost_per_km": 2,  "fixed_delay": 0.5,  "reliability": 0.70, "color": "#ffd93d"},
-    "✈️ Commercial Air":    {"speed": 800, "cost_per_km": 5,  "fixed_delay": 3.0,  "reliability": 0.85, "color": "#4cc9f0"},
-    "🚁 Helicopter":        {"speed": 250, "cost_per_km": 15, "fixed_delay": 0.2,  "reliability": 0.92, "color": "#64ffda"},
-    "🚀 Charter Jet":       {"speed": 900, "cost_per_km": 25, "fixed_delay": 1.0,  "reliability": 0.95, "color": "#c084fc"},
+    "🚑 Ground Ambulance": {
+        "speed": 100,
+        "cost_per_km": 2,
+        "fixed_delay": 0.5,
+        "reliability": 0.70,
+        "color": "#ffd93d",
+    },
+    "✈️ Commercial Air": {
+        "speed": 800,
+        "cost_per_km": 5,
+        "fixed_delay": 3.0,
+        "reliability": 0.85,
+        "color": "#4cc9f0",
+    },
+    "🚁 Helicopter": {
+        "speed": 250,
+        "cost_per_km": 15,
+        "fixed_delay": 0.2,
+        "reliability": 0.92,
+        "color": "#64ffda",
+    },
+    "🚀 Charter Jet": {
+        "speed": 900,
+        "cost_per_km": 25,
+        "fixed_delay": 1.0,
+        "reliability": 0.95,
+        "color": "#c084fc",
+    },
 }
 
 DEFAULT_SEGMENTS = [
@@ -159,45 +187,135 @@ DEFAULT_SEGMENTS = [
     {"name": "Regional Hub → Airport", "default_km": 40},
     {"name": "Airport → Dest Airport", "default_km": 600},
     {"name": "Dest Airport → Transplant Center", "default_km": 30},
+    {"name": "Transplant Center → OR", "default_km": 2},
+    {"name": "Wait time in OR", "default_km": 0},
 ]
 
 # --- Drug Delivery ---
 BARRIERS = {
-    "GI Absorption":   {"base_permeability": 0.80, "cost_to_improve": 50,  "emoji": "🫄", "description": "Gastrointestinal lining transit"},
-    "First-Pass Liver":{"base_permeability": 0.55, "cost_to_improve": 120, "emoji": "🟤", "description": "Hepatic first-pass metabolism"},
-    "Plasma Binding":  {"base_permeability": 0.70, "cost_to_improve": 80,  "emoji": "🩸", "description": "Serum protein binding / clearance"},
-    "Tissue Penetration":{"base_permeability": 0.65, "cost_to_improve": 90, "emoji": "🧫", "description": "Target tissue uptake"},
-    "BBB Crossing":    {"base_permeability": 0.15, "cost_to_improve": 300, "emoji": "🧠", "description": "Blood-brain barrier penetration"},
-    "Intracellular":   {"base_permeability": 0.60, "cost_to_improve": 100, "emoji": "🔬", "description": "Endosomal escape / cytoplasmic delivery"},
+    "GI Absorption": {
+        "base_permeability": 0.80,
+        "cost_to_improve": 50,
+        "emoji": "🫄",
+        "description": "Gastrointestinal lining transit",
+    },
+    "First-Pass Liver": {
+        "base_permeability": 0.55,
+        "cost_to_improve": 120,
+        "emoji": "🟤",
+        "description": "Hepatic first-pass metabolism",
+    },
+    "Plasma Binding": {
+        "base_permeability": 0.70,
+        "cost_to_improve": 80,
+        "emoji": "🩸",
+        "description": "Serum protein binding / clearance",
+    },
+    "Tissue Penetration": {
+        "base_permeability": 0.65,
+        "cost_to_improve": 90,
+        "emoji": "🧫",
+        "description": "Target tissue uptake",
+    },
+    "BBB Crossing": {
+        "base_permeability": 0.15,
+        "cost_to_improve": 300,
+        "emoji": "🧠",
+        "description": "Blood-brain barrier penetration",
+    },
+    "Intracellular": {
+        "base_permeability": 0.60,
+        "cost_to_improve": 100,
+        "emoji": "🔬",
+        "description": "Endosomal escape / cytoplasmic delivery",
+    },
 }
 
 VEHICLE_TYPES = {
-    "💊 Oral Tablet":       {"permeability_boost": 1.0,  "cost_multiplier": 1.0,  "description": "Standard oral formulation"},
-    "💉 Nanoparticle":      {"permeability_boost": 1.6,  "cost_multiplier": 3.0,  "description": "Lipid nanoparticle carrier"},
-    "🧬 Antibody Conjugate":{"permeability_boost": 2.0,  "cost_multiplier": 8.0,  "description": "Targeted ADC / molecular Trojan horse"},
-    "🫧 Liposome":          {"permeability_boost": 1.3,  "cost_multiplier": 2.0,  "description": "Liposomal encapsulation"},
+    "💊 Oral Tablet": {
+        "permeability_boost": 1.0,
+        "cost_multiplier": 1.0,
+        "description": "Standard oral formulation",
+    },
+    "💉 Nanoparticle": {
+        "permeability_boost": 1.6,
+        "cost_multiplier": 3.0,
+        "description": "Lipid nanoparticle carrier",
+    },
+    "🧬 Antibody Conjugate": {
+        "permeability_boost": 2.0,
+        "cost_multiplier": 8.0,
+        "description": "Targeted ADC / molecular Trojan horse",
+    },
+    "🫧 Liposome": {
+        "permeability_boost": 1.3,
+        "cost_multiplier": 2.0,
+        "description": "Liposomal encapsulation",
+    },
 }
 
 # --- Cold Chain ---
 COLD_CHAIN_STAGES = {
-    "Manufacturing":  {"base_reliability": 0.98, "equipment_cost": 50000,  "emoji": "🏭", "description": "Factory storage & initial QC"},
-    "Primary Storage": {"base_reliability": 0.95, "equipment_cost": 30000, "emoji": "🧊", "description": "Regional distribution warehouse"},
-    "Air Transport":  {"base_reliability": 0.85, "equipment_cost": 80000,  "emoji": "✈️", "description": "Cold freight / reefer container"},
-    "Last Mile":      {"base_reliability": 0.70, "equipment_cost": 20000,  "emoji": "🚐", "description": "Local delivery to clinic"},
-    "Clinic Storage": {"base_reliability": 0.80, "equipment_cost": 15000,  "emoji": "🏥", "description": "On-site refrigeration"},
+    "Manufacturing": {
+        "base_reliability": 0.98,
+        "equipment_cost": 50000,
+        "emoji": "🏭",
+        "description": "Factory storage & initial QC",
+    },
+    "Primary Storage": {
+        "base_reliability": 0.95,
+        "equipment_cost": 30000,
+        "emoji": "🧊",
+        "description": "Regional distribution warehouse",
+    },
+    "Air Transport": {
+        "base_reliability": 0.85,
+        "equipment_cost": 80000,
+        "emoji": "✈️",
+        "description": "Cold freight / reefer container",
+    },
+    "Last Mile": {
+        "base_reliability": 0.70,
+        "equipment_cost": 20000,
+        "emoji": "🚐",
+        "description": "Local delivery to clinic",
+    },
+    "Clinic Storage": {
+        "base_reliability": 0.80,
+        "equipment_cost": 15000,
+        "emoji": "🏥",
+        "description": "On-site refrigeration",
+    },
 }
 
 UPGRADE_OPTIONS = {
-    "Backup Generator":    {"reliability_boost": 0.10, "cost": 8000,  "description": "Diesel backup for power outage"},
-    "IoT Temperature Monitor":{"reliability_boost": 0.05, "cost": 3000, "description": "Real-time alerting, faster response"},
-    "Phase-Change Material":{"reliability_boost": 0.08, "cost": 5000,  "description": "PCM insulation for passive cooling"},
-    "Redundant Cooling":   {"reliability_boost": 0.12, "cost": 12000, "description": "Dual-compressor system"},
+    "Backup Generator": {
+        "reliability_boost": 0.10,
+        "cost": 8000,
+        "description": "Diesel backup for power outage",
+    },
+    "IoT Temperature Monitor": {
+        "reliability_boost": 0.05,
+        "cost": 3000,
+        "description": "Real-time alerting, faster response",
+    },
+    "Phase-Change Material": {
+        "reliability_boost": 0.08,
+        "cost": 5000,
+        "description": "PCM insulation for passive cooling",
+    },
+    "Redundant Cooling": {
+        "reliability_boost": 0.12,
+        "cost": 12000,
+        "description": "Dual-compressor system",
+    },
 }
 
 
 # ═══════════════════════════════════════════════════════════
 # CORE SAGE MATH (shared across all tabs)
 # ═══════════════════════════════════════════════════════════
+
 
 def sage_log_viability(stage_values, t_scale=1.0):
     """
@@ -214,45 +332,47 @@ def sage_log_viability(stage_values, t_scale=1.0):
 def evaluate_organ_route(distances, modes_selection, organ_type, stochastic=True):
     """Organ transport: same as original."""
     t_viable = ORGANS[organ_type]["t_viable"]
-    
+
     total_cost = 0
     total_time = 0
     log_v_stages = []
     stage_details = []
-    
+
     for dist, mode_name in zip(distances, modes_selection):
         mode = TRANSPORT_MODES[mode_name]
-        
+
         base_time = (dist / mode["speed"]) + mode["fixed_delay"]
-        
+
         if stochastic and mode["reliability"] < 1.0:
             effective_time = base_time * (1 + 1.0 / mode["reliability"])
         else:
             effective_time = base_time
-        
+
         stage_cost = dist * mode["cost_per_km"]
-        
+
         stage_log_v = -(effective_time / t_viable)
         stage_viability = math.exp(stage_log_v)
-        
+
         total_time += effective_time
         total_cost += stage_cost
         log_v_stages.append(stage_log_v)
-        
-        stage_details.append({
-            "mode": mode_name,
-            "distance": dist,
-            "base_time": base_time,
-            "effective_time": effective_time,
-            "cost": stage_cost,
-            "log_v": stage_log_v,
-            "viability": stage_viability,
-        })
-    
+
+        stage_details.append(
+            {
+                "mode": mode_name,
+                "distance": dist,
+                "base_time": base_time,
+                "effective_time": effective_time,
+                "cost": stage_cost,
+                "log_v": stage_log_v,
+                "viability": stage_viability,
+            }
+        )
+
     total_log_v = sum(log_v_stages)
     final_viability = math.exp(total_log_v)
     threshold = float(ORGANS[organ_type]["threshold"])
-    
+
     return {
         "viability": final_viability,
         "log_viability": total_log_v,
@@ -269,19 +389,19 @@ def solve_organ_lp(distances, organ_type, stochastic=True):
     """Exhaustive LP: enumerate all mode combinations."""
     mode_names = list(TRANSPORT_MODES.keys())
     all_combos = list(itertools.product(mode_names, repeat=len(distances)))
-    
+
     results = []
     for combo in all_combos:
         r = evaluate_organ_route(distances, combo, organ_type, stochastic)
         results.append(r)
-    
+
     feasible = [r for r in results if r["feasible"]]
     feasible_sorted = sorted(feasible, key=lambda x: x["cost"])
-    
+
     best_viability = max(results, key=lambda x: x["viability"])
     cheapest_feasible = feasible_sorted[0] if feasible_sorted else None
     most_expensive = feasible_sorted[-1] if feasible_sorted else None
-    
+
     return {
         "total_configs": len(results),
         "n_feasible": len(feasible),
@@ -293,7 +413,9 @@ def solve_organ_lp(distances, organ_type, stochastic=True):
     }
 
 
-def evaluate_drug_delivery(barriers_selected, vehicle, target_delivery=0.10, stochastic=True):
+def evaluate_drug_delivery(
+    barriers_selected, vehicle, target_delivery=0.10, stochastic=True
+):
     """
     Drug Delivery Sage LP:
     Each barrier is a 'stage' with permeability = viability fraction.
@@ -303,44 +425,52 @@ def evaluate_drug_delivery(barriers_selected, vehicle, target_delivery=0.10, sto
     veh = VEHICLE_TYPES[vehicle]
     stage_details = []
     total_cost = 0
-    
+
     for barrier_name in barriers_selected:
         b = BARRIERS[barrier_name]
         base_perm = float(b["base_permeability"])
-        
+
         # Vehicle boost (diminished for barriers it doesn't target well)
         if barrier_name == "BBB Crossing":
             boost = float(veh["permeability_boost"])  # vehicles help most here
         else:
-            boost = 1.0 + (float(veh["permeability_boost"]) - 1.0) * 0.5  # partial boost elsewhere
-        
+            boost = (
+                1.0 + (float(veh["permeability_boost"]) - 1.0) * 0.5
+            )  # partial boost elsewhere
+
         effective_perm = min(base_perm * boost, 0.99)
-        
+
         # Stochastic penalty: variability in crossing probability
         if stochastic:
             # Higher cost barriers have more variance
-            variance_penalty = 1.0 - 0.05 * (1.0 - base_perm) / 0.85  # scale 0-5% penalty
+            variance_penalty = (
+                1.0 - 0.05 * (1.0 - base_perm) / 0.85
+            )  # scale 0-5% penalty
             effective_perm *= max(variance_penalty, 0.80)
-        
+
         stage_cost = float(b["cost_to_improve"]) * float(veh["cost_multiplier"])
         total_cost += stage_cost
-        
+
         log_v = math.log(max(effective_perm, 1e-12))
-        
-        stage_details.append({
-            "barrier": barrier_name,
-            "emoji": b["emoji"],
-            "description": b["description"],
-            "base_perm": base_perm,
-            "effective_perm": effective_perm,
-            "log_v": log_v,
-            "stage_cost": stage_cost,
-            "marginal_return": effective_perm / float(stage_cost) * 1000 if stage_cost > 0 else 0,  # permeability per $1k
-        })
-    
+
+        stage_details.append(
+            {
+                "barrier": barrier_name,
+                "emoji": b["emoji"],
+                "description": b["description"],
+                "base_perm": base_perm,
+                "effective_perm": effective_perm,
+                "log_v": log_v,
+                "stage_cost": stage_cost,
+                "marginal_return": effective_perm / float(stage_cost) * 1000
+                if stage_cost > 0
+                else 0,  # permeability per $1k
+            }
+        )
+
     total_log_v = sum(s["log_v"] for s in stage_details)
     final_delivery = math.exp(total_log_v)
-    
+
     return {
         "delivery_fraction": final_delivery,
         "log_delivery": total_log_v,
@@ -361,12 +491,12 @@ def evaluate_cold_chain(stages_config, stochastic=True, target_potency=0.80):
     """
     stage_details = []
     total_cost = 0
-    
+
     for stage_name, config in stages_config.items():
         s = COLD_CHAIN_STAGES[stage_name]
         base_rel = config.get("reliability", s["base_reliability"])
         upgrades = config.get("upgrades", [])
-        
+
         # Apply upgrades
         boosted_rel = base_rel
         upgrade_cost = 0
@@ -374,7 +504,7 @@ def evaluate_cold_chain(stages_config, stochastic=True, target_potency=0.80):
             upg = UPGRADE_OPTIONS[upg_name]
             boosted_rel = min(boosted_rel + upg["reliability_boost"], 0.995)
             upgrade_cost += upg["cost"]
-        
+
         # Stochastic penalty: (1 + 2/p) — variance from power outages etc.
         if stochastic and boosted_rel < 1.0:
             stoch_factor = 1 + 2.0 / (boosted_rel * 100)  # scaled penalty
@@ -382,30 +512,32 @@ def evaluate_cold_chain(stages_config, stochastic=True, target_potency=0.80):
             effective_rel = max(effective_rel, 0.01)
         else:
             effective_rel = boosted_rel
-        
+
         stage_cost = s["equipment_cost"] + upgrade_cost
         total_cost += stage_cost
-        
+
         log_v = math.log(max(effective_rel, 1e-12))
-        
-        stage_details.append({
-            "stage": stage_name,
-            "emoji": s["emoji"],
-            "description": s["description"],
-            "base_reliability": base_rel,
-            "boosted_reliability": boosted_rel,
-            "effective_reliability": effective_rel,
-            "upgrades": upgrades,
-            "log_v": log_v,
-            "equipment_cost": s["equipment_cost"],
-            "upgrade_cost": upgrade_cost,
-            "total_stage_cost": stage_cost,
-            "stoch_penalty": base_rel - effective_rel if stochastic else 0,
-        })
-    
+
+        stage_details.append(
+            {
+                "stage": stage_name,
+                "emoji": s["emoji"],
+                "description": s["description"],
+                "base_reliability": base_rel,
+                "boosted_reliability": boosted_rel,
+                "effective_reliability": effective_rel,
+                "upgrades": upgrades,
+                "log_v": log_v,
+                "equipment_cost": s["equipment_cost"],
+                "upgrade_cost": upgrade_cost,
+                "total_stage_cost": stage_cost,
+                "stoch_penalty": base_rel - effective_rel if stochastic else 0,
+            }
+        )
+
     total_log_v = sum(s["log_v"] for s in stage_details)
     final_potency = math.exp(total_log_v)
-    
+
     return {
         "potency": final_potency,
         "log_potency": total_log_v,
@@ -421,56 +553,98 @@ def evaluate_cold_chain(stages_config, stochastic=True, target_potency=0.80):
 # SHARED VISUALIZATION HELPERS
 # ═══════════════════════════════════════════════════════════
 
-def plot_viability_decay(stages, labels, threshold, y_label="Viability", title_prefix=""):
+
+def plot_viability_decay(
+    stages, labels, threshold, y_label="Viability", title_prefix=""
+):
     """Shared viability decay + log-decomposition plot."""
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
-    fig.patch.set_facecolor('#0a192f')
-    
+    fig.patch.set_facecolor("#0a192f")
+
     # Left: Decay curve
-    ax1.set_facecolor('#112240')
+    ax1.set_facecolor("#112240")
     cumulative = [1.0]
     xlabels = ["Start"]
     for i, s in enumerate(stages):
         v = math.exp(s["log_v"])
         cumulative.append(cumulative[-1] * v)
-        xlabels.append(labels[i] if i < len(labels) else f"S{i+1}")
-    
-    ax1.plot(xlabels, cumulative, 'o-', color='#64ffda', linewidth=2.5, markersize=10,
-             markeredgecolor='white', markeredgewidth=1.5, zorder=5)
-    ax1.axhline(y=threshold, color='#e94560', linestyle='--', linewidth=1.5,
-                label=f'Threshold ({threshold*100:.0f}%)', alpha=0.8)
-    ax1.fill_between(range(len(cumulative)), cumulative, threshold,
-                     where=[v >= threshold for v in cumulative],
-                     alpha=0.1, color='#64ffda')
-    ax1.set_ylabel(y_label, color='#e6f1ff', fontsize=11)
+        xlabels.append(labels[i] if i < len(labels) else f"S{i + 1}")
+
+    ax1.plot(
+        xlabels,
+        cumulative,
+        "o-",
+        color="#64ffda",
+        linewidth=2.5,
+        markersize=10,
+        markeredgecolor="white",
+        markeredgewidth=1.5,
+        zorder=5,
+    )
+    ax1.axhline(
+        y=threshold,
+        color="#e94560",
+        linestyle="--",
+        linewidth=1.5,
+        label=f"Threshold ({threshold * 100:.0f}%)",
+        alpha=0.8,
+    )
+    ax1.fill_between(
+        range(len(cumulative)),
+        cumulative,
+        threshold,
+        where=[v >= threshold for v in cumulative],
+        alpha=0.1,
+        color="#64ffda",
+    )
+    ax1.set_ylabel(y_label, color="#e6f1ff", fontsize=11)
     ax1.set_ylim(0, 1.05)
-    ax1.legend(facecolor='#112240', edgecolor='#233554', labelcolor='#e6f1ff')
-    ax1.tick_params(colors='#8892b0')
-    ax1.set_title(f"{title_prefix} End-to-End Decay", color='#e6f1ff', fontsize=12, pad=10)
+    ax1.legend(facecolor="#112240", edgecolor="#233554", labelcolor="#e6f1ff")
+    ax1.tick_params(colors="#8892b0")
+    ax1.set_title(
+        f"{title_prefix} End-to-End Decay", color="#e6f1ff", fontsize=12, pad=10
+    )
     for spine in ax1.spines.values():
-        spine.set_color('#233554')
-    ax1.grid(axis='y', linestyle='--', alpha=0.15, color='#8892b0')
-    plt.setp(ax1.xaxis.get_majorticklabels(), rotation=30, ha='right', fontsize=9)
-    
+        spine.set_color("#233554")
+    ax1.grid(axis="y", linestyle="--", alpha=0.15, color="#8892b0")
+    plt.setp(ax1.xaxis.get_majorticklabels(), rotation=30, ha="right", fontsize=9)
+
     # Right: Log decomposition
-    ax2.set_facecolor('#112240')
-    stage_names = labels[:len(stages)]
+    ax2.set_facecolor("#112240")
+    stage_names = labels[: len(stages)]
     log_vals = [s["log_v"] for s in stages]
-    colors = ['#e94560' if v == min(log_vals) else '#64ffda' for v in log_vals]
-    
-    bars = ax2.barh(stage_names, log_vals, color=colors, edgecolor='white', linewidth=0.5, height=0.6)
-    ax2.set_xlabel("log(V) — Stage Contribution", color='#e6f1ff', fontsize=11)
-    ax2.set_title("Log-Decomposition (Bottleneck = Red)", color='#e6f1ff', fontsize=12, pad=10)
-    ax2.tick_params(colors='#8892b0')
+    colors = ["#e94560" if v == min(log_vals) else "#64ffda" for v in log_vals]
+
+    bars = ax2.barh(
+        stage_names,
+        log_vals,
+        color=colors,
+        edgecolor="white",
+        linewidth=0.5,
+        height=0.6,
+    )
+    ax2.set_xlabel("log(V) — Stage Contribution", color="#e6f1ff", fontsize=11)
+    ax2.set_title(
+        "Log-Decomposition (Bottleneck = Red)", color="#e6f1ff", fontsize=12, pad=10
+    )
+    ax2.tick_params(colors="#8892b0")
     for spine in ax2.spines.values():
-        spine.set_color('#233554')
-    ax2.grid(axis='x', linestyle='--', alpha=0.15, color='#8892b0')
+        spine.set_color("#233554")
+    ax2.grid(axis="x", linestyle="--", alpha=0.15, color="#8892b0")
     ax2.invert_yaxis()
-    
+
     for bar, val in zip(bars, log_vals):
-        ax2.text(val - 0.01, bar.get_y() + bar.get_height()/2, f'{val:.3f}',
-                va='center', ha='right', color='white', fontweight='bold', fontsize=10)
-    
+        ax2.text(
+            val - 0.01,
+            bar.get_y() + bar.get_height() / 2,
+            f"{val:.3f}",
+            va="center",
+            ha="right",
+            color="white",
+            fontweight="bold",
+            fontsize=10,
+        )
+
     plt.tight_layout(pad=2)
     return fig
 
@@ -478,10 +652,16 @@ def plot_viability_decay(stages, labels, threshold, y_label="Viability", title_p
 # ═══════════════════════════════════════════════════════════
 # HEADER
 # ═══════════════════════════════════════════════════════════
-st.markdown('<p class="hero-header">SAGE Logistics Optimizer</p>', unsafe_allow_html=True)
-st.markdown('<p class="subtitle">Translating Quantum Network Bounds into Real-World Sequential Degradation Optimization</p>', unsafe_allow_html=True)
+st.markdown(
+    '<p class="hero-header">SAGE Logistics Optimizer</p>', unsafe_allow_html=True
+)
+st.markdown(
+    '<p class="subtitle">Translating Quantum Network Bounds into Real-World Sequential Degradation Optimization</p>',
+    unsafe_allow_html=True,
+)
 
-st.markdown("""
+st.markdown(
+    """
 <div class="sage-equation">
 <strong>The Sage Bound:</strong>&nbsp;&nbsp;
 log(V<sub>total</sub>) = Σ α<sub>i</sub> &nbsp;where&nbsp; 
@@ -489,84 +669,111 @@ log(V<sub>total</sub>) = Σ α<sub>i</sub> &nbsp;where&nbsp;
 <strong>Constraint:</strong> Σ α<sub>i</sub> ≥ log(V<sub>threshold</sub>) &nbsp;&nbsp;|&nbsp;&nbsp;
 <strong>Objective:</strong> min Σ C(x<sub>i</sub>)
 </div>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
 
 
 # ═══════════════════════════════════════════════════════════
 # TABS
 # ═══════════════════════════════════════════════════════════
 
-tab_organ, tab_drug, tab_cold = st.tabs([
-    "🏥 Organ Transport",
-    "💊 Drug Delivery",
-    "🔗 Cold Chain"
-])
+tab_organ, tab_drug, tab_cold = st.tabs(
+    ["🏥 Organ Transport", "💊 Drug Delivery", "🔗 Cold Chain"]
+)
 
 
 # ═══════════════════════════════════════════════════════════
 # TAB 1: ORGAN TRANSPORT (original functionality)
 # ═══════════════════════════════════════════════════════════
 with tab_organ:
-    st.markdown("""
+    st.markdown(
+        """
     <div class="tab-intro">
         <strong>🏥 Organ Transport Optimizer</strong><br>
         <span style="color: #8892b0;">Can this organ reach the recipient alive? The Sage Bound gives a fast, 
         mathematically rigorous feasibility certificate — or proves no combination of transport modes will work.</span>
     </div>
-    """, unsafe_allow_html=True)
-    
+    """,
+        unsafe_allow_html=True,
+    )
+
     col_config, col_spacer, col_info = st.columns([3, 0.2, 1])
-    
+
     with col_config:
         organ_choice = st.selectbox(
             "Organ Type",
             list(ORGANS.keys()),
-            format_func=lambda x: f"{ORGANS[x]['emoji']} {x} (T={ORGANS[x]['t_viable']}h)",
-            key="organ_select"
+            format_func=lambda x: (
+                f"{ORGANS[x]['emoji']} {x} (T={ORGANS[x]['t_viable']}h)"
+            ),
+            key="organ_select",
         )
         organ = ORGANS[organ_choice]
-        
-        stochastic_mode = st.checkbox("Include Scheduling Uncertainty (1+1/p penalty)", 
-                                       value=True, key="organ_stoch")
-    
+
+        stochastic_mode = st.checkbox(
+            "Include Scheduling Uncertainty (1+1/p penalty)",
+            value=True,
+            key="organ_stoch",
+        )
+
     with col_info:
         st.markdown(f"**{ORGANS[organ_choice]['emoji']} {organ_choice}**")
-        st.markdown(f"- Min Viability: **{organ['threshold']*100:.0f}%**")
+        st.markdown(f"- Min Viability: **{organ['threshold'] * 100:.0f}%**")
         st.markdown(f"- Ischemia Limit: **{organ['t_viable']} hrs**")
-    
+
     st.markdown("### 📍 Define Route Segments")
-    
-    num_stages = st.number_input("Number of segments", min_value=2, max_value=6, value=4, key="organ_stages")
-    
+
+    num_stages = st.number_input(
+        "Number of segments", min_value=2, max_value=6, value=4, key="organ_stages"
+    )
+
     cols = st.columns(num_stages)
     distances = []
     for i in range(num_stages):
         with cols[i]:
-            default = DEFAULT_SEGMENTS[i]["default_km"] if i < len(DEFAULT_SEGMENTS) else 100
-            label = DEFAULT_SEGMENTS[i]["name"] if i < len(DEFAULT_SEGMENTS) else f"Segment {i+1}"
-            d = st.number_input(f"Stage {i+1} (km)", value=default, min_value=1, key=f"organ_dist_{i}",
-                               help=label)
+            default = (
+                DEFAULT_SEGMENTS[i]["default_km"] if i < len(DEFAULT_SEGMENTS) else 100
+            )
+            label = (
+                DEFAULT_SEGMENTS[i]["name"]
+                if i < len(DEFAULT_SEGMENTS)
+                else f"Segment {i + 1}"
+            )
+            d = st.number_input(
+                f"Stage {i + 1} (km)",
+                value=default,
+                min_value=1,
+                key=f"organ_dist_{i}",
+                help=label,
+            )
             distances.append(d)
-    
+
     total_km = sum(distances)
     st.markdown(f"**Total route: {total_km} km** across {num_stages} segments")
-    
+
     st.markdown("---")
-    
-    if st.button("⚡ Run Sage LP Optimization", type="primary", use_container_width=True, key="organ_solve"):
+
+    if st.button(
+        "⚡ Run Sage LP Optimization",
+        type="primary",
+        use_container_width=True,
+        key="organ_solve",
+    ):
         with st.spinner("Solving combinatorial LP across all configurations..."):
             solution = solve_organ_lp(distances, organ_choice, stochastic_mode)
-        
+
         st.markdown("---")
-        
+
         if solution["n_feasible"] == 0:
-            st.markdown(f"""
+            st.markdown(
+                f"""
             <div class="infeasible-card">
                 <h1 style="color: #e94560; margin-bottom: 0.5rem;">❌ INFEASIBLE</h1>
                 <h3 style="color: #ff6b6b;">No transport combination can deliver a {organ_choice} over {total_km} km</h3>
                 <p style="color: #8892b0; font-size: 1.1rem;">
-                    Best achievable viability: <strong>{solution['best_viability']['viability']*100:.1f}%</strong> 
-                    (threshold: {organ['threshold']*100:.0f}%)
+                    Best achievable viability: <strong>{solution["best_viability"]["viability"] * 100:.1f}%</strong> 
+                    (threshold: {organ["threshold"] * 100:.0f}%)
                 </p>
                 <p style="color: #64ffda; font-size: 1.3rem; margin-top: 1rem;">
                     ⚡ <strong>RECOMMENDATION: Immediate release to closer recipient</strong>
@@ -576,137 +783,179 @@ with tab_organ:
                     A fast "no" saves more lives than a slow "maybe."
                 </p>
             </div>
-            """, unsafe_allow_html=True)
-            
+            """,
+                unsafe_allow_html=True,
+            )
+
             st.markdown("### 📊 Technology Gap Analysis")
             best = solution["best_viability"]
             gap_ratio = organ["threshold"] / best["viability"]
-            
+
             col1, col2, col3 = st.columns(3)
-            col1.metric("Best Viability", f"{best['viability']*100:.1f}%",
-                        f"Need {organ['threshold']*100:.0f}%", delta_color="inverse")
+            col1.metric(
+                "Best Viability",
+                f"{best['viability'] * 100:.1f}%",
+                f"Need {organ['threshold'] * 100:.0f}%",
+                delta_color="inverse",
+            )
             col2.metric("Gap Factor", f"{gap_ratio:.2f}×", "Must close this gap")
-            col3.metric("Configs Tested", f"{solution['total_configs']}", "All infeasible")
-        
+            col3.metric(
+                "Configs Tested", f"{solution['total_configs']}", "All infeasible"
+            )
+
         else:
             opt = solution["optimal"]
-            
-            st.markdown(f"""
+
+            st.markdown(
+                f"""
             <div class="result-card">
                 <h2 style="color: #64ffda; margin-bottom: 0.3rem;">
-                    ✅ {solution['n_feasible']} / {solution['total_configs']} configurations are feasible
+                    ✅ {solution["n_feasible"]} / {solution["total_configs"]} configurations are feasible
                 </h2>
                 <p style="color: #8892b0;">LP-optimal route found (minimum cost subject to viability constraint)</p>
             </div>
-            """, unsafe_allow_html=True)
-            
+            """,
+                unsafe_allow_html=True,
+            )
+
             col1, col2, col3, col4 = st.columns(4)
             col1.metric("💰 Optimal Cost", f"${opt['cost']:,.0f}")
-            col2.metric("🧬 Final Viability", f"{opt['viability']*100:.1f}%",
-                        f"Threshold: {organ['threshold']*100:.0f}%")
-            col3.metric("⏱️ Transit Time", f"{opt['time']:.1f} hrs",
-                        f"Limit: {organ['t_viable']} hrs")
-            
+            col2.metric(
+                "🧬 Final Viability",
+                f"{opt['viability'] * 100:.1f}%",
+                f"Threshold: {organ['threshold'] * 100:.0f}%",
+            )
+            col3.metric(
+                "⏱️ Transit Time",
+                f"{opt['time']:.1f} hrs",
+                f"Limit: {organ['t_viable']} hrs",
+            )
+
             if solution["most_expensive"]:
                 savings = solution["most_expensive"]["cost"] - opt["cost"]
                 savings_pct = (savings / solution["most_expensive"]["cost"]) * 100
-                col4.metric("📉 Cost Savings", f"${savings:,.0f}", f"{savings_pct:.0f}% vs most expensive")
-            
+                col4.metric(
+                    "📉 Cost Savings",
+                    f"${savings:,.0f}",
+                    f"{savings_pct:.0f}% vs most expensive",
+                )
+
             # Chain visualization
             st.markdown("### 🔗 LP-Optimized Logistics Chain")
-            chain_cols = st.columns(num_stages * 2 - 1)
+            chain_cols = st.columns(num_stages)
             for i, stage in enumerate(opt["stages"]):
-                with chain_cols[i * 2]:
-                    st.markdown(f"""
-                    <div style="background: rgba(100,255,218,0.08); border-radius: 12px; 
-                         padding: 0.8rem; text-align: center; border: 1px solid rgba(100,255,218,0.15);">
-                        <div style="font-size: 1.4rem;">{stage['mode'].split(' ')[0]}</div>
-                        <div style="color: #e6f1ff; font-weight: 600; font-size: 0.9rem;">{stage['mode'].split(' ', 1)[1]}</div>
-                        <div style="color: #8892b0; font-size: 0.8rem;">{stage['distance']} km</div>
-                        <div style="color: #64ffda; font-size: 0.85rem; font-weight: 500;">α = {stage['log_v']:.3f}</div>
-                    </div>
-                    """, unsafe_allow_html=True)
-                if i < num_stages - 1:
-                    with chain_cols[i * 2 + 1]:
-                        st.markdown('<div style="text-align: center; padding-top: 1.5rem; color: #533483; font-size: 1.5rem;">➔</div>',
-                                   unsafe_allow_html=True)
-            
+                with chain_cols[i]:
+                    with st.expander(
+                        f"📦 {DEFAULT_SEGMENTS[i]['name'] if i < len(DEFAULT_SEGMENTS) else f'Stage {i + 1}'}",
+                        expanded=True,
+                    ):
+                        st.markdown(f"**Mode:** {stage['mode']}")
+                        st.markdown(f"**Distance:** {stage['distance']} km")
+                        st.markdown(f"**Cost:** ${stage['cost']:,.0f}")
+                        st.markdown(
+                            f"**Log-V (α):** <span style='color: #64ffda;'>{stage['log_v']:.3f}</span>",
+                            unsafe_allow_html=True,
+                        )
+
+            st.markdown("---")
+
             # Viability decay plot
             st.markdown("### 📈 Viability Decay Profile")
-            labels = [f"S{i+1}" for i in range(len(opt["stages"]))]
-            fig = plot_viability_decay(opt["stages"], labels, organ["threshold"],
-                                       y_label="Organ Viability", title_prefix="🏥")
+            labels = [f"S{i + 1}" for i in range(len(opt["stages"]))]
+            fig = plot_viability_decay(
+                opt["stages"],
+                labels,
+                organ["threshold"],
+                y_label="Organ Viability",
+                title_prefix="🏥",
+            )
             st.pyplot(fig)
             plt.close()
-            
+
             # Breakdown table
             st.markdown("### 📋 Stage-by-Stage Breakdown")
             df_data = []
             for i, s in enumerate(opt["stages"]):
-                df_data.append({
-                    "Stage": f"Stage {i+1}",
-                    "Transport": s["mode"],
-                    "Distance (km)": s["distance"],
-                    "Base Time (h)": round(s["base_time"], 2),
-                    "Eff. Time (h)": round(s["effective_time"], 2),
-                    "Cost ($)": f"${s['cost']:,.0f}",
-                    "α (log-V)": round(s["log_v"], 4),
-                    "Stage Viability": f"{s['viability']*100:.1f}%",
-                })
-            st.dataframe(pd.DataFrame(df_data), use_container_width=True, hide_index=True)
-            
-            with st.expander(f"📊 View all {solution['n_feasible']} feasible configurations"):
+                df_data.append(
+                    {
+                        "Stage": f"Stage {i + 1}",
+                        "Transport": s["mode"],
+                        "Distance (km)": s["distance"],
+                        "Base Time (h)": round(s["base_time"], 2),
+                        "Eff. Time (h)": round(s["effective_time"], 2),
+                        "Cost ($)": f"${s['cost']:,.0f}",
+                        "α (log-V)": round(s["log_v"], 4),
+                        "Stage Viability": f"{s['viability'] * 100:.1f}%",
+                    }
+                )
+            st.dataframe(
+                pd.DataFrame(df_data), use_container_width=True, hide_index=True
+            )
+
+            with st.expander(
+                f"📊 View all {solution['n_feasible']} feasible configurations"
+            ):
                 for i, route in enumerate(solution["all_feasible"][:20]):
                     modes_str = " → ".join(route["modes"])
                     feasibility_margin = route["viability"] - organ["threshold"]
                     st.markdown(
-                        f"**#{i+1}** | Cost: ${route['cost']:,.0f} | "
-                        f"V: {route['viability']*100:.1f}% "
-                        f"(+{feasibility_margin*100:.1f}%) | "
+                        f"**#{i + 1}** | Cost: ${route['cost']:,.0f} | "
+                        f"V: {route['viability'] * 100:.1f}% "
+                        f"(+{feasibility_margin * 100:.1f}%) | "
                         f"{modes_str}"
                     )
                 if solution["n_feasible"] > 20:
-                    st.caption(f"Showing top 20 of {solution['n_feasible']} feasible routes (sorted by cost)")
+                    st.caption(
+                        f"Showing top 20 of {solution['n_feasible']} feasible routes (sorted by cost)"
+                    )
 
 
 # ═══════════════════════════════════════════════════════════
 # TAB 2: DRUG DELIVERY
 # ═══════════════════════════════════════════════════════════
 with tab_drug:
-    st.markdown("""
+    st.markdown(
+        """
     <div class="tab-intro">
         <strong>💊 Drug Delivery R&D Capital Allocator</strong><br>
         <span style="color: #8892b0;">Every biological barrier is a 'relay stage.' The Sage Bound decomposes end-to-end 
         bioavailability into per-barrier log-contributions — then ranks barriers by marginal R&D return per dollar.</span>
     </div>
-    """, unsafe_allow_html=True)
-    
+    """,
+        unsafe_allow_html=True,
+    )
+
     col_drug_config, col_drug_space, col_drug_info = st.columns([3, 0.2, 1.5])
-    
+
     with col_drug_config:
         vehicle_choice = st.selectbox(
-            "Delivery Vehicle",
-            list(VEHICLE_TYPES.keys()),
-            key="drug_vehicle"
+            "Delivery Vehicle", list(VEHICLE_TYPES.keys()), key="drug_vehicle"
         )
         veh_info = VEHICLE_TYPES[vehicle_choice]
-        
+
         barriers_selected = st.multiselect(
             "Select Biological Barriers (in sequence)",
             list(BARRIERS.keys()),
             default=list(BARRIERS.keys()),
-            key="drug_barriers"
+            key="drug_barriers",
         )
-        
-        target_delivery = st.slider(
-            "Target Bioavailability (%)", 
-            min_value=1, max_value=50, value=10, 
-            key="drug_target",
-            help="Minimum fraction of drug that must reach the target site"
-        ) / 100.0
-        
-        stochastic_drug = st.checkbox("Include Absorption Variance", value=True, key="drug_stoch")
-    
+
+        target_delivery = (
+            st.slider(
+                "Target Bioavailability (%)",
+                min_value=1,
+                max_value=50,
+                value=10,
+                key="drug_target",
+                help="Minimum fraction of drug that must reach the target site",
+            )
+            / 100.0
+        )
+
+        stochastic_drug = st.checkbox(
+            "Include Absorption Variance", value=True, key="drug_stoch"
+        )
+
     with col_drug_info:
         st.markdown(f"**Vehicle: {vehicle_choice}**")
         st.markdown(f"- Permeability boost: **{veh_info['permeability_boost']:.1f}×**")
@@ -719,88 +968,119 @@ with tab_drug:
         Drug delivery: **molecule** passes through **biological barriers**  
         Same math: `V = Π pᵢ = exp(Σ log pᵢ)`
         """)
-    
+
     st.markdown("---")
-    
-    if len(barriers_selected) >= 2 and st.button("🧬 Analyze Drug Delivery Pipeline", type="primary", 
-                                                   use_container_width=True, key="drug_solve"):
+
+    if len(barriers_selected) >= 2 and st.button(
+        "🧬 Analyze Drug Delivery Pipeline",
+        type="primary",
+        use_container_width=True,
+        key="drug_solve",
+    ):
         with st.spinner("Computing barrier-by-barrier Sage decomposition..."):
-            result = evaluate_drug_delivery(barriers_selected, vehicle_choice, target_delivery, stochastic_drug)
-        
+            result = evaluate_drug_delivery(
+                barriers_selected, vehicle_choice, target_delivery, stochastic_drug
+            )
+
         st.markdown("---")
-        
+
         # Feasibility verdict
         if result["feasible"]:
-            st.markdown(f"""
+            st.markdown(
+                f"""
             <div class="result-card">
                 <h2 style="color: #64ffda; margin-bottom: 0.3rem;">
-                    ✅ Bioavailability: {result['delivery_fraction']*100:.2f}% (target: {target_delivery*100:.0f}%)
+                    ✅ Bioavailability: {result["delivery_fraction"] * 100:.2f}% (target: {target_delivery * 100:.0f}%)
                 </h2>
                 <p style="color: #8892b0;">Pipeline is feasible — below is the bottleneck analysis and R&D priority ranking.</p>
             </div>
-            """, unsafe_allow_html=True)
+            """,
+                unsafe_allow_html=True,
+            )
         else:
-            st.markdown(f"""
+            st.markdown(
+                f"""
             <div class="infeasible-card">
                 <h1 style="color: #e94560; margin-bottom: 0.5rem;">⚠️ Below Target</h1>
-                <h3 style="color: #ff6b6b;">Bioavailability: {result['delivery_fraction']*100:.2f}% — target is {target_delivery*100:.0f}%</h3>
+                <h3 style="color: #ff6b6b;">Bioavailability: {result["delivery_fraction"] * 100:.2f}% — target is {target_delivery * 100:.0f}%</h3>
                 <p style="color: #8892b0;">The bottleneck analysis below shows where R&D investment has the highest marginal return.</p>
             </div>
-            """, unsafe_allow_html=True)
-        
+            """,
+                unsafe_allow_html=True,
+            )
+
         col1, col2, col3 = st.columns(3)
-        col1.metric("🧬 Final Bioavailability", f"{result['delivery_fraction']*100:.2f}%")
+        col1.metric(
+            "🧬 Final Bioavailability", f"{result['delivery_fraction'] * 100:.2f}%"
+        )
         col2.metric("💰 Total R&D Cost Index", f"${result['total_cost']:,.0f}")
         col3.metric("📊 Barriers Traversed", f"{len(result['stages'])}")
-        
+
         # Bottleneck identification
         st.markdown("### 🎯 Bottleneck Identification & R&D Priority")
-        
+
         # Sort by marginal return
         stages_ranked = sorted(result["stages"], key=lambda x: x["log_v"])
-        
+
         for rank, s in enumerate(stages_ranked):
             is_bottleneck = s["log_v"] == min(st_["log_v"] for st_ in stages_ranked)
             card_class = "bottleneck-highlight" if is_bottleneck else "upgrade-card"
-            badge = "🔴 PRIMARY BOTTLENECK" if is_bottleneck else f"#{rank+1}"
-            
-            st.markdown(f"""
+            badge = "🔴 PRIMARY BOTTLENECK" if is_bottleneck else f"#{rank + 1}"
+
+            st.markdown(
+                f"""
             <div class="{card_class}">
-                <strong>{s['emoji']} {s['barrier']}</strong> — {badge}<br>
-                <span style="color: #8892b0; font-size: 0.9rem;">{s['description']}</span><br>
-                <span style="color: #e6f1ff;">Base: {s['base_perm']*100:.0f}% → Effective: {s['effective_perm']*100:.1f}%</span> &nbsp;|&nbsp;
-                <span style="color: #64ffda;">log(V) = {s['log_v']:.3f}</span> &nbsp;|&nbsp;
-                <span style="color: #ffd93d;">Marginal Return: {s['marginal_return']:.2f} perm/$1k</span>
+                <strong>{s["emoji"]} {s["barrier"]}</strong> — {badge}<br>
+                <span style="color: #8892b0; font-size: 0.9rem;">{s["description"]}</span><br>
+                <span style="color: #e6f1ff;">Base: {s["base_perm"] * 100:.0f}% → Effective: {s["effective_perm"] * 100:.1f}%</span> &nbsp;|&nbsp;
+                <span style="color: #64ffda;">log(V) = {s["log_v"]:.3f}</span> &nbsp;|&nbsp;
+                <span style="color: #ffd93d;">Marginal Return: {s["marginal_return"]:.2f} perm/$1k</span>
             </div>
-            """, unsafe_allow_html=True)
-        
+            """,
+                unsafe_allow_html=True,
+            )
+
         # R&D Capital Allocation Matrix
         st.markdown("### 💰 R&D Capital Allocation Matrix")
-        st.markdown("_Barriers ranked by marginal return: permeability improvement per $1,000 invested._")
-        
+        st.markdown(
+            "_Barriers ranked by marginal return: permeability improvement per $1,000 invested._"
+        )
+
         stages_by_roi = sorted(result["stages"], key=lambda x: -x["marginal_return"])
-        
-        df_drug = pd.DataFrame([{
-            "Rank": i+1,
-            "Barrier": f"{s['emoji']} {s['barrier']}",
-            "Base Perm": f"{s['base_perm']*100:.0f}%",
-            "Effective Perm": f"{s['effective_perm']*100:.1f}%",
-            "Cost Index": f"${s['stage_cost']:,.0f}",
-            "log(V)": round(s["log_v"], 4),
-            "Marginal Return": f"{s['marginal_return']:.2f}",
-            "Priority": "🔴 Invest Now" if i < 2 else ("🟡 Secondary" if i < 4 else "🟢 Low Priority"),
-        } for i, s in enumerate(stages_by_roi)])
-        
+
+        df_drug = pd.DataFrame(
+            [
+                {
+                    "Rank": i + 1,
+                    "Barrier": f"{s['emoji']} {s['barrier']}",
+                    "Base Perm": f"{s['base_perm'] * 100:.0f}%",
+                    "Effective Perm": f"{s['effective_perm'] * 100:.1f}%",
+                    "Cost Index": f"${s['stage_cost']:,.0f}",
+                    "log(V)": round(s["log_v"], 4),
+                    "Marginal Return": f"{s['marginal_return']:.2f}",
+                    "Priority": "🔴 Invest Now"
+                    if i < 2
+                    else ("🟡 Secondary" if i < 4 else "🟢 Low Priority"),
+                }
+                for i, s in enumerate(stages_by_roi)
+            ]
+        )
+
         st.dataframe(df_drug, use_container_width=True, hide_index=True)
-        
+
         # Viability decay plot
         st.markdown("### 📈 Bioavailability Decay Through Barriers")
         labels = [s["barrier"][:12] for s in result["stages"]]
-        fig = plot_viability_decay(result["stages"], labels, target_delivery,
-                                   y_label="Bioavailability", title_prefix="💊")
+        fig = plot_viability_decay(
+            result["stages"],
+            labels,
+            target_delivery,
+            y_label="Bioavailability",
+            title_prefix="💊",
+        )
         st.pyplot(fig)
         plt.close()
-    
+
     elif len(barriers_selected) < 2:
         st.warning("Select at least 2 barriers to analyze the delivery pipeline.")
 
@@ -809,160 +1089,224 @@ with tab_drug:
 # TAB 3: COLD CHAIN
 # ═══════════════════════════════════════════════════════════
 with tab_cold:
-    st.markdown("""
+    st.markdown(
+        """
     <div class="tab-intro">
         <strong>🔗 Cold Chain Variance Analyzer</strong><br>
         <span style="color: #8892b0;">Vaccines don't fail because the average temperature is wrong — they fail because 
         <em>variance</em> (power outages, door-opens, transport delays) causes excursions. The stochastic penalty 
         (1+2/p) proves this mathematically: <strong>variance kills potency, not averages.</strong></span>
     </div>
-    """, unsafe_allow_html=True)
-    
+    """,
+        unsafe_allow_html=True,
+    )
+
     st.markdown("### ⚙️ Configure Cold Chain Stages")
-    
+
     stages_config = {}
-    
+
     for stage_name, stage_data in COLD_CHAIN_STAGES.items():
-        with st.expander(f"{stage_data['emoji']} {stage_name} — Base Reliability: {stage_data['base_reliability']*100:.0f}%", expanded=True):
+        with st.expander(
+            f"{stage_data['emoji']} {stage_name} — Base Reliability: {stage_data['base_reliability'] * 100:.0f}%",
+            expanded=True,
+        ):
             col_rel, col_upg = st.columns([1, 2])
-            
+
             with col_rel:
-                rel = st.slider(
-                    "Reliability (%)",
-                    min_value=50, max_value=99,
-                    value=int(stage_data["base_reliability"] * 100),
-                    key=f"cold_{stage_name}_rel",
-                    help=stage_data["description"]
-                ) / 100.0
-            
+                rel = (
+                    st.slider(
+                        "Reliability (%)",
+                        min_value=50,
+                        max_value=99,
+                        value=int(stage_data["base_reliability"] * 100),
+                        key=f"cold_{stage_name}_rel",
+                        help=stage_data["description"],
+                    )
+                    / 100.0
+                )
+
             with col_upg:
                 upgrades = st.multiselect(
                     "Apply Upgrades",
                     list(UPGRADE_OPTIONS.keys()),
                     key=f"cold_{stage_name}_upg",
-                    help="Each upgrade boosts reliability at a cost"
+                    help="Each upgrade boosts reliability at a cost",
                 )
                 if upgrades:
                     for u in upgrades:
                         upg = UPGRADE_OPTIONS[u]
-                        st.caption(f"  +{upg['reliability_boost']*100:.0f}% reliability, ${upg['cost']:,} — _{upg['description']}_")
-            
+                        st.caption(
+                            f"  +{upg['reliability_boost'] * 100:.0f}% reliability, ${upg['cost']:,} — _{upg['description']}_"
+                        )
+
             stages_config[stage_name] = {"reliability": rel, "upgrades": upgrades}
-    
+
     st.markdown("---")
-    
+
     col_target, col_stoch = st.columns(2)
     with col_target:
-        target_potency = st.slider("Target Vaccine Potency (%)", min_value=50, max_value=95, value=80,
-                                    key="cold_target") / 100.0
+        target_potency = (
+            st.slider(
+                "Target Vaccine Potency (%)",
+                min_value=50,
+                max_value=95,
+                value=80,
+                key="cold_target",
+            )
+            / 100.0
+        )
     with col_stoch:
-        stochastic_cold = st.checkbox("Include Variance Penalty (1+2/p)", value=True, key="cold_stoch",
-                                       help="The quantum-analog stochastic penalty that captures power outage risk")
-    
-    if st.button("❄️ Analyze Cold Chain", type="primary", use_container_width=True, key="cold_solve"):
+        stochastic_cold = st.checkbox(
+            "Include Variance Penalty (1+2/p)",
+            value=True,
+            key="cold_stoch",
+            help="The quantum-analog stochastic penalty that captures power outage risk",
+        )
+
+    if st.button(
+        "❄️ Analyze Cold Chain",
+        type="primary",
+        use_container_width=True,
+        key="cold_solve",
+    ):
         with st.spinner("Computing stochastic penalty across cold chain..."):
             result = evaluate_cold_chain(stages_config, stochastic_cold, target_potency)
-        
+
         st.markdown("---")
-        
+
         # Verdict
         if result["feasible"]:
-            st.markdown(f"""
+            st.markdown(
+                f"""
             <div class="result-card">
                 <h2 style="color: #64ffda; margin-bottom: 0.3rem;">
-                    ✅ End-to-End Potency: {result['potency']*100:.1f}% (target: {target_potency*100:.0f}%)
+                    ✅ End-to-End Potency: {result["potency"] * 100:.1f}% (target: {target_potency * 100:.0f}%)
                 </h2>
                 <p style="color: #8892b0;">Cold chain maintains vaccine potency above threshold. 
                 See below for variance hotspots and upgrade targeting.</p>
             </div>
-            """, unsafe_allow_html=True)
+            """,
+                unsafe_allow_html=True,
+            )
         else:
-            st.markdown(f"""
+            st.markdown(
+                f"""
             <div class="infeasible-card">
                 <h1 style="color: #e94560; margin-bottom: 0.5rem;">❌ POTENCY FAILURE</h1>
-                <h3 style="color: #ff6b6b;">End-to-End Potency: {result['potency']*100:.1f}% — target is {target_potency*100:.0f}%</h3>
+                <h3 style="color: #ff6b6b;">End-to-End Potency: {result["potency"] * 100:.1f}% — target is {target_potency * 100:.0f}%</h3>
                 <p style="color: #8892b0;">The variance penalty shows which stages need equipment upgrades.</p>
             </div>
-            """, unsafe_allow_html=True)
-        
+            """,
+                unsafe_allow_html=True,
+            )
+
         col1, col2, col3, col4 = st.columns(4)
-        col1.metric("💉 Final Potency", f"{result['potency']*100:.1f}%")
-        col2.metric("🎯 Target", f"{target_potency*100:.0f}%")
+        col1.metric("💉 Final Potency", f"{result['potency'] * 100:.1f}%")
+        col2.metric("🎯 Target", f"{target_potency * 100:.0f}%")
         col3.metric("💰 Total Equipment Cost", f"${result['total_cost']:,.0f}")
         col4.metric("📊 Stages", f"{len(result['stages'])}")
-        
+
         # Stochastic penalty visualization
         st.markdown("### 🌡️ Variance Penalty Breakdown")
-        st.markdown("_The (1+2/p) stochastic penalty shows how much reliability each stage **actually loses** due to variance — power outages, door-opens, equipment failure._")
-        
+        st.markdown(
+            "_The (1+2/p) stochastic penalty shows how much reliability each stage **actually loses** due to variance — power outages, door-opens, equipment failure._"
+        )
+
         penalty_data = []
         for s in result["stages"]:
-            penalty_data.append({
-                "Stage": f"{s['emoji']} {s['stage']}",
-                "Base": f"{s['base_reliability']*100:.0f}%",
-                "After Upgrades": f"{s['boosted_reliability']*100:.1f}%",
-                "Effective (w/ variance)": f"{s['effective_reliability']*100:.1f}%",
-                "Variance Penalty": f"{s['stoch_penalty']*100:.1f}%" if stochastic_cold else "—",
-                "log(V)": round(s["log_v"], 4),
-                "Equipment Cost": f"${s['equipment_cost']:,}",
-                "Upgrade Cost": f"${s['upgrade_cost']:,}" if s["upgrade_cost"] > 0 else "—",
-                "Upgrades Applied": ", ".join(s["upgrades"]) if s["upgrades"] else "None",
-            })
-        
-        st.dataframe(pd.DataFrame(penalty_data), use_container_width=True, hide_index=True)
-        
+            penalty_data.append(
+                {
+                    "Stage": f"{s['emoji']} {s['stage']}",
+                    "Base": f"{s['base_reliability'] * 100:.0f}%",
+                    "After Upgrades": f"{s['boosted_reliability'] * 100:.1f}%",
+                    "Effective (w/ variance)": f"{s['effective_reliability'] * 100:.1f}%",
+                    "Variance Penalty": f"{s['stoch_penalty'] * 100:.1f}%"
+                    if stochastic_cold
+                    else "—",
+                    "log(V)": round(s["log_v"], 4),
+                    "Equipment Cost": f"${s['equipment_cost']:,}",
+                    "Upgrade Cost": f"${s['upgrade_cost']:,}"
+                    if s["upgrade_cost"] > 0
+                    else "—",
+                    "Upgrades Applied": ", ".join(s["upgrades"])
+                    if s["upgrades"]
+                    else "None",
+                }
+            )
+
+        st.dataframe(
+            pd.DataFrame(penalty_data), use_container_width=True, hide_index=True
+        )
+
         # Upgrade targeting
         st.markdown("### 🎯 Upgrade Targeting")
-        
+
         # Find weakest stages
-        sorted_stages = sorted(result["stages"], key=lambda x: x["effective_reliability"])
-        
+        sorted_stages = sorted(
+            result["stages"], key=lambda x: x["effective_reliability"]
+        )
+
         for rank, s in enumerate(sorted_stages):
             if rank < 2:
-                st.markdown(f"""
+                st.markdown(
+                    f"""
                 <div class="bottleneck-highlight">
-                    <strong>{s['emoji']} {s['stage']}</strong> — 🔴 Priority #{rank+1} for upgrade<br>
-                    <span style="color: #ff6b6b;">Effective reliability: {s['effective_reliability']*100:.1f}%</span>
-                    &nbsp;|&nbsp; <span style="color: #ffd93d;">Variance penalty: {s['stoch_penalty']*100:.1f}%</span><br>
-                    <span style="color: #8892b0; font-size: 0.9rem;">{s['description']}</span>
+                    <strong>{s["emoji"]} {s["stage"]}</strong> — 🔴 Priority #{rank + 1} for upgrade<br>
+                    <span style="color: #ff6b6b;">Effective reliability: {s["effective_reliability"] * 100:.1f}%</span>
+                    &nbsp;|&nbsp; <span style="color: #ffd93d;">Variance penalty: {s["stoch_penalty"] * 100:.1f}%</span><br>
+                    <span style="color: #8892b0; font-size: 0.9rem;">{s["description"]}</span>
                 </div>
-                """, unsafe_allow_html=True)
+                """,
+                    unsafe_allow_html=True,
+                )
             else:
-                st.markdown(f"""
+                st.markdown(
+                    f"""
                 <div class="upgrade-card">
-                    <strong>{s['emoji']} {s['stage']}</strong> — #{rank+1}<br>
-                    <span style="color: #e6f1ff;">Effective: {s['effective_reliability']*100:.1f}%</span>
-                    &nbsp;|&nbsp; <span style="color: #8892b0;">Variance: {s['stoch_penalty']*100:.1f}%</span>
+                    <strong>{s["emoji"]} {s["stage"]}</strong> — #{rank + 1}<br>
+                    <span style="color: #e6f1ff;">Effective: {s["effective_reliability"] * 100:.1f}%</span>
+                    &nbsp;|&nbsp; <span style="color: #8892b0;">Variance: {s["stoch_penalty"] * 100:.1f}%</span>
                 </div>
-                """, unsafe_allow_html=True)
-        
+                """,
+                    unsafe_allow_html=True,
+                )
+
         # Potency decay plot
         st.markdown("### 📈 Potency Decay Through Cold Chain")
         labels = [s["stage"][:12] for s in result["stages"]]
-        fig = plot_viability_decay(result["stages"], labels, target_potency,
-                                   y_label="Vaccine Potency", title_prefix="🔗")
+        fig = plot_viability_decay(
+            result["stages"],
+            labels,
+            target_potency,
+            y_label="Vaccine Potency",
+            title_prefix="🔗",
+        )
         st.pyplot(fig)
         plt.close()
-        
+
         # Key insight callout
         st.markdown("---")
         if stochastic_cold:
             total_penalty = sum(s["stoch_penalty"] for s in result["stages"])
-            st.markdown(f"""
+            st.markdown(
+                f"""
             <div class="sage-equation">
                 <strong>Key Insight:</strong> The stochastic penalty removes an additional 
-                <strong>{total_penalty*100:.1f}%</strong> of effective reliability across the chain.<br>
+                <strong>{total_penalty * 100:.1f}%</strong> of effective reliability across the chain.<br>
                 This is the mathematical proof that <em>variance kills vaccines, not averages</em> — 
                 identical to the quantum penalty (1+2/p) in repeater networks.
             </div>
-            """, unsafe_allow_html=True)
+            """,
+                unsafe_allow_html=True,
+            )
 
 
 # ═══════════════════════════════════════════════════════════
 # FOOTER
 # ═══════════════════════════════════════════════════════════
 st.markdown("---")
-st.markdown("""
+st.markdown(
+    """
 <div style="text-align: center; color: #8892b0; padding: 1rem;">
     <p style="font-size: 0.9rem;">
         <strong>SAGE Logistics Optimizer</strong> — Based on the Sage Bound LP Framework<br>
@@ -972,7 +1316,9 @@ st.markdown("""
         Paper: "The Stochastic Penalty in Sequential Systems: From Quantum Decoherence to Supply Chain Variance"
     </p>
 </div>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
 
 # --- SIDEBAR (shared) ---
 st.sidebar.markdown("---")
