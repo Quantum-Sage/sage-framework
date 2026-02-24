@@ -68,10 +68,5 @@ Running `python run_all.py` produces:
 |------|---------|
 | `singularity_protocol_atlas.png` | 6-panel evolutionary emergence |
 | `satellite_hybrid_atlas.png` | Intercontinental topology comparison |
-| `qutip_validation.png` | SAGE vs QuTiP density matrix |
-
-
-
-
 
 
