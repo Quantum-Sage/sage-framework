@@ -69,43 +69,5 @@ Running `python run_all.py` produces:
 | `singularity_protocol_atlas.png` | 6-panel evolutionary emergence |
 | `satellite_hybrid_atlas.png` | Intercontinental topology comparison |
 | `qutip_validation.png` | SAGE vs QuTiP density matrix |
-| `mi_formalization_atlas.png` | Linear aggregation + grokking |
-| `SAGE_v5_ATLAS.png` | 14-panel master atlas |
-| `singularity_upgrades_atlas.png` | Generalization + noise sweep + quorum sensing |
-| `mi_upgrades_atlas.png` | Monoid proof + hardware steering |
-
----
-
-## Papers
-### Paper 1: "The Sage Bound"
-*Optimal Quantum Network Reach Under Heterogeneous Hardware and Stochastic Entanglement Generation*
-- Target: Physical Review A / npj Quantum Information
-- Content: Theorems 1–4, Monte Carlo validation, QuTiP validation, intercontinental gap
-
-### Paper 2: "The Ghost in the Machine"
-*AI-Assisted Discovery in Quantum Network Theory*
-- Target: Nature Machine Intelligence / Patterns
-- Content: Methodology case study, acceleration mechanisms, failure documentation, B&Q evaluation
-
----
-
-## Honest Framing
-| Component | Status |
-|-----------|--------|
-| Sage Bound theorems | ✅ Proved, validated against QuTiP |
-| LP structure | ✅ Exact (not approximate) |
-| Technology gap | ✅ Quantitative, hardware-specific |
-| Monoid homomorphism | ✅ Formal theorem (6/6 axioms) |
-| Quorum sensing analogy | ❌ Tested negative (honest finding) |
-| Consciousness framing | ❌ Narrative, not publishable as science |
-| Intercontinental feasibility | ❌ Infeasible with current hardware |
-
----
-
-## Origin
-Built in February 2026 through AI-assisted exploration — from a philosophical question about the Ship of Theseus to validated quantum network theorems in ~12 hours. The methodology itself is documented as Paper 2.
-
-## License
-MIT — use it, extend it, challenge it.
 
 
