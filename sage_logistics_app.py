@@ -34,105 +34,182 @@ st.markdown(
     
     .main > div { padding-top: 1.5rem; }
     
+    /* GLASSMORPHISM METRICS */
     .stMetric {
-        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-        padding: 1rem 1.2rem;
-        border-radius: 12px;
-        border: 1px solid rgba(255,255,255,0.08);
-        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        background: rgba(22, 33, 62, 0.4) !important;
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important;
+        padding: 1.2rem !important;
+        border-radius: 16px !important;
+        border: 1px solid rgba(100, 255, 218, 0.15) !important;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3) !important;
+        transition: transform 0.3s ease, box-shadow 0.3s ease !important;
     }
-    .stMetric label { color: #8892b0 !important; font-size: 0.85rem !important; }
-    .stMetric [data-testid="stMetricValue"] { color: #e6f1ff !important; font-weight: 600 !important; }
-    .stMetric [data-testid="stMetricDelta"] { font-size: 0.8rem !important; }
+    .stMetric:hover {
+        transform: translateY(-5px) !important;
+        box-shadow: 0 12px 40px 0 rgba(100, 255, 218, 0.2) !important;
+        border: 1px solid rgba(100, 255, 218, 0.4) !important;
+    }
+    .stMetric label { color: #a8b2d1 !important; font-size: 0.9rem !important; letter-spacing: 0.5px !important; text-transform: uppercase; }
+    .stMetric [data-testid="stMetricValue"] { color: #ffffff !important; font-weight: 700 !important; font-size: 2.2rem !important; text-shadow: 0 0 10px rgba(255,255,255,0.2); }
     
+    /* DYNAMIC BUTTONS */
     div.stButton > button[kind="primary"] {
-        background: linear-gradient(135deg, #0f3460 0%, #533483 100%);
-        border: none;
-        padding: 0.75rem 2rem;
-        font-weight: 600;
-        font-size: 1rem;
-        border-radius: 8px;
-        transition: all 0.3s ease;
+        background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%) !important;
+        border: none !important;
+        padding: 0.8rem 2.5rem !important;
+        font-weight: 600 !important;
+        font-size: 1.1rem !important;
+        border-radius: 12px !important;
+        letter-spacing: 0.5px !important;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+        box-shadow: 0 4px 15px rgba(0, 180, 219, 0.3) !important;
+        color: white !important;
     }
     div.stButton > button[kind="primary"]:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(83, 52, 131, 0.4);
+        transform: translateY(-3px) scale(1.02) !important;
+        box-shadow: 0 10px 25px rgba(0, 180, 219, 0.5) !important;
     }
     
+    /* ANIMATED GRADIENT HEADER */
     .hero-header {
-        background: linear-gradient(135deg, #0f3460 0%, #533483 50%, #e94560 100%);
+        background: linear-gradient(-45deg, #64ffda, #00b4db, #533483, #e94560);
+        background-size: 300% 300%;
+        animation: gradientBG 8s ease infinite;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        font-size: 2.2rem;
-        font-weight: 700;
-        margin-bottom: 0;
+        font-size: 2.8rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+        letter-spacing: -0.5px;
+    }
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
     }
     
     .subtitle {
-        color: #8892b0;
-        font-size: 1.1rem;
-        margin-top: -0.5rem;
-        margin-bottom: 1.5rem;
+        color: #a8b2d1;
+        font-size: 1.2rem;
+        font-weight: 300;
+        margin-top: 0;
+        margin-bottom: 2rem;
+        letter-spacing: 0.5px;
     }
     
+    /* NEON GLOW RESULT CARDS */
     .result-card {
-        background: linear-gradient(135deg, #0a192f 0%, #112240 100%);
-        border: 1px solid rgba(100, 255, 218, 0.1);
+        background: rgba(10, 25, 47, 0.6);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(100, 255, 218, 0.3);
         border-radius: 16px;
-        padding: 1.5rem;
-        margin: 1rem 0;
+        padding: 2rem;
+        margin: 1.5rem 0;
+        box-shadow: 0 0 20px rgba(100, 255, 218, 0.1), inset 0 0 20px rgba(100, 255, 218, 0.05);
+        position: relative;
+        overflow: hidden;
+    }
+    .result-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 4px;
+        background: linear-gradient(90deg, transparent, #64ffda, transparent);
     }
     
     .infeasible-card {
-        background: linear-gradient(135deg, #2d0a0a 0%, #401515 100%);
-        border: 1px solid rgba(233, 69, 96, 0.3);
+        background: rgba(45, 10, 10, 0.6);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(233, 69, 96, 0.4);
         border-radius: 16px;
         padding: 2rem;
-        margin: 1rem 0;
+        margin: 1.5rem 0;
         text-align: center;
+        box-shadow: 0 0 30px rgba(233, 69, 96, 0.15), inset 0 0 20px rgba(233, 69, 96, 0.05);
+        position: relative;
+    }
+    .infeasible-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 4px;
+        background: linear-gradient(90deg, transparent, #e94560, transparent);
     }
     
     .sage-equation {
-        background: rgba(100, 255, 218, 0.05);
-        border-left: 3px solid #64ffda;
-        padding: 1rem 1.5rem;
-        border-radius: 0 8px 8px 0;
-        margin: 1rem 0;
-        font-family: 'Courier New', monospace;
+        background: rgba(100, 255, 218, 0.03);
+        border-left: 4px solid #64ffda;
+        padding: 1.2rem 1.8rem;
+        border-radius: 0 12px 12px 0;
+        margin: 1.5rem 0;
+        font-family: 'Fira Code', 'Courier New', monospace;
+        font-size: 1.05rem;
+        color: #e6f1ff;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
     
     .stage-chip {
         display: inline-block;
-        background: rgba(83, 52, 131, 0.3);
-        border: 1px solid rgba(83, 52, 131, 0.5);
+        background: rgba(83, 52, 131, 0.2);
+        border: 1px solid rgba(100, 255, 218, 0.3);
         border-radius: 20px;
-        padding: 0.3rem 1rem;
-        margin: 0.2rem;
-        font-size: 0.85rem;
+        padding: 0.4rem 1.2rem;
+        margin: 0.3rem;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #e6f1ff;
+        transition: all 0.2s ease;
+    }
+    .stage-chip:hover {
+        background: rgba(83, 52, 131, 0.4);
+        border-color: #64ffda;
+        box-shadow: 0 0 10px rgba(100, 255, 218, 0.2);
     }
     
     .tab-intro {
-        background: linear-gradient(135deg, #0a192f 0%, #112240 100%);
-        border: 1px solid rgba(100, 255, 218, 0.08);
-        border-radius: 12px;
-        padding: 1.2rem 1.5rem;
-        margin-bottom: 1.5rem;
+        background: rgba(10, 25, 47, 0.5);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 1.5rem 2rem;
+        margin-bottom: 2rem;
+        border-left: 4px solid #00b4db;
     }
     
     .bottleneck-highlight {
-        background: linear-gradient(135deg, #2d0a0a 0%, #401515 100%);
-        border: 1px solid rgba(233, 69, 96, 0.25);
+        background: linear-gradient(135deg, rgba(233, 69, 96, 0.1) 0%, rgba(45, 10, 10, 0.4) 100%);
+        border: 1px solid rgba(233, 69, 96, 0.4);
         border-radius: 12px;
-        padding: 1rem;
-        margin: 0.5rem 0;
+        padding: 1.2rem;
+        margin: 0.8rem 0;
+        box-shadow: 0 4px 15px rgba(233, 69, 96, 0.1);
+        transition: transform 0.2s ease;
+    }
+    .bottleneck-highlight:hover {
+        transform: translateX(5px);
+        border-color: #e94560;
     }
     
     .upgrade-card {
-        background: rgba(100, 255, 218, 0.05);
-        border: 1px solid rgba(100, 255, 218, 0.15);
+        background: rgba(100, 255, 218, 0.03);
+        border: 1px solid rgba(100, 255, 218, 0.2);
         border-radius: 12px;
-        padding: 1rem;
-        margin: 0.5rem 0;
+        padding: 1.2rem;
+        margin: 0.8rem 0;
+        transition: all 0.2s ease;
+    }
+    .upgrade-card:hover {
+        background: rgba(100, 255, 218, 0.08);
+        box-shadow: 0 4px 15px rgba(100, 255, 218, 0.1);
+    }
+    
+    /* DATAFRAME STYLING */
+    [data-testid="stDataFrame"] {
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.1);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.2);
     }
 </style>
 """,
