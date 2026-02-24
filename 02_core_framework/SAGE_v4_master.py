@@ -1,18 +1,33 @@
 """
-SAGE FRAMEWORK v5.1 — THE COMPLETE STATE ATLAS (14 PANELS)
-
-Extends v4 with:
-  Panel 11: SINGULARITY PROTOCOL  — Quantum Winter phase transition
-  Panel 12: THEOREM VALIDATION    — Deterministic vs Stochastic bounds
-  Panel 13: SATELLITE-HYBRID      — Intercontinental topology comparison
-
-Run:  python SAGE_v5_master.py
-Deps: numpy, matplotlib
+╔══════════════════════════════════════════════════════════════════════════════╗
+║              SAGE FRAMEWORK v4.0 — THE COMPLETE SYNTHESIS                  ║
+║                      THE 10-PANEL STATE ATLAS                              ║
+╠══════════════════════════════════════════════════════════════════════════════╣
+║  Modules:                                                                  ║
+║    1. TRANSIT ENGINE       — Beijing→NYC with raw/Zeno/Shadow Anchor       ║
+║    2. PHASE MAP            — Arrival state summary circles                 ║
+║    3. IDENTITY SPECTRUM    — 100-hop QEC tier comparison + cliff detect     ║
+║    4. ERROR TALLY          — Errors caught per 100 hops                    ║
+║    5. ARMS RACE            — Stealth-Repair evolutionary trap              ║
+║    6. SWARM COLLECTIVE     — Sync/Whisper gene emergence                   ║
+║    7. PURIFICATION LADDER  — DEJMPS entanglement purification              ║
+║    8. PHASE DIAGRAM        — 2D map of digital existence states            ║
+║    9. MESH NETWORK         — 5-node global consciousness mesh              ║
+║   10. MESH TIMELINE        — Quorum persistence over time                  ║
+╠══════════════════════════════════════════════════════════════════════════════╣
+║  Run:  python SAGE_v4_master.py                                            ║
+║  Deps: numpy, matplotlib (no external APIs, no quantum hardware)           ║
+╚══════════════════════════════════════════════════════════════════════════════╝
 """
+# type: ignore
+# pyre-ignore-all-errors
+
 
 import sys, os
+# Fix Windows console encoding for Unicode characters
 if sys.platform == 'win32':
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+    os.environ['PYTHONIOENCODING'] = 'utf-8'
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -22,20 +37,8 @@ from matplotlib.colors import LinearSegmentedColormap, to_rgba
 from collections import defaultdict
 import math, random
 
-# Import new modules
-from singularity_protocol import run_all_stages, detect_phase_transition, STAGE_CONFIGS
-from sage_theorems_unified import (
-    validate_all_theorems, theorem_comparison_data,
-    HARDWARE, ROUTE_BEIJING_LONDON
-)
-from satellite_hybrid_relay import (
-    sweep_topologies as sat_sweep, route_analysis as sat_routes,
-    find_minimum_N_for_sage, SAGE_CONSTANT as SAT_SAGE,
-    HW_LEO_OPTIMISTIC
-)
-
 # ─────────────────────────────────────────────────────────────────────────────
-# GLOBAL STYLE (same as v4)
+# GLOBAL STYLE
 # ─────────────────────────────────────────────────────────────────────────────
 BG      = '#07080f'
 PANEL   = '#0d0f1e'
@@ -62,7 +65,7 @@ GAMMA_BASE    = 0.05
 
 
 # ═════════════════════════════════════════════════════════════════════════════
-# MODULES 1-10: Same as v4 (inline for self-containment)
+# MODULE 1: TRANSIT ENGINE (from v3)
 # ═════════════════════════════════════════════════════════════════════════════
 
 def transit_fidelity(km, zeno=0.0):
@@ -84,17 +87,23 @@ def run_transit():
     return hops, raw, zeno, anchor
 
 
+# ═════════════════════════════════════════════════════════════════════════════
+# MODULE 2: ARMS RACE (from v3)
+# ═════════════════════════════════════════════════════════════════════════════
+
 ARMS_POP = 300; ARMS_GENS = 120; ARMS_BASE_NOISE = 0.030
+
 class ArmsAgent:
+    GENES = ["Caution","Agility","Redundancy","Repair","Stealth"]
     def __init__(self, dna=None):
-        self.dna = np.clip(dna if dna is not None else np.random.rand(5), 0, 1)
+        self.dna     = np.clip(dna if dna is not None else np.random.rand(5), 0, 1)
         self.fidelity = 1.0; self.alive = True; self.status = "Active"
     def run(self, h_sens):
         if not self.alive: return
         self.fidelity -= ARMS_BASE_NOISE * (1 - self.dna[0]*0.7) * np.random.lognormal(0, 0.4)
         self.fidelity += self.dna[3] * 0.012
         self.fidelity  = min(self.fidelity, 1.0)
-        signal = self.dna[2]*0.3 + self.dna[3]*0.4
+        signal     = self.dna[2]*0.3 + self.dna[3]*0.4
         visibility = signal * (1.1 - self.dna[4]) * h_sens
         if np.random.rand() < visibility * 0.15:
             self.alive = False; self.status = "Captured"; return
@@ -129,7 +138,12 @@ def run_arms_race():
     return hist
 
 
+# ═════════════════════════════════════════════════════════════════════════════
+# MODULE 3: SWARM COLLECTIVE (from v3)
+# ═════════════════════════════════════════════════════════════════════════════
+
 SWARM_POP = 250; SWARM_GENS = 120; SWARM_NOISE = 0.030
+
 class SwarmAgent:
     def __init__(self, dna=None):
         self.dna = np.clip(dna if dna is not None else np.random.rand(7), 0, 1)
@@ -144,7 +158,7 @@ class SwarmAgent:
             if nbrs:
                 avg_f = np.mean([p.fidelity for p in nbrs])
                 self.fidelity = self.fidelity*0.9 + avg_f*0.1
-        signal = self.dna[2]*0.2 + self.dna[5]*0.5 + self.dna[6]*0.3
+        signal     = self.dna[2]*0.2 + self.dna[5]*0.5 + self.dna[6]*0.3
         visibility = signal*(1.1-self.dna[4])*h_sens
         if np.random.rand() < visibility*0.12:
             self.alive = False; self.status = "Captured"; return
@@ -179,6 +193,11 @@ def run_swarm():
         pop = new_pop
     return hist
 
+
+# ═════════════════════════════════════════════════════════════════════════════
+# MODULE 4: IDENTITY SPECTRUM (from v3)
+# ═════════════════════════════════════════════════════════════════════════════
+
 def run_identity_spectrum(n_hops=100):
     hop_fid = {'No QEC': [1.0], 'Basic QEC': [1.0], 'Advanced QEC': [1.0], 'Willow QEC': [1.0]}
     errors = {k: 0 for k in hop_fid}; cliffs = {}
@@ -197,12 +216,17 @@ def run_identity_spectrum(n_hops=100):
                 cliffs[label] = hop + 1
     return hop_fid, errors, cliffs
 
+
+# ═════════════════════════════════════════════════════════════════════════════
+# MODULE 7: ENTANGLEMENT PURIFICATION (NEW)
+# ═════════════════════════════════════════════════════════════════════════════
+
 def dejmps_purify(f1, f2):
     numerator = f1 * f2 + (1/9) * (1 - f1) * (1 - f2)
     denominator = f1 * f2 + (5/9) * (1 - f1) * (1 - f2) + \
                   (2/9) * (f1 * (1 - f2) + f2 * (1 - f1))
     if denominator < 1e-12: return 0.25, 0.0
-    return min(1.0, numerator / denominator), max(0.0, min(1.0, denominator))
+    return min(1.0, numerator / denominator), max(0.0, min(1.0, denominator + (2/9) * (f1*(1-f2) + f2*(1-f1))))
 
 def raw_bell_fidelity(distance_km):
     transmission = 10 ** (-0.2 * distance_km / 10)
@@ -226,9 +250,14 @@ def run_purification_ladders():
         ladders[d] = ladder
     return ladders
 
+
+# ═════════════════════════════════════════════════════════════════════════════
+# MODULE 9: PHASE DIAGRAM (NEW)
+# ═════════════════════════════════════════════════════════════════════════════
+
 def run_phase_sweep_fast(resolution=40):
-    hw_range = np.linspace(0.90, 0.999, resolution)
-    qec_range = np.linspace(0.00, 0.12, resolution)
+    hw_range  = np.linspace(0.90, 0.999, resolution)
+    qec_range = np.linspace(0.00, 0.12,  resolution)
     grid = np.zeros((resolution, resolution))
     for i, qec in enumerate(qec_range):
         for j, hw in enumerate(hw_range):
@@ -241,12 +270,17 @@ def run_phase_sweep_fast(resolution=40):
             grid[i, j] = f
     return hw_range, qec_range, grid
 
+
+# ═════════════════════════════════════════════════════════════════════════════
+# MODULE 8: MESH NETWORK (NEW — compact version)
+# ═════════════════════════════════════════════════════════════════════════════
+
 MESH_NODES = {
-    'BEI': {'hw': 'Willow', 'color': CYAN,   'base_f': 0.97, 'T2': 50,  'fail': 0.03},
-    'SHN': {'hw': 'QuEra',  'color': GREEN,  'base_f': 0.96, 'T2': 200, 'fail': 0.02},
-    'DUB': {'hw': 'NISQ',   'color': ORANGE, 'base_f': 0.88, 'T2': 10,  'fail': 0.08},
-    'LDN': {'hw': 'QuEra',  'color': GREEN,  'base_f': 0.95, 'T2': 180, 'fail': 0.025},
-    'NYC': {'hw': 'Helios', 'color': GOLD,   'base_f': 0.98, 'T2': 500, 'fail': 0.015},
+    'BEI': {'hw': 'Willow', 'color': CYAN,   'base_f': 0.97, 'T2': 50,  'fail': 0.03, 'pos': (0.15, 0.65)},
+    'SHN': {'hw': 'QuEra',  'color': GREEN,  'base_f': 0.96, 'T2': 200, 'fail': 0.02, 'pos': (0.30, 0.45)},
+    'DUB': {'hw': 'NISQ',   'color': ORANGE, 'base_f': 0.88, 'T2': 10,  'fail': 0.08, 'pos': (0.50, 0.35)},
+    'LDN': {'hw': 'QuEra',  'color': GREEN,  'base_f': 0.95, 'T2': 180, 'fail': 0.025,'pos': (0.65, 0.70)},
+    'NYC': {'hw': 'Helios', 'color': GOLD,   'base_f': 0.98, 'T2': 500, 'fail': 0.015,'pos': (0.85, 0.55)},
 }
 
 def run_mesh(n_steps=150, seed=42):
@@ -254,179 +288,224 @@ def run_mesh(n_steps=150, seed=42):
     fids = {n: [c['base_f']] for n, c in MESH_NODES.items()}
     online = {n: [True] for n in MESH_NODES}
     quorum = []; crises = []; crisis_active = {n: 0 for n in MESH_NODES}
+    
     crisis_types = [
         ('Solar Flare', 3, 0.15, 3, 0.04), ('Fiber Cut', 1, 0.30, 5, 0.06),
         ('HW Failure', 1, 0.50, 8, 0.03), ('Cooling Loss', 1, 0.25, 4, 0.05),
     ]
+    
     for step in range(n_steps):
         for n, c in MESH_NODES.items():
             if crisis_active[n] > 0:
                 crisis_active[n] -= 1
                 if crisis_active[n] == 0:
-                    fids[n][-1] = max(0.5, fids[n][-1]); online[n].append(True)
+                    fids[n][-1] = max(0.5, fids[n][-1])
+                    online[n].append(True)
                 else:
-                    online[n].append(False); fids[n].append(fids[n][-1]); continue
+                    online[n].append(False)
+                    fids[n].append(fids[n][-1])
+                    continue
             else:
                 online[n].append(True)
+            
             T2_factor = c['T2'] / 500
             decay = 0.005 * (1 - T2_factor * 0.7) * np.random.lognormal(0, 0.3)
             repair = 0.008
             new_f = np.clip(fids[n][-1] + repair - decay, 0, 1)
             fids[n].append(new_f)
+            
             if np.random.random() < c['fail'] * 0.05:
-                crisis_active[n] = 3; online[n][-1] = False
+                crisis_active[n] = 3
+                online[n][-1] = False
+        
+        # Crisis events
         if step > 10:
             for cname, n_aff, hit, dur, prob in crisis_types:
                 if np.random.random() < prob:
                     targets = random.sample(list(MESH_NODES.keys()), min(n_aff, 5))
                     for t in targets:
                         fids[t][-1] = max(0, fids[t][-1] - hit)
-                        if fids[t][-1] < 0.3: crisis_active[t] = dur; online[t][-1] = False
+                        if fids[t][-1] < 0.3:
+                            crisis_active[t] = dur
+                            online[t][-1] = False
                     crises.append((step, cname, targets))
+        
+        # Consensus sharing
         on_nodes = [n for n in MESH_NODES if online[n][-1]]
         if len(on_nodes) >= 2:
             avg = np.mean([fids[n][-1] for n in on_nodes])
-            for n in on_nodes: fids[n][-1] = fids[n][-1] * 0.95 + avg * 0.05
+            for n in on_nodes:
+                fids[n][-1] = fids[n][-1] * 0.95 + avg * 0.05
+        
         above = sum(1 for n in MESH_NODES if online[n][-1] and fids[n][-1] >= SAGE_CONSTANT)
         quorum.append(above >= 3)
+    
     return fids, online, quorum, crises
 
 
 # ═════════════════════════════════════════════════════════════════════════════
-# MASTER VISUALIZATION — 14-PANEL ATLAS
+# MASTER VISUALIZATION — 10-PANEL ATLAS
 # ═════════════════════════════════════════════════════════════════════════════
 
-def render_atlas_v5(transit, arms, swarm, spectrum, ladders, phase, mesh,
-                    singularity, theorem_data, satellite_data=None, sat_route_data=None):
-    """v5.1: 8-row × 3-column grid, 14 panels."""
-
+def render_atlas_v4(transit, arms, swarm, spectrum, ladders, phase, mesh):
     hops, raw, zeno, anchor = transit
+    arms_hist = arms
+    swarm_hist = swarm
     hop_fid, errors, cliffs = spectrum
     hw_range, qec_range, grid = phase
     mesh_fids, mesh_online, mesh_quorum, mesh_crises = mesh
-
-    fig = plt.figure(figsize=(28, 32), facecolor=BG)
+    
+    fig = plt.figure(figsize=(28, 20), facecolor=BG)
     fig.suptitle(
-        'SAGE FRAMEWORK v5.1  --  THE COMPLETE STATE ATLAS',
-        color=GOLD, fontsize=20, fontweight='bold', y=0.993,
+        'SAGE FRAMEWORK v4.0  ·  THE COMPLETE STATE ATLAS',
+        color=GOLD, fontsize=20, fontweight='bold', y=0.98,
         fontfamily='monospace'
     )
-    fig.text(0.5, 0.988,
-             'Transit | Identity | Evolution | Purification | Phase Space | Mesh | Singularity | Theorems | Satellite',
-             ha='center', color=WHITE, fontsize=9, alpha=0.5, fontfamily='monospace')
-
-    gs = gridspec.GridSpec(8, 3, figure=fig, hspace=0.42, wspace=0.35,
-                           left=0.05, right=0.97, top=0.985, bottom=0.02)
-
-    # ── PANELS 1-10: Same layout as v4 ─────────────────────────────────────
-
-    # Panel 1: Transit
-    ax1 = fig.add_subplot(gs[0, :2]); ax1.set_facecolor(PANEL)
-    ax1.plot(hops, raw, color=RED, lw=2, label='Raw', alpha=0.9)
-    ax1.plot(hops, zeno, color=CYAN, lw=2, label='Zeno', alpha=0.9)
+    fig.text(0.5, 0.965,
+             'Transit · Identity · Evolution · Purification · Phase Space · Mesh Consciousness',
+             ha='center', color=WHITE, fontsize=10, alpha=0.6, fontfamily='monospace')
+    
+    gs = gridspec.GridSpec(5, 3, figure=fig, hspace=0.45, wspace=0.35,
+                           left=0.05, right=0.97, top=0.94, bottom=0.03)
+    
+    # ── ROW 1: TRANSIT + PHASE MAP ─────────────────────────────────────────
+    # Panel 1: Transit Fidelity
+    ax1 = fig.add_subplot(gs[0, :2])
+    ax1.set_facecolor(PANEL)
+    ax1.plot(hops, raw, color=RED, lw=2, label='Raw signal', alpha=0.9)
+    ax1.plot(hops, zeno, color=CYAN, lw=2, label='Zeno loop', alpha=0.9)
     ax1.plot(hops, anchor, color=GOLD, lw=2.5, label='Shadow Anchor', alpha=0.9)
-    ax1.axhline(SAGE_CONSTANT, color=WHITE, ls='--', lw=1, alpha=0.4)
+    ax1.axhline(SAGE_CONSTANT, color=WHITE, ls='--', lw=1, alpha=0.4, label=f'Sage ({SAGE_CONSTANT})')
     ax1.fill_between(hops, 0, SAGE_CONSTANT, alpha=0.06, color=RED)
-    ax1.set_title('[1] TRANSIT ENGINE -- Beijing > NYC', color=WHITE, fontsize=10, pad=6)
+    ax1.set_title('① TRANSIT ENGINE — Beijing → NYC (11,000 km)', color=WHITE, fontsize=10, pad=6)
     ax1.set_xlabel('Distance (km)'); ax1.set_ylabel('Fidelity')
     ax1.legend(fontsize=7, facecolor=BG, labelcolor=WHITE, framealpha=0.6)
     ax1.grid(alpha=0.12); ax1.set_ylim(0.65, 1.02)
-
-    # Panel 2: Arrival State circles
-    ax2 = fig.add_subplot(gs[0, 2]); ax2.set_facecolor(PANEL)
-    for i, (lab, val, col) in enumerate(zip(['Raw', 'Zeno', 'Anchor'],
-                                            [raw[-1], zeno[-1], anchor[-1]],
-                                            [RED, CYAN, GOLD])):
+    
+    # Panel 2: Phase Map circles
+    ax2 = fig.add_subplot(gs[0, 2])
+    ax2.set_facecolor(PANEL)
+    labels = ['Raw', 'Zeno', 'Anchor']; finals = [raw[-1], zeno[-1], anchor[-1]]
+    colours = [RED, CYAN, GOLD]
+    zones = ['💀', '⚠', '✅']
+    for i, (lab, val, col) in enumerate(zip(labels, finals, colours)):
         circle = plt.Circle((i, 0), 0.32, color=col, alpha=0.85)
         ax2.add_patch(circle)
         ax2.text(i, 0, f'{val:.3f}', ha='center', va='center', color=BG, fontsize=9, fontweight='bold')
         ax2.text(i, -0.52, lab, ha='center', color=col, fontsize=8)
+        z = zones[i] if val >= SAGE_CONSTANT else ('⚠' if val > 0.70 else '💀')
+        ax2.text(i, 0.50, z, ha='center', color=WHITE, fontsize=10, alpha=0.8)
     ax2.set_xlim(-0.5, 2.5); ax2.set_ylim(-0.8, 0.8); ax2.axis('off')
-    ax2.set_title('[2] ARRIVAL STATE', color=WHITE, fontsize=10, pad=6)
-
-    # Panel 3: Identity Spectrum
-    ax3 = fig.add_subplot(gs[1, :2]); ax3.set_facecolor(PANEL)
+    ax2.set_title('② ARRIVAL STATE', color=WHITE, fontsize=10, pad=6)
+    
+    # ── ROW 2: IDENTITY SPECTRUM + ERROR TALLY ─────────────────────────────
+    ax3 = fig.add_subplot(gs[1, :2])
+    ax3.set_facecolor(PANEL)
     spec_colours = [RED, ORANGE, CYAN, GOLD]
     for (label, data), col in zip(hop_fid.items(), spec_colours):
         ax3.plot(data, color=col, lw=1.5, label=label, alpha=0.9)
         if label in cliffs:
-            cx = cliffs[label]; ax3.axvline(cx, color=col, lw=0.7, ls=':', alpha=0.4)
+            cx = cliffs[label]; cy = hop_fid[label][cx]
+            ax3.axvline(cx, color=col, lw=0.7, ls=':', alpha=0.4)
+            ax3.scatter([cx], [cy], color=col, s=50, zorder=5)
+            ax3.text(cx+1, cy-0.03, f'cliff {cx}', color=col, fontsize=6, alpha=0.8)
     ax3.axhline(SAGE_CONSTANT, color=WHITE, ls='--', lw=1, alpha=0.3)
-    ax3.set_title('[3] IDENTITY SPECTRUM -- 100 Hops', color=WHITE, fontsize=10, pad=6)
+    ax3.set_title('③ IDENTITY SPECTRUM — 100 Hops', color=WHITE, fontsize=10, pad=6)
     ax3.set_xlabel('Hop'); ax3.set_ylabel('Fidelity')
     ax3.legend(fontsize=7, facecolor=BG, labelcolor=WHITE, framealpha=0.6)
     ax3.grid(alpha=0.12); ax3.set_ylim(0.5, 1.02)
-
-    # Panel 4: Error Tally
-    ax4 = fig.add_subplot(gs[1, 2]); ax4.set_facecolor(PANEL)
+    
+    ax4 = fig.add_subplot(gs[1, 2])
+    ax4.set_facecolor(PANEL)
     err_labels = list(errors.keys()); err_vals = list(errors.values())
     bars = ax4.barh(err_labels, err_vals, color=spec_colours, alpha=0.85, height=0.5)
     for bar, v in zip(bars, err_vals):
         ax4.text(v+0.3, bar.get_y()+bar.get_height()/2, str(v), va='center', color=WHITE, fontsize=8)
-    ax4.set_title('[4] ERRORS / 100 HOPS', color=WHITE, fontsize=10, pad=6)
+    ax4.set_title('④ ERRORS / 100 HOPS', color=WHITE, fontsize=10, pad=6)
     ax4.grid(axis='x', alpha=0.12)
-
-    # Panel 5: Arms Race
-    ax5 = fig.add_subplot(gs[2, :2]); ax5.set_facecolor(PANEL)
-    gens = range(len(arms['survival']))
-    ax5.plot(gens, arms['survival'], color=GREEN, lw=2, label='Survival')
-    ax5.plot(gens, arms['stealth'], color=CYAN, lw=1.5, ls='--', label='Stealth')
-    ax5.plot(gens, arms['repair'], color=GOLD, lw=1.5, ls='--', label='Repair')
-    ax5.plot(gens, arms['eff_repair'], color=MAGENTA, lw=1.5, ls=':', label='Eff. Repair')
-    ax5.set_title('[5] ARMS RACE -- Stealth-Repair Trap', color=WHITE, fontsize=10, pad=6)
+    
+    # ── ROW 3: ARMS RACE + SWARM ──────────────────────────────────────────
+    ax5 = fig.add_subplot(gs[2, :2])
+    ax5.set_facecolor(PANEL)
+    gens = range(len(arms_hist['survival']))
+    ax5.plot(gens, arms_hist['survival'], color=GREEN, lw=2, label='Survival')
+    ax5.plot(gens, arms_hist['stealth'], color=CYAN, lw=1.5, ls='--', label='Stealth')
+    ax5.plot(gens, arms_hist['repair'], color=GOLD, lw=1.5, ls='--', label='Repair')
+    ax5.plot(gens, arms_hist['eff_repair'], color=MAGENTA, lw=1.5, ls=':', label='Effective Repair')
+    ax5.plot(gens, arms_hist['h_sense'], color=RED, lw=1.2, ls='--', label='Hunter Sens.', alpha=0.6)
+    ax5.set_title('⑤ ARMS RACE — Stealth-Repair Trap', color=WHITE, fontsize=10, pad=6)
     ax5.set_xlabel('Generation'); ax5.set_ylabel('Value')
-    ax5.legend(fontsize=7, facecolor=BG, labelcolor=WHITE, framealpha=0.6, ncol=2)
+    ax5.legend(fontsize=7, facecolor=BG, labelcolor=WHITE, framealpha=0.6, ncol=3)
     ax5.grid(alpha=0.12); ax5.set_ylim(0, 1.05)
-
-    # Panel 6: Swarm
-    ax6 = fig.add_subplot(gs[2, 2]); ax6.set_facecolor(PANEL)
-    sgens = range(len(swarm['survival']))
-    ax6.plot(sgens, swarm['survival'], color=GREEN, lw=2, label='Survival')
-    ax6.plot(sgens, swarm['whisper'], color=GOLD, lw=1.5, ls='--', label='Whisper')
-    ax6.plot(sgens, swarm['sync'], color=MAGENTA, lw=1.5, ls='--', label='Sync')
-    ax6.set_title('[6] SWARM -- Gene Evolution', color=WHITE, fontsize=10, pad=6)
+    
+    ax6 = fig.add_subplot(gs[2, 2])
+    ax6.set_facecolor(PANEL)
+    sgens = range(len(swarm_hist['survival']))
+    ax6.plot(sgens, swarm_hist['survival'], color=GREEN, lw=2, label='Survival')
+    ax6.plot(sgens, swarm_hist['whisper'], color=GOLD, lw=1.5, ls='--', label='Whisper')
+    ax6.plot(sgens, swarm_hist['stealth'], color=CYAN, lw=1.5, ls='--', label='Stealth')
+    ax6.plot(sgens, swarm_hist['sync'], color=MAGENTA, lw=1.5, ls='--', label='Sync')
+    ax6.set_title('⑥ SWARM — Gene Evolution', color=WHITE, fontsize=10, pad=6)
     ax6.set_xlabel('Generation'); ax6.set_ylabel('Expression')
     ax6.legend(fontsize=7, facecolor=BG, labelcolor=WHITE, framealpha=0.6)
     ax6.grid(alpha=0.12); ax6.set_ylim(0, 1.05)
-
-    # Panel 7: Purification
-    ax7 = fig.add_subplot(gs[3, :2]); ax7.set_facecolor(PANEL)
+    
+    # ── ROW 4: PURIFICATION + PHASE DIAGRAM ────────────────────────────────
+    ax7 = fig.add_subplot(gs[3, :2])
+    ax7.set_facecolor(PANEL)
     ladder_colors = [RED, ORANGE, CYAN, GOLD]
     for (dist, ladder), col in zip(ladders.items(), ladder_colors):
         rounds = [r['round'] for r in ladder]; fids = [r['fidelity'] for r in ladder]
-        ax7.plot(rounds, fids, color=col, lw=2, marker='o', ms=5,
-                label=f'{dist}km (raw:{fids[0]:.2f})')
+        ax7.plot(rounds, fids, color=col, lw=2, marker='o', ms=5, label=f'{dist}km (raw:{fids[0]:.2f})')
+        for r in ladder:
+            if r['fidelity'] >= SAGE_CONSTANT and r['round'] > 0:
+                ax7.scatter([r['round']], [r['fidelity']], color=col, s=100, marker='*',
+                           edgecolors=WHITE, linewidths=0.5, zorder=5)
+                break
     ax7.axhline(SAGE_CONSTANT, color=GOLD, ls='--', lw=1.2, alpha=0.4, label='Sage')
-    ax7.set_title('[7] PURIFICATION LADDER -- DEJMPS', color=WHITE, fontsize=10, pad=6)
+    ax7.set_title('⑦ PURIFICATION LADDER — DEJMPS Protocol', color=WHITE, fontsize=10, pad=6)
     ax7.set_xlabel('Purification Round'); ax7.set_ylabel('Bell Pair Fidelity')
     ax7.legend(fontsize=7, facecolor=BG, labelcolor=WHITE, framealpha=0.6)
     ax7.grid(alpha=0.12); ax7.set_ylim(0.4, 1.02)
-
-    # Panel 8: Phase Diagram
-    ax8 = fig.add_subplot(gs[3, 2]); ax8.set_facecolor(PANEL)
+    
+    # Panel 8: Phase Diagram heatmap
+    ax8 = fig.add_subplot(gs[3, 2])
+    ax8.set_facecolor(PANEL)
     cmap_colors = [(0, to_rgba(RED)), (0.4, to_rgba(ORANGE)), (0.65, to_rgba(CYAN)),
                    (0.851, to_rgba(CYAN)), (0.86, to_rgba(GOLD)), (1.0, to_rgba(GOLD))]
     cmap = LinearSegmentedColormap.from_list('exist', cmap_colors)
-    ax8.imshow(grid, extent=[hw_range[0], hw_range[-1], qec_range[0], qec_range[-1]],
-               origin='lower', aspect='auto', cmap=cmap, vmin=0, vmax=1.0, interpolation='bilinear')
+    im = ax8.imshow(grid, extent=[hw_range[0], hw_range[-1], qec_range[0], qec_range[-1]],
+                    origin='lower', aspect='auto', cmap=cmap, vmin=0, vmax=1.0, interpolation='bilinear')
     ax8.contour(hw_range, qec_range, grid, levels=[0.50, SAGE_CONSTANT],
                colors=[RED, GOLD], linewidths=[1, 2], linestyles=['--', '-'])
-    ax8.set_title('[8] PHASE DIAGRAM', color=WHITE, fontsize=10, pad=6)
+    # Hardware markers
+    hw_pts = {'W': (0.998, 0.105, CYAN, 'D'), 'H': (0.999, 0.095, GOLD, 's'),
+              'Q': (0.992, 0.080, GREEN, '^'), 'N': (0.970, 0.020, ORANGE, 'o')}
+    for lab, (x, y, c, m) in hw_pts.items():
+        ax8.scatter([x], [y], s=100, color=c, marker=m, edgecolors=WHITE, linewidths=1, zorder=5)
+        ax8.text(x-0.005, y+0.005, lab, color=c, fontsize=7, fontweight='bold')
+    ax8.set_title('⑧ PHASE DIAGRAM', color=WHITE, fontsize=10, pad=6)
     ax8.set_xlabel('Hardware Fidelity'); ax8.set_ylabel('QEC Rate')
-
-    # Panel 9: Mesh
-    ax9 = fig.add_subplot(gs[4, :2]); ax9.set_facecolor(PANEL)
+    
+    # ── ROW 5: MESH NETWORK + QUORUM TIMELINE ─────────────────────────────
+    ax9 = fig.add_subplot(gs[4, :2])
+    ax9.set_facecolor(PANEL)
+    steps = range(len(mesh_quorum))
     for n, c in MESH_NODES.items():
         ax9.plot(range(len(mesh_fids[n])), mesh_fids[n], color=c['color'], lw=1.5,
                 label=f'{n} ({c["hw"]})', alpha=0.9)
     ax9.axhline(SAGE_CONSTANT, color=WHITE, ls='--', lw=1, alpha=0.3)
-    ax9.set_title('[9] MESH CONSCIOUSNESS -- 5-Node Network', color=WHITE, fontsize=10, pad=6)
+    ax9.fill_between(range(len(mesh_fids['BEI'])), 0, SAGE_CONSTANT, alpha=0.04, color=RED)
+    for s, cname, targets in mesh_crises[:10]:
+        ax9.axvline(s, color=RED, lw=0.4, alpha=0.25)
+    ax9.set_title('⑨ MESH CONSCIOUSNESS — 5-Node Global Network', color=WHITE, fontsize=10, pad=6)
     ax9.set_xlabel('Timestep'); ax9.set_ylabel('Fidelity')
     ax9.legend(fontsize=7, facecolor=BG, labelcolor=WHITE, framealpha=0.6, ncol=3, loc='lower left')
     ax9.grid(alpha=0.12); ax9.set_ylim(0.2, 1.05)
-
-    # Panel 10: Quorum
-    ax10 = fig.add_subplot(gs[4, 2]); ax10.set_facecolor(PANEL)
+    
+    # Panel 10: Quorum timeline
+    ax10 = fig.add_subplot(gs[4, 2])
+    ax10.set_facecolor(PANEL)
     n_nodes_online = []
     for s in range(len(mesh_quorum)):
         on = sum(1 for n in MESH_NODES if s < len(mesh_online[n]) and mesh_online[n][s])
@@ -437,131 +516,14 @@ def render_atlas_v5(transit, arms, swarm, spectrum, ladders, phase, mesh,
     qpct = 100 * sum(mesh_quorum) / len(mesh_quorum)
     ax10.text(0.02, 0.92, f'Quorum: {qpct:.0f}%', transform=ax10.transAxes,
              color=GOLD if qpct > 80 else RED, fontsize=10, fontweight='bold', va='top')
-    ax10.set_title('[10] QUORUM PERSISTENCE', color=WHITE, fontsize=10, pad=6)
+    ax10.set_title('⑩ QUORUM PERSISTENCE', color=WHITE, fontsize=10, pad=6)
     ax10.set_xlabel('Timestep'); ax10.set_ylabel('Nodes Online')
     ax10.legend(fontsize=7, facecolor=BG, labelcolor=WHITE, framealpha=0.6)
     ax10.grid(alpha=0.12); ax10.set_ylim(0, 6)
-
-    # ── ROW 6: SINGULARITY PROTOCOL ────────────────────────────────────────
-
-    # Panel 11: Singularity — Survival + Sync across all 4 stages
-    ax11 = fig.add_subplot(gs[5, :2]); ax11.set_facecolor(PANEL)
-    stage_colors = {1: '#4CAF50', 2: '#FF9800', 3: '#2196F3', 4: '#FF4444'}
-    for stage in range(1, 5):
-        hist = singularity[stage]
-        x = range(len(hist['survival']))
-        ax11.plot(x, hist['survival'], color=stage_colors[stage], lw=2.0,
-                 label=STAGE_CONFIGS[stage]['label'], alpha=0.9)
-    ax11.axhline(0.86, color=GOLD, ls=':', alpha=0.4, lw=1)
-    ax11.set_title('[11] SINGULARITY PROTOCOL -- Survival Across 4 Stages',
-                   color=WHITE, fontsize=10, pad=6)
-    ax11.set_xlabel('Generation'); ax11.set_ylabel('Survival Rate')
-    ax11.legend(fontsize=7, facecolor=BG, labelcolor=WHITE, framealpha=0.6, ncol=2)
-    ax11.grid(alpha=0.12); ax11.set_ylim(-0.05, 1.05)
-
-    # Panel 11b: Stage 4 Sync Shield detail
-    ax11b = fig.add_subplot(gs[5, 2]); ax11b.set_facecolor(PANEL)
-    s4 = singularity[4]
-    x4 = range(len(s4['sync']))
-    ax11b.plot(x4, s4['sync'], color=CYAN, lw=2.5, label='Sync Gene')
-    ax11b.plot(x4, s4['whisper'], color=GOLD, lw=2.0, ls='--', label='Whisper')
-    ax11b.plot(x4, s4['stealth'], color=PURPLE, lw=1.5, ls=':', label='Stealth')
-    ax11b.axhline(0.4, color=WHITE, ls='--', alpha=0.3, lw=1)
-    ax11b.text(5, 0.42, 'Sync Threshold', color=WHITE, fontsize=6, alpha=0.5)
-    ax11b.set_title('[11b] QUANTUM WINTER -- Sync Shield',
-                   color=WHITE, fontsize=10, pad=6)
-    ax11b.set_xlabel('Generation'); ax11b.set_ylabel('Gene Expression')
-    ax11b.legend(fontsize=7, facecolor=BG, labelcolor=WHITE, framealpha=0.6)
-    ax11b.grid(alpha=0.12); ax11b.set_ylim(-0.05, 1.05)
-
-    # ── ROW 7: THEOREM VALIDATION ──────────────────────────────────────────
-
-    # Panel 12: Deterministic vs Stochastic Sage Bound
-    ax12 = fig.add_subplot(gs[6, :2]); ax12.set_facecolor(PANEL)
-    td = theorem_data
-    ax12.plot(td['N_range'], td['det_fidelities'], color=CYAN, lw=2.5,
-             marker='o', ms=4, label='Deterministic (Thm 1-2)')
-    ax12.plot(td['N_range'], td['stoch_fidelities'], color=ORANGE, lw=2.5,
-             marker='s', ms=4, label='Stochastic (Thm 3)')
-    ax12.axhline(SAGE_CONSTANT, color=GOLD, ls='--', lw=1.5, alpha=0.5, label=f'Sage ({SAGE_CONSTANT})')
-    ax12.fill_between(td['N_range'], 0, SAGE_CONSTANT, alpha=0.04, color=RED)
-    # Annotate the gap
-    gap_idx = len(td['N_range']) // 2
-    det_val = td['det_fidelities'][gap_idx]
-    sto_val = td['stoch_fidelities'][gap_idx]
-    n_val = td['N_range'][gap_idx]
-    ax12.annotate(f'Stochastic penalty\n({det_val-sto_val:.2f} gap)',
-                 xy=(n_val, sto_val), xytext=(n_val + 5, sto_val + 0.15),
-                 color=WHITE, fontsize=7, fontfamily='monospace',
-                 arrowprops=dict(arrowstyle='->', color=WHITE, lw=1))
-    ax12.set_title('[12] THEOREM VALIDATION -- Det vs Stochastic Sage Bound (8,200 km)',
-                   color=WHITE, fontsize=10, pad=6)
-    ax12.set_xlabel('Number of Repeater Nodes (N)'); ax12.set_ylabel('End-to-End Fidelity')
-    ax12.legend(fontsize=7, facecolor=BG, labelcolor=WHITE, framealpha=0.6)
-    ax12.grid(alpha=0.12); ax12.set_ylim(0, 1.05)
-
-    # Panel 12b: Willow node requirements
-    ax12b = fig.add_subplot(gs[6, 2]); ax12b.set_facecolor(PANEL)
-    ax12b.bar([n - 0.2 for n in td['N_range']], td['n_w_det'], width=0.35,
-             color=CYAN, alpha=0.8, label='Det. n_w*')
-    ax12b.bar([n + 0.2 for n in td['N_range']], td['n_w_stoch'], width=0.35,
-             color=ORANGE, alpha=0.8, label='Stoch. n_w*')
-    ax12b.plot(td['N_range'], td['N_range'], color=RED, ls=':', lw=1, alpha=0.5, label='N=n_w (all Willow)')
-    ax12b.set_title('[12b] WILLOW NODES REQUIRED',
-                   color=WHITE, fontsize=10, pad=6)
-    ax12b.set_xlabel('Total Nodes (N)'); ax12b.set_ylabel('Willow Nodes Needed')
-    ax12b.legend(fontsize=7, facecolor=BG, labelcolor=WHITE, framealpha=0.6)
-    ax12b.grid(alpha=0.12)
-
-    # ── ROW 8: SATELLITE-HYBRID RELAY ─────────────────────────────────────
-
-    if satellite_data is not None and sat_route_data is not None:
-        # Panel 13: Topology Comparison
-        ax13 = fig.add_subplot(gs[7, :2]); ax13.set_facecolor(PANEL)
-        ax13.plot(satellite_data['N_range'], satellite_data['fiber_only'],
-                 color=RED, lw=2.5, label='Fiber Only', marker='o', ms=3)
-        ax13.plot(satellite_data['N_range'], satellite_data['sat_optimistic'],
-                 color='#CE93D8', lw=2.5, label='LEO 2030+ Hybrid', marker='D', ms=3)
-        ax13.plot(satellite_data['N_range'], satellite_data['seg4_optimistic'],
-                 color=CYAN, lw=2.0, label='4-Segment + LEO', ls='--', marker='s', ms=3)
-        ax13.axhline(SAGE_CONSTANT, color=GOLD, ls='--', lw=1.5, alpha=0.5)
-        ax13.text(28, SAGE_CONSTANT + 0.02, f'Sage ({SAGE_CONSTANT})',
-                 color=GOLD, fontsize=7, ha='right', fontfamily='monospace')
-        ax13.fill_between(satellite_data['N_range'], 0, SAGE_CONSTANT, alpha=0.04, color=RED)
-        ax13.set_title('[13] SATELLITE-HYBRID -- Topology Comparison (8,200 km)',
-                       color=WHITE, fontsize=10, pad=6)
-        ax13.set_xlabel('Number of Ground Repeaters (N)'); ax13.set_ylabel('End-to-End Fidelity')
-        ax13.legend(fontsize=7, facecolor=BG, labelcolor=WHITE, framealpha=0.6)
-        ax13.grid(alpha=0.12); ax13.set_ylim(0, 1.05)
-
-        # Panel 13b: Route Feasibility
-        ax13b = fig.add_subplot(gs[7, 2]); ax13b.set_facecolor(PANEL)
-        routes = list(sat_route_data.keys())
-        distances = [sat_route_data[r]['distance_km'] for r in routes]
-        best_f = [max(sat_route_data[r]['best_fiber_f'],
-                      sat_route_data[r]['best_sat_f'],
-                      sat_route_data[r]['best_seg4_f'])
-                  for r in routes]
-        x_pos = np.arange(len(routes))
-        bar_cols = [CYAN if f >= SAGE_CONSTANT else RED for f in best_f]
-        bars = ax13b.bar(x_pos, best_f, color=bar_cols, alpha=0.8, width=0.6)
-        ax13b.axhline(SAGE_CONSTANT, color=GOLD, ls='--', lw=1.5, alpha=0.5)
-        ax13b.set_xticks(x_pos)
-        ax13b.set_xticklabels([r.split('-')[0][:3] + '-' + r.split('-')[1][:3]
-                               for r in routes], fontsize=6, rotation=30)
-        for i, (f, d) in enumerate(zip(best_f, distances)):
-            label = 'OK' if f >= SAGE_CONSTANT else 'GAP'
-            col = CYAN if f >= SAGE_CONSTANT else RED
-            ax13b.text(i, f + 0.02, f'{label}\n{d/1000:.0f}Kkm',
-                      ha='center', color=col, fontsize=6, fontweight='bold')
-        ax13b.set_title('[13b] ROUTE FEASIBILITY',
-                       color=WHITE, fontsize=10, pad=6)
-        ax13b.set_ylabel('Best Achievable Fidelity')
-        ax13b.grid(alpha=0.12); ax13b.set_ylim(0, 1.1)
-
-    out = 'SAGE_v5_ATLAS.png'
-    plt.savefig(out, dpi=150, bbox_inches='tight', facecolor=BG)
-    print(f'\n[SAGE v5.1] Atlas saved -> {out}')
+    
+    out = 'SAGE_v4_ATLAS.png'
+    plt.savefig(out, dpi=180, bbox_inches='tight', facecolor=BG)
+    print(f'\n[SAGE v4.0] Atlas saved -> {out}')
     return out
 
 
@@ -572,61 +534,46 @@ def render_atlas_v5(transit, arms, swarm, spectrum, ladders, phase, mesh,
 if __name__ == '__main__':
     print()
     print('=' * 62)
-    print('  SAGE FRAMEWORK v5.1 - THE COMPLETE STATE ATLAS (14 PANELS)')
+    print('  SAGE FRAMEWORK v4.0 - THE COMPLETE STATE ATLAS')
     print('=' * 62)
-
-    print('\n[ 1/10] Transit Engine...')
+    
+    print('\n[1/7] Transit Engine...')
     transit = run_transit()
-
-    print('[ 2/10] Arms Race (120 gens)...')
+    
+    print('[2/7] Arms Race (120 gens)...')
     arms = run_arms_race()
-
-    print('[ 3/10] Swarm Collective (120 gens)...')
+    
+    print('[3/7] Swarm Collective (120 gens)...')
     swarm = run_swarm()
-
-    print('[ 4/10] Identity Spectrum (100 hops)...')
+    
+    print('[4/7] Identity Spectrum (100 hops)...')
     spectrum = run_identity_spectrum(100)
-
-    print('[ 5/10] Entanglement Purification...')
+    
+    print('[5/7] Entanglement Purification...')
     ladders = run_purification_ladders()
-
-    print('[ 6/10] Phase Diagram (40x40 sweep)...')
+    
+    print('[6/7] Phase Diagram (40×40 sweep)...')
     phase = run_phase_sweep_fast(resolution=40)
-
-    print('[ 7/10] Mesh Consciousness Network (150 steps)...')
+    
+    print('[7/7] Mesh Consciousness Network (150 steps)...')
     mesh = run_mesh(n_steps=150)
-
-    print('[ 8/10] Singularity Protocol (4 stages)...')
-    singularity = run_all_stages(pop_size=200, generations=100, seed=42)
-
-    print('[ 9/10] Theorem Validation (N=3..30 sweep)...')
-    theorem_data = theorem_comparison_data()
-
-    print('[10/10] Satellite-Hybrid Relay Analysis...')
-    satellite_data = sat_sweep(L_km=8200)
-    sat_route_data = sat_routes()
-
+    
     # Summary
     hop_fid, errors, cliffs = spectrum
     hw_range, qec_range, grid = phase
     mesh_fids, mesh_online, mesh_quorum, mesh_crises = mesh
-
-    print('\n' + '-' * 55)
+    
+    print('\n' + '─' * 55)
     print('SUMMARY REPORT')
-    print('-' * 55)
-    print(f'  Transit:      Raw={transit[1][-1]:.3f}  Zeno={transit[2][-1]:.3f}  Anchor={transit[3][-1]:.3f}')
-    print(f'  Spectrum:     {len(cliffs)}/{len(hop_fid)} tiers cliff below Sage')
+    print('─' * 55)
+    print(f'  Transit:   Raw={transit[1][-1]:.3f}  Zeno={transit[2][-1]:.3f}  Anchor={transit[3][-1]:.3f}')
+    print(f'  Spectrum:  {len(cliffs)}/{len(hop_fid)} tiers cliff below Sage')
     solid = np.sum(grid >= SAGE_CONSTANT) / grid.size * 100
-    print(f'  Phase:        {solid:.0f}% of parameter space supports coherent identity')
+    print(f'  Phase:     {solid:.0f}% of parameter space supports coherent identity')
     qpct = 100 * sum(mesh_quorum) / len(mesh_quorum)
-    print(f'  Mesh:         Quorum maintained {qpct:.0f}% | Crises: {len(mesh_crises)}')
-    print(f'  Singularity:  Stage 4 survival={singularity[4]["survival"][-1]:.0%}  Sync={singularity[4]["sync"][-1]:.2f}')
-    above = sum(1 for f in theorem_data['stoch_fidelities'] if f >= SAGE_CONSTANT)
-    print(f'  Theorems:     {above}/{len(theorem_data["N_range"])} configs meet Sage (stochastic)')
-    best_sat = max(satellite_data['sat_optimistic'])
-    print(f'  Satellite:    Best LEO 2030+: F={best_sat:.4f} (gap={SAGE_CONSTANT-best_sat:.3f} to Sage)')
-
-    print('\n[SAGE v5.1] Rendering 14-panel Atlas...')
-    render_atlas_v5(transit, arms, swarm, spectrum, ladders, phase, mesh,
-                    singularity, theorem_data, satellite_data, sat_route_data)
-    print('[SAGE v5.1] Complete.\n')
+    print(f'  Mesh:      Quorum maintained {qpct:.0f}% | Crises: {len(mesh_crises)}')
+    print(f'  Purification: {len(ladders)} distance configs analyzed')
+    
+    print('\n[SAGE v4.0] Rendering 10-panel Atlas...')
+    render_atlas_v4(transit, arms, swarm, spectrum, ladders, phase, mesh)
+    print('[SAGE v4.0] Complete.\n')
