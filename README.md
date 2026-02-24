@@ -50,7 +50,7 @@ sage-framework/
 ├── core/
 │   └── qutip_validation.py            # Independent density matrix validation
 │
-├── 02_core_framework/
+├── core_framework/
 │   ├── sage_theorems_unified.py       # Theorems 1-4 + Monte Carlo validation
 │   ├── satellite_hybrid_relay.py      # Intercontinental topology analysis
 │   ├── entanglement_purification.py   # Protocol simulations for error correction
