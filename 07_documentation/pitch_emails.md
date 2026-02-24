@@ -99,3 +99,35 @@ Sincerely,
 Tylor Flett  
 Independent Researcher  
 [innerpeacesage@gmail.com](mailto:innerpeacesage@gmail.com)
+
+---
+
+## Email D: arXiv Endorsement Request (Quantum Physics Professors)
+
+**Subject:** arXiv Endorsement Request (quant-ph): The Sage Bound / Optimal Quantum Network Reach
+
+---
+
+Dear Dr. [Name, e.g., Wehner/Lukin/Englund],
+
+I am an independent researcher submitting a new analytical result to the `quant-ph` category on arXiv, and I am writing to request a brief endorsement.
+
+My manuscript, "The Sage Bound: Optimal Quantum Network Reach Under Heterogeneous Hardware and Stochastic Entanglement Generation," applies the logarithmic map to multiplicative fidelity composition, reducing complex quantum repeater network routing to a tractable Linear Program (LP). 
+
+A key result of this paper is proving that the geometric retry distribution of probabilistic entanglement generation introduces a strict $(1 + 2/p)$ degradation penalty. For current hardware architectures (e.g., QuEra, Willow), this reveals a precise analytical bound on the maximum feasible end-to-end fidelity limit over intercontinental distances. The results have been validated against QuTiP density-matrix simulations.
+
+To make the LP solver immediately accessible to researchers without running the Python QuTiP infrastructure, I have deployed the mathematics into a live interactive web tool at: [https://sage-framework.streamlit.app](https://sage-framework.streamlit.app)
+
+Given your lab's leading work on [insert 1 specific topic, e.g., quantum network routing protocols / solid-state quantum memory / neutral atom architectures], I believe this analytical bound will be highly relevant to your ongoing hardware topology research. 
+
+If you have a moment to review the attached PDF or test the web application, I would be incredibly grateful if you would consider endorsing the paper for the `quant-ph` category. 
+
+My unique endorsement code is **`9N99JS`**, which can be entered at: https://arxiv.org/auth/endorse?x=9N99JS
+
+Thank you very much for your time and for advancing the field of quantum networks.
+
+Best regards,
+
+Tylor Flett
+[innerpeacesage@gmail.com](mailto:innerpeacesage@gmail.com)
+GitHub: [Quantum-Sage](https://github.com/Quantum-Sage/sage-framework)
