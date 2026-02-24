@@ -1399,9 +1399,9 @@ with tab_quantum:
             stage_details = []
 
             for s in q_stages_config:
-                pd = s["data"]
-                base_fid = pd["fidelity"]
-                p = pd["prob"]
+                hw_data = s["data"]
+                base_fid = hw_data["fidelity"]
+                p = hw_data["prob"]
 
                 # The core theorem of the paper
                 if q_stochastic:
@@ -1419,7 +1419,7 @@ with tab_quantum:
                     {
                         "stage": s["name"],
                         "hardware": s["hardware"],
-                        "emoji": pd["emoji"],
+                        "emoji": hw_data["emoji"],
                         "base_fid": base_fid,
                         "prob": p,
                         "effective_fid": effective_fid,
