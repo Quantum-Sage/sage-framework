@@ -108,3 +108,4 @@ Built in February 2026 through AI-assisted exploration — from a philosophical 
 ## License
 MIT — use it, extend it, challenge it.
 
+
