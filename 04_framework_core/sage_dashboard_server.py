@@ -104,6 +104,7 @@ class SageNeuralKernel:
     def _connect_node(self, node, port):
         try:
             ser = serial.Serial(port, BAUD_RATE, timeout=SERIAL_TIMEOUT)
+            ser.reset_input_buffer()
             ser.dtr = True
             ser.rts = True
             self.connections[node] = ser
@@ -124,8 +125,11 @@ class SageNeuralKernel:
                 self._process_telemetry(node, data)
             elif "event" in data:
                 print(f"[EVT] Node {node}: {data['event']}")
-        except Exception:
+        except json.JSONDecodeError:
+            # Silently ignore partial/corrupt fragments
             pass
+        except Exception as e:
+            print(f"[ERR] Node {node} Processing Error: {e}")
 
     def _process_telemetry(self, node: str, data: dict):
         t = float(data.get("temp_c", 25.0))
@@ -194,17 +198,37 @@ class SageNeuralKernel:
 
     def loop(self):
         print("[SYS] High-Speed Telemetry Loop Active.")
+        last_reconnect_check = 0.0
         while self.running:
+            now = time.time()
+
+            # --- AUTO-RECOVERY: Checks for dead nodes every 5.0 seconds ---
+            if now - last_reconnect_check > 5.0:
+                last_reconnect_check = now
+                for node, port in SAGE_PORTS.items():
+                    if node not in self.connections:
+                        self._connect_node(node, port)
+
             for node, ser in list(self.connections.items()):
                 try:
                     if ser.in_waiting > 0:
                         line = ser.readline().decode("utf-8", errors="ignore").strip()
                         if line.startswith("{"):
                             self._handle_line(node, line)
-                except Exception:
+                except (serial.SerialException, OSError) as e:
+                    print(f"[!] Link Terminated: Node {node} ({e})")
                     with _lock:
                         node_entry = cast(Dict[str, Any], live_telemetry["nodes"][node])
                         node_entry["health"] = 0.0
+                    # Cleanup old handle so it can be re-initialized
+                    try:
+                        ser.close()
+                    except Exception:
+                        pass
+                    if node in self.connections:
+                        del self.connections[node]
+                except Exception as e:
+                    print(f"[SYS] Kernel Warning ({node}): {e}")
             time.sleep(0.001)
 
 
