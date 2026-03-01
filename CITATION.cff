@@ -1,42 +1,22 @@
 cff-version: 1.2.0
-message: "If you use this software or framework in your research, please cite it as below."
+message: "If you use this software, please cite it as below."
 type: software
-title: "Quantum Consciousness Framework: From Philosophy to Network Optimization via AI-Assisted Learning"
-version: 1.0.0-alpha
-date-released: 2026-02-16
-url: "https://github.com/yourusername/quantum-consciousness-framework"
-repository-code: "https://github.com/yourusername/quantum-consciousness-framework"
-license: MIT
 authors:
-  - family-names: "Your Last Name"
-    given-names: "Your First Name"
-    email: your.email@example.com
-    orcid: "https://orcid.org/0000-0000-0000-0000" # Optional - get one at orcid.org
+  - family-names: "Flett"
+    given-names: "Tylor"
+    email: "innerpeacesage@gmail.com"
+title: "SAGE Framework: A Linear Programming Approach to Quantum Network Reach"
+version: 6.0.0
+date-released: 2026-02-28
+url: "https://github.com/Quantum-Sage/sage-framework"
 keywords:
-  - quantum computing
-  - quantum error correction
-  - quantum networks
-  - consciousness
-  - information theory
-  - AI-assisted learning
-  - network optimization
-  - identity persistence
+  - quantum-repeater-networks
+  - linear-programming
+  - quantum-error-correction
+  - sage-bound
+  - stochastic-penalty
 abstract: >-
-  An exploration of quantum computing concepts through the lens of 
-  consciousness and identity persistence, developed via AI-assisted 
-  learning. The framework demonstrates how quantum error correction 
-  principles can be applied to both philosophical questions about 
-  consciousness and practical engineering problems in quantum network 
-  optimization. This work maps consciousness persistence through 
-  death/rebirth to information fidelity in quantum communication 
-  networks, achieving 99.9% fidelity across 11,000km with optimal 
-  error correction protocols.
-references:
-  - type: article
-    title: "Google's Willow Quantum Chip Breakthrough"
-    authors:
-      - family-names: "Neven"
-        given-names: "Hartmut"
-    year: 2024
-    month: 12
-    url: "https://blog.google/technology/research/google-willow-quantum-chip/"
+  The SAGE (Synthetic Adaptive Generation Engine) provides a formal 
+  mathematical framework for calculating the Sage Bound— the point where 
+  decoherence outpaces correction in multi-node quantum relays. It maps 
+  philosophical identity persistence to a deterministic linear program.
