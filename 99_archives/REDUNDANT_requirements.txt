@@ -1,0 +1,7 @@
+# SAGE Framework Core Dependencies
+qutip
+numpy
+scipy
+matplotlib
+streamlit
+pandas

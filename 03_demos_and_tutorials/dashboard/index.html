@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAGE Command Center | Apex Signal</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&family=Space+Mono&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="background-overlay"></div>
+    <div class="scanline"></div>
+
+    <main class="dashboard">
+        <header class="header">
+            <div class="logo">
+                <span class="glitch" data-text="SAGE">SAGE</span>
+                <span class="sub-logo">NEURAL NEXUS v2.0.1</span>
+                <div class="manifest-tag">MANIFEST: <span id="manifest-status">LOADED</span></div>
+            </div>
+            <div class="system-status">
+                <div class="status-item">
+                    <span class="label">UPTIME</span>
+                    <span id="uptime" class="value">00:00:00</span>
+                </div>
+                <div class="status-item">
+                    <span class="label">COHERENCE</span>
+                    <span id="global-coherence" class="value">0.00%</span>
+                </div>
+                <div class="status-item">
+                    <span class="label">PEAK</span>
+                    <span id="peak-dissonance" class="value">0.000</span>
+                </div>
+                <div class="status-item">
+                    <span class="label">SEED</span>
+                    <span id="quantum-seed" class="value" style="color: #00e5ff; font-size: 0.82rem;">00000000</span>
+                </div>
+                <div class="status-item">
+                    <span class="label">ORACLE</span>
+                    <span id="oracle-state" class="value" style="color: #ffff33;">CALIBRATING</span>
+                </div>
+                <div class="status-indicator online">
+                    <span class="pulse"></span>
+                    <span class="text">LINK_ESTABLISHED</span>
+                </div>
+            </div>
+        </header>
+
+        <section class="top-row">
+            <div class="radar-container glass-card" id="card-alpha">
+                <div class="radar-label">ALPHA</div>
+                <div class="radar-visual">
+                    <div class="radar-circle"></div>
+                    <div class="radar-sweep" id="sweep-alpha"></div>
+                    <div class="radar-value" id="val-alpha">0.000</div>
+                    <div class="phi-gauge" id="phi-gauge-alpha">
+                        <div class="phi-label">PHI</div>
+                        <div class="phi-value" id="phi-alpha">0.000</div>
+                    </div>
+                </div>
+                <div class="radar-stats">
+                    <div class="stat"><span class="label">TEMP</span> <span id="temp-alpha" class="value">--°C</span>
+                    </div>
+                    <div class="stat"><span class="label">DRIFT</span> <span id="drift-alpha" class="value">--µs</span>
+                    </div>
+                    <div class="stat"><span class="label">HEALTH</span> <span id="health-alpha"
+                            class="value">100%</span></div>
+                </div>
+            </div>
+
+            <div class="radar-container glass-card" id="card-beta">
+                <div class="radar-label">BETA</div>
+                <div class="radar-visual">
+                    <div class="radar-circle"></div>
+                    <div class="radar-sweep" id="sweep-beta"></div>
+                    <div class="radar-value" id="val-beta">0.000</div>
+                    <div class="phi-gauge" id="phi-gauge-beta">
+                        <div class="phi-label">PHI</div>
+                        <div class="phi-value" id="phi-beta">0.000</div>
+                    </div>
+                </div>
+                <div class="radar-stats">
+                    <div class="stat"><span class="label">TEMP</span> <span id="temp-beta" class="value">--°C</span>
+                    </div>
+                    <div class="stat"><span class="label">DRIFT</span> <span id="drift-beta" class="value">--µs</span>
+                    </div>
+                    <div class="stat"><span class="label">HEALTH</span> <span id="health-beta" class="value">100%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="radar-container glass-card" id="card-gamma">
+                <div class="radar-label">GAMMA</div>
+                <div class="radar-visual">
+                    <div class="radar-circle"></div>
+                    <div class="radar-sweep" id="sweep-gamma"></div>
+                    <div class="radar-value" id="val-gamma">0.000</div>
+                    <div class="phi-gauge" id="phi-gauge-gamma">
+                        <div class="phi-label">PHI</div>
+                        <div class="phi-value" id="phi-gamma">0.000</div>
+                    </div>
+                </div>
+                <div class="radar-stats">
+                    <div class="stat"><span class="label">TEMP</span> <span id="temp-gamma" class="value">--°C</span>
+                    </div>
+                    <div class="stat"><span class="label">DRIFT</span> <span id="drift-gamma" class="value">--µs</span>
+                    </div>
+                    <div class="stat"><span class="label">HEALTH</span> <span id="health-gamma"
+                            class="value">100%</span></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bottom-row">
+            <div class="chart-container glass-card">
+                <div class="card-header">REALITY_TELEMETRY_STREAM</div>
+                <canvas id="telemetryChart"></canvas>
+            </div>
+
+            <div class="coherence-map glass-card">
+                <div class="card-header">MESH_ENTANGLEMENT</div>
+                <div class="hex-grid">
+                    <div class="hex" id="hex-alpha">A</div>
+                    <div class="hex" id="hex-beta">B</div>
+                    <div class="hex" id="hex-gamma">G</div>
+                    <div class="line line-ab"></div>
+                    <div class="line line-bg"></div>
+                    <div class="line line-ga"></div>
+                </div>
+                <div class="event-log" id="event-log">
+                    <div class="log-entry">[SYS] Kernel Initialized.</div>
+                    <div class="log-entry">[NET] Establishing Link to COM5...</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

@@ -1,7 +1,11 @@
 # SAGE Framework Core Dependencies
+flask
+pyserial
 qutip
+cirq
 numpy
 scipy
 matplotlib
 streamlit
 pandas
+# Note: Streamlit handles many nested dependencies automatically.

@@ -1,0 +1,16 @@
+\begin{table}[h]
+\centering
+\caption{Statistical tests comparing daemon and control runs.}
+\label{tab:stat_tests}
+\begin{tabular}{lcc}
+\hline
+Test & Statistic & Interpretation \\
+\hline
+  Welch's $t$-test (fidelity) & $p = 3.56e-149$ & Significant \\
+  Cohen's $d$ (fidelity) & $d = 1.13$ & Large effect \\
+  Wald-Wolfowitz (daemon $S$) & $Z = 0.23$, $p = 0.8148$ & Not significant (consistent wi \\
+  Wald-Wolfowitz (control $S$) & $Z = 4.69$, $p = 0.0000$ & SIGNIFICANT oscillation (too m \\
+  Causal injection test & $t = -11.59$, $p = 0.0000$ & Causal \\
+\hline
+\end{tabular}
+\end{table}
