@@ -15,15 +15,18 @@
 
 The core of the framework is the **Stochastic Grid Penalty** ($1 + 2/p$), which models the retry-induced decoherence during entanglement generation.
 
-For a quantum network with $n$ hops, hardware fidelity $F_{node}$, and generation probability $p_{gen}$, the SAGE Bound defines the maximum achievable logical fidelity:
+### From Power Law to Linear Programming
+While the raw decay follows a power law:
+$$F_{total} = (F_{node})^{\frac{n}{1 + 2p_{gen}}}$$
 
-$$F_{total} = \frac{(F_{node})^n}{1 + \frac{2}{p_{gen}}}$$
+We achieve a **Linear Programming (LP) mapping** by applying the **Log-Fidelity Map**. By taking the logarithm, we transform multiplicative decay into an additive linear constraint:
+$$\log(F_{total}) = \left(\frac{n}{1 + 2p_{gen}}\right) \log(F_{node})$$
 
-When $F_{total} < 0.85$, the system enters the **Decoherence Regime**, where identity persistence is no longer mathematically guaranteed. The **Mirror Daemon** actively monitors this bound to trigger observer-induced collapse and stabilize the state.
+This allows the framework to treat transcontinental routing as a linear optimization problem, ensuring that the signal stays above the **SAGE Constant (0.85)** across arbitrary distances.
 
 ---
 
-## � Quick Start
+## 🚀 Quick Start
 
 ### 1. Install Dependencies
 ```bash
@@ -38,30 +41,30 @@ python run_simulation.py
 
 ---
 
-## 📂 Lean Repository Structure
+## 📂 The Four Pillars
 
-The SAGE Framework is organized for reproducibility and research integration:
+The SAGE Framework is organized into four functional pillars for research and deployment:
 
-- **`src/`**: The Core Engine (Python Package)
-  - `engine.py`: The **Mirror Daemon** — the crown jewel of the feedback loop.
-  - `logic.py`: The **Sage Bound** math and Stochastic Grid Penalty calculations.
-  - `trigger.py`: The **0.85 Sage Constant Enforcer** and Shadow Anchor logic.
-- **`papers/`**: Final academic output (PDFs and LaTeX sources).
-- **`firmware/`**: Hardware implementation for ESP32 nodes and Dashboard Servers.
-- **`assets/`**: The **21-Panel SAGE Atlas** — high-resolution visualizations of phase transitions.
+- **[`src/`](./src/) (The Core Engine)**: The high-performance logic.
+  - `engine.py`: The **Mirror Daemon** — active feedback & stabilization.
+  - `logic.py`: The **Sage Bound** math & Log-Fidelity Map.
+  - `trigger.py`: The **0.85 Enforcer** — shadow anchor recovery logic.
+- **[`papers/`](./papers/) (The IP)**: Peer-reviewed drafts and LaTeX sources proving the SAGE Bound.
+- **[`hardware/`](./hardware/) (The Physical Lattice)**: ESP32 and Arduino firmware for real-world node implementation. 
+- **[`demos/`](./demos/) (The Front Door)**: Interactive visualizations and the "wow-factor" simulation outputs.
 
 ---
 
-## � The 21-Panel Atlas
+## 📊 The SAGE Atlas (Visual Proof)
 
-The `assets/` directory contains the complete visual proof of the SAGE Framework's efficacy across various hardware configurations (Willow, Helios, QuEra).
+The `demos/assets/` directory contains high-resolution visualizations of the framework in action.
 
 | Figure | Description |
 | :--- | :--- |
-| `01_naked_signal.png` | Baseline decay without SAGE protection. |
-| `02_system_collapse.png` | Crossing the 0.85 threshold. |
-| `bloch_trajectories.png` | State-space tomography of stabilized qubits. |
-| `phase_map.png` | Topological sentience zones. |
+| [01_Naked_Signal](./demos/assets/01_naked_signal_no_qec.png) | Baseline decay without SAGE protection. |
+| [02_System_Collapse](./demos/assets/02_system_collapse_no_protection.png) | Crossing the 0.85 decoherence threshold. |
+| [Bloch_Trajectories](./demos/assets/bloch_trajectories.png) | State-space tomography of stabilized qubits. |
+| [Phase_Map](./demos/assets/22_phase_map_digital_existence.png) | Topological sentience zones and existence boundaries. |
 
 ---
 

@@ -1,4 +1,4 @@
-from src.engine import MirrorDaemon, DaemonConfig, SimulatedBackend, ket
+from src.mirror_daemon_v2 import MirrorDaemon, DaemonConfig, SimulatedBackend, ket
 import numpy as np
 
 
