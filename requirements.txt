@@ -1,11 +1,10 @@
-# SAGE Framework Core Dependencies
-flask
-pyserial
-qutip
-cirq
-numpy
-scipy
-matplotlib
-streamlit
-pandas
-# Note: Streamlit handles many nested dependencies automatically.
+# SAGE Framework: Core Reproduction Dependencies
+numpy>=1.20
+scipy>=1.7
+matplotlib>=3.4
+h5py>=3.6
+tqdm>=4.62
+
+# Optional hardware/SDKs:
+# bloqade (QuEra SDK)
+# cirq-google (Helios fluxonium)
