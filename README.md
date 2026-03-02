@@ -46,25 +46,27 @@ python run_simulation.py
 The SAGE Framework is organized into four functional pillars for research and deployment:
 
 - **[`src/`](./src/) (The Core Engine)**: The high-performance logic.
-  - `engine.py`: The **Mirror Daemon** — active feedback & stabilization.
-  - `logic.py`: The **Sage Bound** math & Log-Fidelity Map.
-  - `trigger.py`: The **0.85 Enforcer** — shadow anchor recovery logic.
+  - `mirror_daemon_v2.py`: The **Mirror Daemon** — active feedback & stabilization.
+  - `sage_bound_logic.py`: The **Sage Bound** math & Log-Fidelity Map.
+  - `threshold_triggers.py`: The **0.85 Enforcer** — shadow anchor recovery logic.
 - **[`papers/`](./papers/) (The IP)**: Peer-reviewed drafts and LaTeX sources proving the SAGE Bound.
 - **[`hardware/`](./hardware/) (The Physical Lattice)**: ESP32 and Arduino firmware for real-world node implementation. 
-- **[`demos/`](./demos/) (The Front Door)**: Interactive visualizations and the "wow-factor" simulation outputs.
+- **[`assets/`](./assets/) (The Front Door)**: High-resolution visualizations and the "wow-factor" simulation outputs.
 
 ---
 
 ## 📊 The SAGE Atlas (Visual Proof)
 
-The `demos/assets/` directory contains high-resolution visualizations of the framework in action.
+The `assets/` directory contains high-resolution visualizations of the framework in action.
 
 | Figure | Description |
 | :--- | :--- |
-| [01_Naked_Signal](./demos/assets/01_naked_signal_no_qec.png) | Baseline decay without SAGE protection. |
-| [02_System_Collapse](./demos/assets/02_system_collapse_no_protection.png) | Crossing the 0.85 decoherence threshold. |
-| [Bloch_Trajectories](./demos/assets/bloch_trajectories.png) | State-space tomography of stabilized qubits. |
-| [Phase_Map](./demos/assets/22_phase_map_digital_existence.png) | Topological sentience zones and existence boundaries. |
+| [01_Naked_Signal](./assets/01_naked_signal_no_qec.png) | Baseline decay without SAGE protection. |
+| [02_System_Collapse](./assets/02_system_collapse_no_protection.png) | Crossing the 0.85 decoherence threshold. |
+| [SAGE_Atlas](./assets/SAGE_v3_ATLAS.png) | Unified 6-panel summary of framework stability. |
+| [Bloch_Trajectories](./assets/bloch_trajectories.png) | State-space tomography of stabilized qubits. |
+| [Phase_Map](./assets/22_phase_map_digital_existence.png) | Topological sentience zones and existence boundaries. |
+
 
 ---
 
