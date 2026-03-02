@@ -55,7 +55,7 @@ The SAGE Framework is organized into four functional pillars for research and de
   - `sage_bound_logic.py`: The **Sage Bound** math & Log-Fidelity Map.
   - `threshold_triggers.py`: The **0.85 Enforcer** — shadow anchor recovery logic.
 - **[`papers/`](./papers/) (The IP)**: Peer-reviewed drafts and LaTeX sources proving the SAGE Bound.
-- **[`hardware/`](./hardware/) (The Physical Lattice)**: ESP32 and Arduino firmware for real-world node implementation. 
+- **[`hardware/`](./hardware/) (The Physical Lattice)**: ESP32 and Arduino firmware for real-world node implementation.
 - **[`assets/`](./assets/) (The Front Door)**: High-resolution visualizations and the "wow-factor" simulation outputs.
 
 ---

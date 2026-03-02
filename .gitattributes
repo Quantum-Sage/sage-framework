@@ -1,0 +1,12 @@
+* text=auto
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.hdf5 binary
+*.py text
+*.md text
+*.txt text
+*.cff text
+*.ps1 text
+*.sh text

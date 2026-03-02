@@ -1,6 +1,4 @@
-import sys
 import argparse
-import numpy as np
 from src.mirror_daemon_v2 import MirrorDaemon, DaemonConfig, SimulatedBackend, ket
 from src.sage_bound_logic import calculate_sage_bound, SAGE_CONSTANT
 
@@ -48,7 +46,7 @@ def main():
 
     args = parser.parse_args()
 
-    print(f"🚀 SAGE Framework v6.0: Initializing Simulation Engine")
+    print("🚀 SAGE Framework v6.0: Initializing Simulation Engine")
     print(f"   Relay: {args.distance}km over {args.hops} hops")
     print(f"   Node Fidelity: {args.fid_node} | Gen Prob: {args.p_gen}")
     print("-" * 50)
@@ -63,7 +61,7 @@ def main():
             f"⚠️  WARNING: Theoretical limit is below the Sage Constant ({SAGE_CONSTANT})."
         )
         print(
-            f"   The Mirror Daemon will activate 'Enforcer' mode to prevent decoherence."
+            "   The Mirror Daemon will activate 'Enforcer' mode to prevent decoherence."
         )
     else:
         print(
@@ -87,7 +85,7 @@ def main():
     daemon = MirrorDaemon(backend=backend, config=cfg)
     daemon.initialize(psi_0)
 
-    print(f"\n[MIRROR DAEMON] Engaging feedback loop...")
+    print("\n[MIRROR DAEMON] Engaging feedback loop...")
     results = daemon.run(n_steps=args.steps)
 
     # Final Result Summary
