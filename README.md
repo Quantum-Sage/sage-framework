@@ -6,7 +6,8 @@
 
 **SAGE (Synthetic Adaptive Generation Engine)** is a formal framework for ensuring quantum state persistence across transcontinental distances. It provides a rigorous Linear Programming (LP) approach to calculate the "Sage Bound" — the exact point where decoherence outpaces correction in a multi-node quantum relay.
 
-### 🌟 Value Proposition
+## 🌟 Value Proposition
+
 > **"The SAGE Framework proves the existence of a $0.85$ fidelity constant across 30,000 km relays, providing a deterministic path to persistent digital identity in quantum networks."**
 
 ---
@@ -16,6 +17,7 @@
 The core of the framework is the **Stochastic Grid Penalty** ($1 + 2/p$), which models the retry-induced decoherence during entanglement generation.
 
 ### From Power Law to Linear Programming
+
 While the raw decay follows a power law:
 $$F_{total} = (F_{node})^{\frac{n}{1 + 2p_{gen}}}$$
 
@@ -29,12 +31,15 @@ This allows the framework to treat transcontinental routing as a linear optimiza
 ## 🚀 Quick Start
 
 ### 1. Install Dependencies
+
 ```bash
 pip install -r requirements.txt
 ```
 
 ### 2. Run the Simulation
+
 Launch the "One-Entry-Point" reproduction suite:
+
 ```bash
 python run_simulation.py
 ```
@@ -75,9 +80,9 @@ If you use this framework in your research, please cite:
 
 ```bibtex
 @software{sage_framework_2026,
-  author = {Quantum-Sage},
+  author = {Tylor Flett},
   title = {SAGE Framework: A Linear Programming approach to Quantum Network Reach},
-  version = {6.0},
+  version = {6.0.0},
   year = {2026},
   publisher = {GitHub},
   journal = {GitHub repository}
