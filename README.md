@@ -67,7 +67,6 @@ The `assets/` directory contains high-resolution visualizations of the framework
 | [Bloch_Trajectories](./assets/bloch_trajectories.png) | State-space tomography of stabilized qubits. |
 | [Phase_Map](./assets/22_phase_map_digital_existence.png) | Topological sentience zones and existence boundaries. |
 
-
 ---
 
 ## 📄 Citation
