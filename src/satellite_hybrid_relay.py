@@ -798,7 +798,7 @@ def generate_satellite_atlas(
     ax4.set_xlim(0, 19000)
 
     # Save
-    plt.savefig(save_path, dpi=180, bbox_inches="tight", facecolor=BG)
+    plt.savefig(save_path, dpi=180, facecolor=BG)
     print(f"  [Satellite-Hybrid] Atlas saved -> {save_path}")
     return save_path
 
