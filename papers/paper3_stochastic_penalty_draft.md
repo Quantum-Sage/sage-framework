@@ -79,7 +79,7 @@ The cold chain penalty uses **(1 + 1/p)** rather than the quantum (1 + 2/p) beca
 **5-stage cold chain:** Manufacturer → National → Regional → District → Health Post → Outreach
 
 | Scenario | End-to-End Potency | Feasible (>50%)? |
-|----------|-------------------|-----------------| 
+|----------|-------------------|--------------------|
 | Current cold chain (deterministic) | 36.9% | ❌ |
 | + Power interruptions (stochastic) | 5.0% | ❌ |
 | + Solar cold boxes at stages 4–5 | 64.1% | ✅ |
