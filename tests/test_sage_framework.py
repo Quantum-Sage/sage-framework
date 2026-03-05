@@ -8,7 +8,7 @@ Run:  pytest tests/test_sage_framework.py -v
 """
 
 import sys
-import math
+
 import numpy as np
 
 sys.path.insert(0, ".")
@@ -130,7 +130,6 @@ class TestColdChain:
 from run_drug_delivery import (
     log_decomposition,
     compute_allocation_matrix,
-    find_optimal_vehicle_selection,
     run_analysis as drug_run_analysis,
     DEFAULT_BARRIERS,
 )

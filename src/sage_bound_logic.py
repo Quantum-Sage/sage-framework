@@ -15,6 +15,12 @@ def calculate_sage_bound(hops, hardware_fidelity, p_gen):
 
     This transformation turns exponential decay into an additive linear constraint.
     """
+    # Guard against edge cases
+    if p_gen <= 0:
+        return 0.0  # Zero generation probability → zero fidelity
+    if hardware_fidelity <= 0:
+        return 0.0  # No hardware fidelity → zero output
+
     # Discovery 2: The Stochastic Grid Penalty (1 + 2/p)
     # This accounts for retry-induced decoherence during generation
     stochastic_penalty = 1 + (2 / p_gen)

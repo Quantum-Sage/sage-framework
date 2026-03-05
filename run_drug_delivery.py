@@ -318,9 +318,26 @@ def main():
 
     args = parser.parse_args()
 
+    # --- Input Validation ---
     if args.barriers_json:
-        with open(args.barriers_json) as f:
-            barriers = json.load(f)
+        try:
+            with open(args.barriers_json) as f:
+                barriers = json.load(f)
+        except FileNotFoundError:
+            parser.error(f"Barriers file not found: {args.barriers_json}")
+        except json.JSONDecodeError as e:
+            parser.error(f"Invalid JSON in barriers file: {e}")
+        # Validate barrier structure
+        required_keys = {"name", "transmission_baseline"}
+        for i, barrier in enumerate(barriers):
+            missing = required_keys - set(barrier.keys())
+            if missing:
+                parser.error(f"Barrier {i + 1} missing required keys: {missing}")
+            if not (0.0 < barrier["transmission_baseline"] <= 1.0):
+                parser.error(
+                    f"Barrier {i + 1} transmission_baseline must be in (0, 1], "
+                    f"got {barrier['transmission_baseline']}"
+                )
     else:
         barriers = DEFAULT_BARRIERS
 
