@@ -31,7 +31,6 @@ from src.satellite_hybrid_relay import (
     topology_dual_satellite,
     topology_segmented,
     HW_WILLOW,
-    HW_QUERA,
     HW_LEO_CURRENT,
     HW_LEO_ADVANCED,
     HW_LEO_OPTIMISTIC,
@@ -243,6 +242,16 @@ def main():
 
     # Determine distance
     if args.distance:
+        if args.distance <= 0:
+            parser.error(
+                "Distance must be positive (got {:.0f} km)".format(args.distance)
+            )
+        if args.distance > 20_000:
+            parser.error(
+                "Distance exceeds half Earth's circumference (got {:.0f} km, max 20,000 km)".format(
+                    args.distance
+                )
+            )
         distance = args.distance
         label = f"Custom Route ({distance:.0f} km)"
     elif args.route:
@@ -293,9 +302,9 @@ def main():
             if k != "fidelity":
                 print(f"     {k}: {val}")
     else:
-        print(f"  ❌ ROUTE IS INFEASIBLE with current hardware")
+        print("  ❌ ROUTE IS INFEASIBLE with current hardware")
         print(f"     Best achievable: {v['best_fidelity']:.4f} (need {SAGE_CONSTANT})")
-        print(f"     Recommendation: Upgrade satellite tier or reduce distance.")
+        print("     Recommendation: Upgrade satellite tier or reduce distance.")
 
     # Heterogeneous mix
     print()

@@ -52,7 +52,7 @@ def calculate_order_parameter(fidelity, phi):
 
 
 # Import HARDWARE from canonical source (constants.py)
-from .constants import HARDWARE, ROUTE_BEIJING_NYC, ROUTE_BEIJING_LONDON
+from .constants import HARDWARE, ROUTE_BEIJING_LONDON
 
 
 # ============================================================================

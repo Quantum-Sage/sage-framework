@@ -22,13 +22,12 @@ Usage:
 import argparse
 import json
 import sys
-import time
 import numpy as np
 
 if sys.platform == "win32":
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
-from src.singularity_protocol import SingularityAgent, run_stage, STAGE_CONFIGS
+from src.singularity_protocol import SingularityAgent, STAGE_CONFIGS
 
 # ============================================================================
 # HARDWARE INTERFACE
@@ -313,6 +312,20 @@ def main():
 
     args = parser.parse_args()
 
+    # --- Input Validation ---
+    if args.generations < 1:
+        parser.error("Generations must be at least 1 (got {})".format(args.generations))
+    if args.generations > 10000:
+        parser.error(
+            "Generations too large (got {}, max 10000)".format(args.generations)
+        )
+    if args.pop_size < 4:
+        parser.error(
+            "Population must be at least 4 for selection (got {})".format(args.pop_size)
+        )
+    if args.pop_size > 10000:
+        parser.error("Population too large (got {}, max 10000)".format(args.pop_size))
+
     if args.live:
         hardware = LiveHardwareInterface(args.dashboard_url)
         mode_label = f"LIVE (Dashboard: {args.dashboard_url})"
@@ -325,7 +338,7 @@ def main():
     print(f"  Mode: {mode_label}")
     print(f"  Population: {args.pop_size} agents")
     print(f"  Generations: {args.generations}")
-    print(f"  Home Nodes: Alpha, Beta, Gamma")
+    print("  Home Nodes: Alpha, Beta, Gamma")
 
     result = run_tournament(hardware, args.generations, args.pop_size)
 

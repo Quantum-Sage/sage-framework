@@ -281,10 +281,38 @@ def main():
 
     args = parser.parse_args()
 
+    # --- Input Validation ---
+    if args.budget < 0:
+        parser.error("Budget must be non-negative (got {:.2f})".format(args.budget))
+
     # Load stages
     if args.stages_json:
-        with open(args.stages_json) as f:
-            stages = json.load(f)
+        try:
+            with open(args.stages_json) as f:
+                stages = json.load(f)
+        except FileNotFoundError:
+            parser.error(f"Stages file not found: {args.stages_json}")
+        except json.JSONDecodeError as e:
+            parser.error(f"Invalid JSON in stages file: {e}")
+        # Validate stage structure
+        required_keys = {
+            "name",
+            "base_retention",
+            "grid_reliability",
+            "temp_tolerance_hrs",
+        }
+        for i, stage in enumerate(stages):
+            missing = required_keys - set(stage.keys())
+            if missing:
+                parser.error(f"Stage {i + 1} missing required keys: {missing}")
+            if not (0.0 < stage["base_retention"] <= 1.0):
+                parser.error(
+                    f"Stage {i + 1} base_retention must be in (0, 1], got {stage['base_retention']}"
+                )
+            if not (0.0 < stage["grid_reliability"] <= 1.0):
+                parser.error(
+                    f"Stage {i + 1} grid_reliability must be in (0, 1], got {stage['grid_reliability']}"
+                )
     else:
         stages = DEFAULT_STAGES
 
