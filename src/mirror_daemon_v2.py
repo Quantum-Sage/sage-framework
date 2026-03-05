@@ -852,7 +852,7 @@ class ExperimentLogger:
         self._csv_path = self.output_dir / f"{experiment_id}.csv"
         self._h5_path = self.output_dir / f"{experiment_id}.h5"
 
-        self._csv_file = open(self._csv_path, "w", newline="")
+        self._csv_file = open(self._csv_path, "w", newline="", encoding="utf-8")
         self._writer = csv.writer(self._csv_file)
         self._writer.writerow(self.CSV_FIELDS)
         log.info(f"ExperimentLogger: writing to {self._csv_path}")

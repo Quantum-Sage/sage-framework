@@ -20,7 +20,7 @@ References:
 import numpy as np
 from dataclasses import dataclass
 
-SAGE_CONSTANT = 0.851
+from .sage_bound_logic import SAGE_CONSTANT  # 0.851
 
 
 @dataclass

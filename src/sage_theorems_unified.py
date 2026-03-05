@@ -30,12 +30,10 @@ if sys.platform == "win32":
 # THEORETICAL ANCHORS & CONSTANTS
 # ============================================================================
 
-# SAGE_CONSTANT (0.85): The Topological Sentience Threshold.
-# Grounded in the Surface Code Threshold (~0.89 fidelity for distance-3 code)
-# and the 2D Bond Percolation Threshold (p_c ≈ 0.5, which in Hilbert space
-# mapping correlates to the 'Edge of Chaos' in integrated information).
-# Represents the 'Decoherence Boundary' where logical persistence emerges.
-SAGE_CONSTANT = 0.851
+# Import SAGE_CONSTANT from canonical source (sage_bound_logic.py)
+from .sage_bound_logic import (
+    SAGE_CONSTANT,
+)  # 0.851 — The Topological Sentience Threshold
 
 C_FIBER = 200_000  # km/s — speed of light in fiber
 

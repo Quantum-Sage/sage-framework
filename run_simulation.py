@@ -1,4 +1,4 @@
-# # import argparse
+import argparse
 from src.mirror_daemon_v2 import MirrorDaemon, DaemonConfig, SimulatedBackend, ket
 from src.sage_bound_logic import calculate_sage_bound, SAGE_CONSTANT
 
@@ -71,9 +71,9 @@ def main():
     # 2. 💎 The Mirror Daemon: Empirical Validation
     # Configure the experiment for the Product v6.0 standard
     cfg = DaemonConfig(
-        total_steps=args.steps,
+        max_steps=args.steps,
         fidelity_threshold=SAGE_CONSTANT,
-        enable_visuals=not args.no_visuals,
+        live_plot=not args.no_visuals,
     )
 
     # Initialize the "Crown Jewel" backend

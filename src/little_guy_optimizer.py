@@ -21,7 +21,8 @@ Reference authors: Sage Framework / Claude research collaboration
 
 import numpy as np
 
-SAGE_CONSTANT = 0.851
+from .sage_bound_logic import SAGE_CONSTANT  # 0.851
+
 C_FIBER = 200_000  # km/s
 
 HARDWARE = {

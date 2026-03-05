@@ -39,7 +39,8 @@ import matplotlib.gridspec as gridspec  # type: ignore
 # CONSTANTS
 # ============================================================================
 
-SAGE_CONSTANT = 0.851
+from .sage_bound_logic import SAGE_CONSTANT  # 0.851
+
 C_FIBER = 200_000  # km/s in fiber
 C_FREESPACE = 300_000  # km/s in free space (vacuum)
 

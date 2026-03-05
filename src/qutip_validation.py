@@ -60,7 +60,8 @@ except ImportError:
 # CONSTANTS (must match sage_theorems_unified.py exactly)
 # ============================================================================
 
-SAGE_CONSTANT = 0.851
+from .sage_bound_logic import SAGE_CONSTANT  # 0.851
+
 C_FIBER = 200_000  # km/s (speed of light in fiber)
 ALPHA_FIBER = 0.2  # dB/km fiber loss
 
