@@ -22,14 +22,7 @@ Reference authors: Sage Framework / Claude research collaboration
 import numpy as np
 
 from .sage_bound_logic import SAGE_CONSTANT  # 0.851
-
-C_FIBER = 200_000  # km/s
-
-HARDWARE = {
-    "QuEra": {"gate_fidelity": 0.990, "T2_sec": 0.10, "cost_units": 1},
-    "Willow": {"gate_fidelity": 0.9985, "T2_sec": 1.0, "cost_units": 8},
-    "NISQ": {"gate_fidelity": 0.950, "T2_sec": 0.001, "cost_units": 0.3},
-}
+from .constants import HARDWARE, C_FIBER
 
 
 def hop_fidelity(segment_km: float, gate_fidelity: float, T2_sec: float) -> float:
@@ -52,7 +45,7 @@ def chain_fidelity(node_sequence: list[str], total_km: float) -> float:
     f = 1.0
     for hw_type in node_sequence:
         hw = HARDWARE[hw_type]
-        f *= hop_fidelity(seg_len, hw["gate_fidelity"], hw["T2_sec"])
+        f *= hop_fidelity(seg_len, hw["F_gate"], hw["T2"])
     return f
 
 

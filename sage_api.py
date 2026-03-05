@@ -63,7 +63,7 @@ if env_key:
 # Rate limiting state
 request_counts = defaultdict(list)  # key -> [timestamps]
 
-SAGE_VERSION = "6.0"
+SAGE_VERSION = "6.0"  # TODO: import from src.__version__ when running as package
 
 # ============================================================================
 # AUTH & RATE LIMITING

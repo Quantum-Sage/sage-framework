@@ -99,7 +99,7 @@ import threading
 import warnings
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 
@@ -958,7 +958,7 @@ class ExperimentLogger:
         with h5py.File(self._h5_path, "w") as f:
             f.attrs["experiment_id"] = self.experiment_id
             f.attrs["n_steps"] = len(self._data)
-            f.attrs["timestamp"] = datetime.utcnow().isoformat()
+            f.attrs["timestamp"] = datetime.now(timezone.utc).isoformat()
             ds = f.create_group("timeseries")
             for fname in self.CSV_FIELDS:
                 if fname == "backend":
@@ -994,7 +994,7 @@ class DaemonConfig:
     threshold_sensitivity: float = 0.05
     # Logging
     experiment_id: str = field(
-        default_factory=lambda: datetime.utcnow().strftime("exp_%Y%m%d_%H%M%S")
+        default_factory=lambda: datetime.now(timezone.utc).strftime("exp_%Y%m%d_%H%M%S")
     )
     output_dir: Path = Path("./mirror_daemon_data")
     live_plot: bool = False
@@ -1805,7 +1805,7 @@ if __name__ == "__main__":
 
     # Reference state: |+⟩ = (|0⟩ + |1⟩)/√2
     psi_ref = ket([1.0, 1.0])
-    exp_id = datetime.utcnow().strftime("exp_%Y%m%d_%H%M%S")
+    exp_id = datetime.now(timezone.utc).strftime("exp_%Y%m%d_%H%M%S")
 
     def make_backend(seed_offset=0):
         if args.backend == "hostile":

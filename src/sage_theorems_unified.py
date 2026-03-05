@@ -51,40 +51,8 @@ def calculate_order_parameter(fidelity, phi):
     return np.power(np.abs(phi - SAGE_CONSTANT), beta)
 
 
-HARDWARE = {
-    "Willow": {
-        "F_gate": 0.9985,
-        "T2": 1.0,  # 1.0 s (Optimistic spec for results consistency)
-        "p_gen": 0.10,
-        "color": "#00A8E8",
-        "label": "Willow (Google)",
-    },
-    "QuEra": {
-        "F_gate": 0.9920,
-        "T2": 2.0,  # 2.0 s (Neutral Atom specialty)
-        "p_gen": 0.05,
-        "color": "#FF6B35",
-        "label": "QuEra (Neutral Atom)",
-    },
-    "Helios": {
-        "F_gate": 0.9950,
-        "T2": 0.500,
-        "p_gen": 0.08,
-        "color": "#FFD700",
-        "label": "Helios (Mid-range)",
-    },
-    "NISQ": {
-        "F_gate": 0.9700,
-        "T2": 0.010,
-        "p_gen": 0.01,
-        "color": "#FF4444",
-        "label": "NISQ (Baseline)",
-    },
-}
-
-# Standard routes
-ROUTE_BEIJING_NYC = 11_000  # km
-ROUTE_BEIJING_LONDON = 8_200  # km
+# Import HARDWARE from canonical source (constants.py)
+from .constants import HARDWARE, ROUTE_BEIJING_NYC, ROUTE_BEIJING_LONDON
 
 
 # ============================================================================

@@ -1,20 +1,28 @@
-# SAGE Framework: Core Reproduction Dependencies
-# Unified v6.0 Launch Dependencies
+# SAGE Framework: Core Dependencies
+# Unified v6.0
 
-numpy==1.24.3
-scipy==1.10.1
-matplotlib==3.7.1
-h5py==3.8.0
-tqdm==4.65.0
+# Core scientific stack
+numpy>=1.24
+scipy>=1.10
+matplotlib>=3.7
 
-# Quantum Simulation stack
-qutip==5.0.0
-streamlit==1.24.1
+# Data & logging
+h5py>=3.8
+tqdm>=4.65
+pandas>=2.0
 
-# Commercial API + Data
-flask>=2.3.0
-pandas>=2.0.0
+# Quantum simulation (optional — install for QuTiP validation)
+# qutip>=5.0
 
-# Optional hardware/SDKs:
+# Commercial API
+flask>=2.3
+
+# Dashboard (optional — install for Streamlit app)
+# streamlit>=1.24
+
+# Testing
+pytest>=7.0
+
+# Optional hardware SDKs:
 # bloqade (QuEra SDK)
 # cirq-google (Helios fluxonium)
