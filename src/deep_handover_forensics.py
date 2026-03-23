@@ -12,8 +12,6 @@ Key Concepts:
   3. Cascading Boundaries: The evolutionary filter for information structures
      as they transit multiple diverse hardware architectures.
 
-References:
-  - Beckmann & Queloz (2026): Mechanistic Interpretability of Conversion Gaps.
 """
 # type: ignore
 

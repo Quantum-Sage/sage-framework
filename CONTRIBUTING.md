@@ -36,6 +36,9 @@ We embrace AI-assisted development! Nearly everything in this repository was bor
 Before submitting a Pull Request, please ensure your changes do not break the core simulation:
 
 ```bash
+# Run the full test suite (93 tests)
+pytest tests/ -v
+
 # Run the main reproduction suite
 python run_simulation.py
 

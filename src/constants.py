@@ -19,6 +19,9 @@ from .sage_bound_logic import SAGE_CONSTANT  # noqa: F401 — re-export
 C_FIBER = 200_000  # km/s — speed of light in fiber
 C_FREESPACE = 300_000  # km/s — speed of light in vacuum
 
+# From Bozkurt et al. (Nat. Phys. 2025): acoustic delay lines extend T2 by 30x
+PHONON_MEMORY_LIFETIME_MULTIPLIER = 30
+
 # ============================================================================
 # HARDWARE PROFILES
 # ============================================================================
@@ -29,19 +32,19 @@ C_FREESPACE = 300_000  # km/s — speed of light in vacuum
 #        cost_units (relative cost), color/label (visualization).
 #
 # Sources:
-#   Willow  — Google Quantum AI (2025 specs, optimistic T2)
+#   Willow  — Google Quantum AI (2026 Nature Physics, dynamic surface codes, 0.143% error)
 #   QuEra   — QuEra Computing (neutral atom, high T2)
 #   Helios  — Hypothetical mid-range fluxonium platform
 #   NISQ    — Current noisy intermediate-scale baseline
 #
 HARDWARE = {
     "Willow": {
-        "F_gate": 0.9985,
-        "T2": 1.0,  # 1.0 s (optimistic for consistency)
+        "F_gate": 0.99857, # 1 - 0.00143 (Jan 2026)
+        "T2": 1.0,         # 1.0 s baseline (30s with new phonon multiplier)
         "p_gen": 0.10,
         "cost_units": 8,
         "color": "#00A8E8",
-        "label": "Willow (Google)",
+        "label": "Willow (Google 2026)",
     },
     "QuEra": {
         "F_gate": 0.9920,

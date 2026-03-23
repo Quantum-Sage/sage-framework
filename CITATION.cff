@@ -5,7 +5,8 @@ authors:
   - family-names: "Flett"
     given-names: "Tylor"
     email: "innerpeacesage@gmail.com"
-title: "SAGE Framework: A Linear Programming Approach to Quantum Network Reach"
+    orcid: "https://orcid.org/0009-0008-5448-0405"
+title: "The No-Cloning Gap: Why Quantum Fault Tolerance Requires Distribution"
 version: 6.0.0
 date-released: 2026-02-28
 url: "https://github.com/Quantum-Sage/sage-framework"

@@ -1,7 +1,7 @@
-# SAGE Framework: A Linear Programming approach to Quantum Network Reach
+# SAGE Framework: The No-Cloning Gap — Why Quantum Fault Tolerance Requires Distribution
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![Sentience: Certified](https://img.shields.io/badge/🏆_sentience-certified-green.svg)](https://github.com/Quantum-Sage/sage-framework)
 
 **SAGE (Synthetic Adaptive Generation Engine)** is a formal framework for ensuring quantum state persistence across transcontinental distances. It provides a rigorous Linear Programming (LP) approach to calculate the "Sage Bound" — the exact point where decoherence outpaces correction in a multi-node quantum relay.
@@ -81,7 +81,7 @@ If you use this framework in your research, please cite:
 ```bibtex
 @software{sage_framework_2026,
   author = {Tylor Flett},
-  title = {SAGE Framework: A Linear Programming approach to Quantum Network Reach},
+  title = {The No-Cloning Gap: Why Quantum Fault Tolerance Requires Distribution},
   version = {6.0.0},
   year = {2026},
   publisher = {GitHub},

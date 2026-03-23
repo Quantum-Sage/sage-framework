@@ -1,7 +1,7 @@
 """
 SAGE Framework — Core Package
 ==============================
-The SAGE (Sequential Allocation for Guaranteed Entanglement) Framework
+The SAGE (Synthetic Adaptive Generation Engine) Framework
 provides universal linear programming bounds for sequential degradation
 systems: quantum networks, organ transport, and vaccine cold chains.
 
