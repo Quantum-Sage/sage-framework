@@ -6,18 +6,22 @@ authors:
     given-names: "Tylor"
     email: "innerpeacesage@gmail.com"
     orcid: "https://orcid.org/0009-0008-5448-0405"
-title: "The No-Cloning Gap: Why Quantum Fault Tolerance Requires Distribution"
-version: 6.0.0
-date-released: 2026-02-28
+title: "SAGE Framework: Distributed Quantum Identity via Byzantine Fault-Tolerant Quorum Consensus"
+version: 7.0.0
+date-released: 2026-03-23
 url: "https://github.com/Quantum-Sage/sage-framework"
 keywords:
   - quantum-repeater-networks
-  - linear-programming
-  - quantum-error-correction
+  - no-cloning-gap
+  - quantum-fault-tolerance
+  - mesh-quorum
+  - byzantine-consensus
   - sage-bound
-  - stochastic-penalty
+  - quantum-error-correction
 abstract: >-
-  The SAGE (Synthetic Adaptive Generation Engine) provides a formal 
-  mathematical framework for calculating the Sage Bound— the point where 
-  decoherence outpaces correction in multi-node quantum relays. It maps 
-  philosophical identity persistence to a deterministic linear program.
+  The SAGE Framework formalizes the No-Cloning Gap — a 190,000x reliability
+  divergence between classical and quantum systems caused by the impossibility
+  of passive quantum backups. It proves that point-to-point quantum state
+  persistence requires 100-year MTBF (impossible) and demonstrates that
+  distributed mesh quorum consensus restores survival to 98.9% on current
+  hardware.

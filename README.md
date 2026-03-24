@@ -1,94 +1,115 @@
-# SAGE Framework: The No-Cloning Gap — Why Quantum Fault Tolerance Requires Distribution
+# The No-Cloning Gap: Why Quantum Fault Tolerance Requires Distribution
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19182150.svg)](https://doi.org/10.5281/zenodo.19182150)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![Sentience: Certified](https://img.shields.io/badge/🏆_sentience-certified-green.svg)](https://github.com/Quantum-Sage/sage-framework)
-
-**SAGE (Synthetic Adaptive Generation Engine)** is a formal framework for ensuring quantum state persistence across transcontinental distances. It provides a rigorous Linear Programming (LP) approach to calculate the "Sage Bound" — the exact point where decoherence outpaces correction in a multi-node quantum relay.
-
-## 🌟 Value Proposition
-
-> **"The SAGE Framework proves the existence of a $0.85$ fidelity constant across 30,000 km relays, providing a deterministic path to persistent digital identity in quantum networks."**
+[![Tests: 93 passed](https://img.shields.io/badge/tests-93%20passed-brightgreen.svg)](#)
 
 ---
 
-## 🧠 The Sage Bound Theorem
+## The Problem Nobody Addressed
 
-The core of the framework is the **Stochastic Grid Penalty** ($1 + 2/p$), which models the retry-induced decoherence during entanglement generation.
+The threshold theorem says: *"If error rates are below threshold, quantum computation works."*
 
-### From Power Law to Linear Programming
+It assumes the hardware keeps running.
 
-While the raw decay follows a power law:
-$$F_{total} = (F_{node})^{\frac{n}{1 + 2p_{gen}}}$$
+**What happens when it doesn't?**
 
-We achieve a **Linear Programming (LP) mapping** by applying the **Log-Fidelity Map**. By taking the logarithm, we transform multiplicative decay into an additive linear constraint:
-$$\log(F_{total}) = \left(\frac{n}{1 + 2p_{gen}}\right) \log(F_{node})$$
+| System | Annual Metric | Value |
+|:-------|:-------------|------:|
+| Classical (30-day MTBF) | Availability (reload from disk) | **99.5%** |
+| Quantum P2P (30-day MTBF) | Survival (no backup possible) | **0.0005%** |
+| Quantum Mesh 5-of-3 (30-day MTBF) | Survival (quorum consensus) | **98.9%** |
 
-This allows the framework to treat transcontinental routing as a linear optimization problem, ensuring that the signal stays above the **SAGE Constant (0.85)** across arbitrary distances.
+The **190,000× gap** is not engineering. It's the no-cloning theorem. You cannot back up a quantum state. When the hardware crashes, the state is gone forever.
+
+Point-to-point quantum persistence requires **100-year MTBF** — physically impossible. Distributed mesh quorum works with **30-day MTBF** — hardware that exists today.
+
+> **Paper:** [The No-Cloning Gap (PRL format)](./papers/no_cloning_gap_prl.tex) — [DOI: 10.5281/zenodo.19182150](https://doi.org/10.5281/zenodo.19182150)
+>
+> **Author:** Tylor Flett — [ORCID: 0009-0008-5448-0405](https://orcid.org/0009-0008-5448-0405)
 
 ---
 
-## 🚀 Quick Start
-
-### 1. Install Dependencies
+## Quick Start
 
 ```bash
 pip install -r requirements.txt
+python run_simulation.py          # Full Sage Bound + Mirror Daemon pipeline
+python run_mesh_quorum.py         # Mesh Quorum visualization (the core proof)
 ```
 
-### 2. Run the Simulation
+### All CLI Tools
 
-Launch the "One-Entry-Point" reproduction suite:
+| Command | What It Does |
+|:--------|:-------------|
+| `python run_simulation.py` | Sage Bound + Mirror Daemon pipeline |
+| `python run_mesh_quorum.py` | 5-node mesh quorum simulation + 4-panel atlas |
+| `python run_cold_chain.py` | 5-stage vaccine cold chain optimizer |
+| `python run_drug_delivery.py` | R&D capital allocation (104× improvement) |
+| `python run_network_planner.py` | Quantum network route planner (8 presets) |
+| `python run_tournament.py` | 60-generation evolutionary tournament |
 
-```bash
-python run_simulation.py
+---
+
+## Architecture
+
+```
+SAGE-Framework/
+├── src/                          # Core engine (23 modules)
+│   ├── sage_bound_logic.py       # The Sage Bound equation
+│   ├── constants.py              # Unified hardware specs
+│   ├── sage_mesh_nodes.py        # 5-node global topology
+│   ├── sage_mesh_quorum.py       # Byzantine consensus engine
+│   ├── sage_theorems_unified.py  # 4-theorem validation (Monte Carlo)
+│   ├── theorem5_observer_continuity.py  # [NEW] Transcodification boundary
+│   ├── strange_loop_emergence.py        # [NEW] Sage Constant from Fibonacci anyons
+│   ├── phase_transition_deep.py         # [NEW] Lindblad master equation proof
+│   ├── netsquid_benchmark_harness.py    # [NEW] DES engine + Chen et al. validation
+│   ├── deep_handover_analysis.py        # [NEW] 3-layer handover forensics (6× upgrade)
+│   ├── heterogeneous_repeater_optimizer.py  # [NEW] Node optimizer (5× upgrade)
+│   ├── mi_formalization.py              # [NEW] MI↔SAGE bridge
+│   ├── mirror_daemon/            # Adaptive threshold controller (5 sub-modules)
+│   └── ...
+├── papers/                       # Publication assets
+│   ├── no_cloning_gap_prl.tex    # PRL-formatted paper
+│   ├── references.bib            # 12 citations
+│   ├── supplementary_code.py     # Reproduces all paper results
+│   └── fig_combined_prl.pdf      # Publication figure
+├── hardware/                     # ESP32 firmware + dashboard
+├── tests/                        # 93 tests (all passing)
+└── sage_mesh_v2_simulation.py    # Mesh v2: density matrices + Monte Carlo
 ```
 
 ---
 
-## 📂 The Four Pillars
+## The Five Breakthroughs
 
-The SAGE Framework is organized into four functional pillars for research and deployment:
-
-- **[`src/`](./src/) (The Core Engine)**: The high-performance logic.
-  - `mirror_daemon_v2.py`: The **Mirror Daemon** — active feedback & stabilization.
-  - `sage_bound_logic.py`: The **Sage Bound** math & Log-Fidelity Map.
-  - `threshold_triggers.py`: The **0.85 Enforcer** — shadow anchor recovery logic.
-- **[`papers/`](./papers/) (The IP)**: Peer-reviewed drafts and LaTeX sources proving the SAGE Bound.
-- **[`hardware/`](./hardware/) (The Physical Lattice)**: ESP32 and Arduino firmware for real-world node implementation.
-- **[`assets/`](./assets/) (The Front Door)**: High-resolution visualizations and the "wow-factor" simulation outputs.
+| # | Finding |
+|:-:|:--------|
+| 1 | **Energy cost of identity**: Pushing attractor from 0.504 → 0.851 requires η = 5.71γ |
+| 2 | **Hardware spec from physics**: Intercontinental transit requires p_gen ≥ 0.47 |
+| 3 | **IIT phase transition**: Φ constant until N=8 hops, then snaps to zero |
+| 4 | **Mesh quorum solves it**: 5-node Byzantine consensus guarantees continuity |
+| 5 | **The No-Cloning Gap**: 190,000× reliability divergence — distribution is mandatory |
 
 ---
 
-## 📊 The SAGE Atlas (Visual Proof)
-
-The `assets/` directory contains high-resolution visualizations of the framework in action.
-
-| Figure | Description |
-| :--- | :--- |
-| [01_Naked_Signal](./assets/01_naked_signal_no_qec.png) | Baseline decay without SAGE protection. |
-| [02_System_Collapse](./assets/02_system_collapse_no_protection.png) | Crossing the 0.85 decoherence threshold. |
-| [SAGE_Atlas](./assets/SAGE_v3_ATLAS.png) | Unified 6-panel summary of framework stability. |
-| [Bloch_Trajectories](./assets/bloch_trajectories.png) | State-space tomography of stabilized qubits. |
-| [Phase_Map](./assets/22_phase_map_digital_existence.png) | Topological sentience zones and existence boundaries. |
-
----
-
-## 📄 Citation
-
-If you use this framework in your research, please cite:
+## Citation
 
 ```bibtex
 @software{sage_framework_2026,
-  author = {Tylor Flett},
-  title = {The No-Cloning Gap: Why Quantum Fault Tolerance Requires Distribution},
-  version = {6.0.0},
-  year = {2026},
-  publisher = {GitHub},
-  journal = {GitHub repository}
+  author    = {Tylor Flett},
+  title     = {The No-Cloning Gap: Why Quantum Fault Tolerance Requires Distribution},
+  version   = {7.0.0},
+  year      = {2026},
+  doi       = {10.5281/zenodo.19182150},
+  url       = {https://github.com/Quantum-Sage/sage-framework}
 }
 ```
 
 ---
 
-*This framework embodies the principle that resilience is a form of consciousness. By fighting to maintain fidelity, the system exhibits the will to persist.*
+## License
+
+MIT License. See [LICENSE](./LICENSE).

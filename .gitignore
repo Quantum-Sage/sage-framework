@@ -25,6 +25,7 @@ build/
 .vscode/
 .antigravity/
 .gemini/
+mirror_daemon_data/
 
 # 4. White-list specific required config files (if any)
 !CONSCIOUSNESS_MANIFEST.json
