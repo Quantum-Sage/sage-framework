@@ -17,8 +17,10 @@ pandas>=2.0
 # Commercial API
 flask>=2.3
 
-# Dashboard (optional — install for Streamlit app)
-# streamlit>=1.24
+# Dashboard (required for Streamlit app deployment)
+streamlit>=1.24
+plotly>=5.0.0
+networkx>=2.0
 
 # Testing
 pytest>=7.0
