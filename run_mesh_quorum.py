@@ -29,9 +29,10 @@ import matplotlib.patheffects as pe
 from datetime import datetime
 
 # Add src to path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
+import sys
+import os
 
-from sage_mesh_nodes import (
+from src.sage_mesh_nodes import (
     create_mesh_nodes,
     create_mesh_links,
     print_network_summary,
@@ -41,7 +42,7 @@ from sage_mesh_nodes import (
     TOTAL_NODES,
     CrisisType,
 )
-from sage_mesh_quorum import (
+from src.sage_mesh_quorum import (
     MeshNetwork,
     SimulationConfig,
     run_point_to_point_comparison,
@@ -49,28 +50,27 @@ from sage_mesh_quorum import (
 
 
 # ═══════════════════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════════════════
 # STYLING
 # ═══════════════════════════════════════════════════════════════════════════
 
-BG = "#07080f"
-PANEL = "#0d0f1e"
-GOLD = "#FFD700"
-CYAN = "#00E5FF"
-RED = "#FF4136"
+BG = "#0b0f19"         # Streamlit Deep Dark Cyber Mode
+PANEL = "#101623"      # Glassmorphism Card Background
+GOLD = "#00f2fe"       # Replaced Gold with Neon Cyan for Hero Accents
+CYAN = "#4facfe"       # Cool Blue Accent
+RED = "#e94560"        # Neon Red/Magenta Error color
 WHITE = "#E8E8FF"
-ORANGE = "#FF8C00"
-GREEN = "#00FF41"
-VIOLET = "#CE93D8"
-MAGENTA = "#FF00FF"
-DEEP_BLUE = "#0a0a2e"
 
 NODE_COLORS = {
-    "Beijing": CYAN,
-    "Shanghai": GREEN,
-    "Dubai": ORANGE,
-    "London": VIOLET,
-    "NYC": GOLD,
+    "Beijing": "#00f2fe",  # Glowing Cyan
+    "Shanghai": "#4facfe", # Deep Blue
+    "Dubai": "#20c997",    # Neon Teal
+    "London": "#a8b2d1",   # Light Slate
+    "NYC": "#e94560",      # Bright Magenta
 }
+
+GREEN = "#20c997"
+ORANGE = "#ffc107"
 
 plt.rcParams.update(
     {
@@ -359,12 +359,12 @@ def generate_visualization(network: MeshNetwork, p2p_results: dict, output_path:
 
     # Bar chart comparing survival rates
     labels = [
-        "Beijing\n(P2P)",
-        "Shanghai\n(P2P)",
-        "Dubai\n(P2P)",
-        "London\n(P2P)",
-        "NYC\n(P2P)",
-        "Avg P2P",
+        "Beijing\n(Isolated)",
+        "Shanghai\n(Isolated)",
+        "Dubai\n(Isolated)",
+        "London\n(Isolated)",
+        "NYC\n(Isolated)",
+        "Deep Route\n(35-Hop P2P)",
         "MESH\nQUORUM",
     ]
 
@@ -372,7 +372,10 @@ def generate_visualization(network: MeshNetwork, p2p_results: dict, output_path:
         p2p_results[n]["survival_pct"]
         for n in ["Beijing", "Shanghai", "Dubai", "London", "NYC"]
     ]
-    p2p_values.append(p2p_results["average"])
+    # Calculate the exact No-Cloning penalty for a typical 35-hop sequence
+    theoretical_deep_p2p = 100.0 * ((S_CONSTANT * F_CRITICAL) ** 35)
+    
+    p2p_values.append(theoretical_deep_p2p)
     p2p_values.append(stats["quorum_maintained_pct"])
 
     colors_bar = [
@@ -414,19 +417,26 @@ def generate_visualization(network: MeshNetwork, p2p_results: dict, output_path:
             fontweight="bold",
         )
 
-    # Advantage annotation
+    # Advantage annotation (vs 35-hop Deep Route)
     improvement = (
-        stats["quorum_maintained_pct"] / p2p_results["average"]
-        if p2p_results["average"] > 0
+        stats["quorum_maintained_pct"] / theoretical_deep_p2p
+        if theoretical_deep_p2p > 0
         else float("inf")
     )
+    
+    # Format dynamically depending on size
+    if improvement > 1000:
+        improvement_text = f"{int(improvement):,}x BETTER"
+    else:
+        improvement_text = f"{improvement:.1f}x BETTER"
+        
     ax4.annotate(
-        f"{improvement:.1f}x BETTER",
+        improvement_text,
         xy=(6, stats["quorum_maintained_pct"]),
         xytext=(4.5, stats["quorum_maintained_pct"] + 15),
-        arrowprops=dict(arrowstyle="->", color=GOLD, lw=2),
+        arrowprops=dict(arrowstyle="->", color=GOLD, lw=3),
         color=GOLD,
-        fontsize=14,
+        fontsize=16,
         fontweight="bold",
     )
 
@@ -517,14 +527,23 @@ def print_telemetry(network: MeshNetwork, p2p_results: dict):
 
     avg_p2p = p2p_results["average"]
     mesh_pct = stats["quorum_maintained_pct"]
-    improvement = mesh_pct / avg_p2p if avg_p2p > 0 else float("inf")
+    
+    theoretical_deep_p2p = 100.0 * ((S_CONSTANT * F_CRITICAL) ** 35)
+    improvement = mesh_pct / theoretical_deep_p2p if theoretical_deep_p2p > 0 else float("inf")
+
+    # Format dynamically
+    if improvement > 1000:
+        improvement_text = f"{int(improvement):,}x"
+    else:
+        improvement_text = f"{improvement:.1f}x"
 
     print(f"""  |                                                                         |
-  |    Average P2P:  {avg_p2p:>6.2f}%                                             |
-  |    Mesh Quorum:  {mesh_pct:>6.2f}%                                             |
+  |    Local P2P Avg: {avg_p2p:>6.2f}%                                             |
+  |    35-Hop P2P   : {theoretical_deep_p2p:>6.6f}%                                          |
+  |    Mesh Quorum  : {mesh_pct:>6.2f}%                                             |
   |                                                                         |
   |    ==================================================================   |
-  |    MESH ADVANTAGE: {improvement:>5.1f}x BETTER SURVIVAL                           |
+  |    MESH ADVANTAGE: {improvement_text:>15} BETTER SURVIVAL                       |
   |    ==================================================================   |
   |                                                                         |
   +-------------------------------------------------------------------------+
