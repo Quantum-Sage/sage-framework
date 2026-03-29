@@ -7,7 +7,7 @@ scipy>=1.10
 matplotlib>=3.7
 
 # Data & logging
-h5py>=3.8
+# h5py>=3.8  # optional: only needed for HDF5 output — not required for Streamlit
 tqdm>=4.65
 pandas>=2.0
 
