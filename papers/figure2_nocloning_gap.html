@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Figure 2 — The No-Cloning Gap: Annual Survival by Architecture</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #ffffff;
+    font-family: "Computer Modern", Georgia, serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 40px;
+  }
+  .figure-wrap { width: 720px; }
+  .caption {
+    margin-top: 18px;
+    font-size: 11.5px;
+    line-height: 1.65;
+    color: #222;
+  }
+</style>
+</head>
+<body>
+<div class="figure-wrap">
+<svg viewBox="0 0 720 380" xmlns="http://www.w3.org/2000/svg">
+
+  <rect width="720" height="380" fill="#fff"/>
+
+  <!-- Plot area: x: 160–660, y: 50–300 -->
+  <!-- 3 bars, horizontal -->
+  <!-- Classical: 99.5%, P2P: 0.0004%, Mesh: 99.97% -->
+  <!-- Log scale for x to show P2P -->
+
+  <!-- Grid lines (log-ish scale markers) -->
+  <g stroke="#eeeeee" stroke-width="0.8">
+    <line x1="160" y1="50" x2="660" y2="50"/>
+    <line x1="160" y1="50" x2="160" y2="310"/>
+    <line x1="260" y1="50" x2="260" y2="310"/>
+    <line x1="360" y1="50" x2="360" y2="310"/>
+    <line x1="460" y1="50" x2="460" y2="310"/>
+    <line x1="560" y1="50" x2="560" y2="310"/>
+    <line x1="660" y1="50" x2="660" y2="310"/>
+  </g>
+  <rect x="160" y="50" width="500" height="260" fill="none" stroke="#bbb" stroke-width="0.8"/>
+
+  <!-- Labels: 0%, 20%, 40%, 60%, 80%, 100% along x -->
+  <!-- x=160 → 0%, x=660 → 100%, linear -->
+  <text x="160" y="325" text-anchor="middle" font-size="10.5" fill="#333" font-family="Georgia,serif">0</text>
+  <text x="260" y="325" text-anchor="middle" font-size="10.5" fill="#333" font-family="Georgia,serif">20</text>
+  <text x="360" y="325" text-anchor="middle" font-size="10.5" fill="#333" font-family="Georgia,serif">40</text>
+  <text x="460" y="325" text-anchor="middle" font-size="10.5" fill="#333" font-family="Georgia,serif">60</text>
+  <text x="560" y="325" text-anchor="middle" font-size="10.5" fill="#333" font-family="Georgia,serif">80</text>
+  <text x="660" y="325" text-anchor="middle" font-size="10.5" fill="#333" font-family="Georgia,serif">100</text>
+  <text x="410" y="345" text-anchor="middle" font-size="12" fill="#111" font-family="Georgia,serif">Steady-state availability (%)</text>
+
+  <!-- Bar 1: Classical 99.5% → x_end = 160 + 0.995*500 = 657.5 -->
+  <!-- y_center = 50 + 43 = 93, height = 50 -->
+  <rect x="160" y="70" width="497" height="52" fill="#2471a3" rx="2"/>
+  <text x="645" y="101" text-anchor="end" font-size="11.5" font-weight="bold" fill="#fff" font-family="Georgia,serif">99.5%</text>
+
+  <!-- Bar 2: Quantum P2P 0.0004% → bar width = 0.000004*500 = 0.002 → show as thin red line + text -->
+  <!-- y_center = 50 + 43 + 70 = 163 -->
+  <rect x="160" y="143" width="2.5" height="52" fill="#e74c3c" rx="1"/>
+  <!-- Label directly since bar is invisible -->
+  <text x="168" y="174" text-anchor="start" font-size="11.5" font-weight="bold" fill="#c0392b" font-family="Georgia,serif">0.0005%</text>
+  <!-- Arrow pointing to tiny bar -->
+  <line x1="162" y1="168" x2="157" y2="168" stroke="#c0392b" stroke-width="1"/>
+
+  <!-- Bar 3: Quantum Mesh 99.97% → x_end = 160 + 0.9997*500 = 659.85 -->
+  <!-- y_center = 50 + 43 + 140 = 233 -->
+  <rect x="160" y="216" width="499" height="52" fill="#1e8449" rx="2"/>
+  <text x="649" y="247" text-anchor="end" font-size="11.5" font-weight="bold" fill="#fff" font-family="Georgia,serif">99.97%</text>
+
+  <!-- Y-axis labels -->
+  <text x="152" y="102" text-anchor="end" font-size="11" fill="#333" font-family="Georgia,serif">Classical</text>
+  <text x="152" y="113" text-anchor="end" font-size="10" fill="#555" font-family="Georgia,serif">(checkpoint)</text>
+  <text x="152" y="163" text-anchor="end" font-size="11" fill="#333" font-family="Georgia,serif">Quantum</text>
+  <text x="152" y="174" text-anchor="end" font-size="10" fill="#555" font-family="Georgia,serif">P2P</text>
+  <text x="152" y="236" text-anchor="end" font-size="11" fill="#333" font-family="Georgia,serif">Quantum</text>
+  <text x="152" y="247" text-anchor="end" font-size="10" fill="#555" font-family="Georgia,serif">Mesh (3-of-5)</text>
+  <text x="152" y="258" text-anchor="end" font-size="10" fill="#555" font-family="Georgia,serif">quorum</text>
+
+  <!-- Gap annotation: double arrow from P2P bar to Classical bar -->
+  <line x1="680" y1="169" x2="680" y2="97" stroke="#c0392b" stroke-width="1.2"
+        marker-end="url(#arr2)" marker-start="url(#arrl2)"/>
+  <defs>
+    <marker id="arr2" markerWidth="5" markerHeight="5" refX="2.5" refY="2.5" orient="auto">
+      <path d="M0,0 L0,5 L5,2.5 z" fill="#c0392b"/>
+    </marker>
+    <marker id="arrl2" markerWidth="5" markerHeight="5" refX="2.5" refY="2.5" orient="auto-start-reverse">
+      <path d="M0,0 L0,5 L5,2.5 z" fill="#c0392b"/>
+    </marker>
+  </defs>
+  <text x="685" y="138" text-anchor="start" font-size="10" fill="#c0392b" font-family="Georgia,serif">235,000×</text>
+  <text x="685" y="149" text-anchor="start" font-size="10" fill="#c0392b" font-family="Georgia,serif">gap</text>
+
+  <!-- Mesh "gap closed" annotation -->
+  <line x1="680" y1="242" x2="680" y2="97" stroke="#1e8449" stroke-width="0.8" stroke-dasharray="4,3"/>
+  <text x="685" y="178" text-anchor="start" font-size="9.5" fill="#1e8449" font-family="Georgia,serif">Gap</text>
+  <text x="685" y="189" text-anchor="start" font-size="9.5" fill="#1e8449" font-family="Georgia,serif">closed</text>
+
+  <!-- Same MTBF label -->
+  <rect x="220" y="282" width="280" height="22" fill="#f9f9f9" stroke="#ddd" stroke-width="0.8" rx="3"/>
+  <text x="360" y="297" text-anchor="middle" font-size="10" fill="#555" font-family="Georgia,serif">
+    All architectures: identical hardware, MTBF = 30 days
+  </text>
+
+</svg>
+
+<div class="caption">
+  <strong>Figure 2.</strong> Steady-state availability — the long-run fraction of time quantum state is maintained — across
+  three architectures with identical hardware (MTBF = 30 days, MTTR = 1 day). Classical systems achieve 99.5% via
+  checkpoint/restore. Quantum point-to-point achieves 0.0005%: the no-cloning theorem prohibits backup, so a single
+  hardware failure permanently destroys the quantum state. The No-Cloning Gap is 235,000×. A five-node Byzantine mesh
+  quorum closes the gap to 99.97% by distributing rather than copying the quantum identity — no cloning required.
+  Note the P2P bar is drawn at actual scale; its 0.002-pixel width is invisible at this resolution.
+</div>
+</div>
+</body>
+</html>

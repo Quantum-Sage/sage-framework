@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Figure 4 — Five-Node Byzantine Mesh Quorum Topology</title>
+<style>
+* { box-sizing:border-box; margin:0; padding:0; }
+body { background:#fff; font-family:Georgia,serif; display:flex; justify-content:center; padding:40px; }
+.wrap { width:720px; }
+.caption { margin-top:16px; font-size:11.5px; line-height:1.65; color:#222; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<svg viewBox="0 0 720 500" xmlns="http://www.w3.org/2000/svg">
+<rect width="720" height="500" fill="#fff"/>
+
+<defs>
+  <!-- Gradient for links -->
+  <linearGradient id="linkGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+    <stop offset="0%" style="stop-color:#2980b9;stop-opacity:0.4"/>
+    <stop offset="100%" style="stop-color:#2980b9;stop-opacity:0.4"/>
+  </linearGradient>
+  <!-- Node drop shadows -->
+  <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+    <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.15"/>
+  </filter>
+</defs>
+
+<!-- Node positions (geographic-ish layout within SVG):
+     Beijing: (310, 120)   - top center
+     Shanghai: (430, 175)  - top right
+     Dubai: (200, 290)     - left center
+     London: (155, 145)    - top left
+     NYC: (540, 310)       - right bottom
+-->
+
+<!-- All 10 links (C(5,2)) -->
+<!-- Color by link distance: shorter=darker blue, longer=lighter -->
+<!-- Beijing-Shanghai: ~1200km -->
+<line x1="310" y1="120" x2="430" y2="175" stroke="#1a5276" stroke-width="2.8" stroke-opacity="0.7"/>
+<!-- Beijing-London: ~8200km -->
+<line x1="310" y1="120" x2="155" y2="145" stroke="#aed6f1" stroke-width="1.4" stroke-opacity="0.8"/>
+<!-- Beijing-Dubai: ~5800km -->
+<line x1="310" y1="120" x2="200" y2="290" stroke="#5dade2" stroke-width="1.8" stroke-opacity="0.7"/>
+<!-- Beijing-NYC: ~11000km -->
+<line x1="310" y1="120" x2="540" y2="310" stroke="#d6eaf8" stroke-width="1.2" stroke-opacity="0.8"/>
+<!-- Shanghai-London: ~9200km -->
+<line x1="430" y1="175" x2="155" y2="145" stroke="#d6eaf8" stroke-width="1.2" stroke-opacity="0.8"/>
+<!-- Shanghai-Dubai: ~6500km -->
+<line x1="430" y1="175" x2="200" y2="290" stroke="#7fb3d3" stroke-width="1.6" stroke-opacity="0.7"/>
+<!-- Shanghai-NYC: ~12000km -->
+<line x1="430" y1="175" x2="540" y2="310" stroke="#d6eaf8" stroke-width="1.2" stroke-opacity="0.8"/>
+<!-- London-Dubai: ~5500km -->
+<line x1="155" y1="145" x2="200" y2="290" stroke="#5dade2" stroke-width="1.8" stroke-opacity="0.7"/>
+<!-- London-NYC: ~5600km -->
+<line x1="155" y1="145" x2="540" y2="310" stroke="#5dade2" stroke-width="1.8" stroke-opacity="0.7"/>
+<!-- Dubai-NYC: ~11000km -->
+<line x1="200" y1="290" x2="540" y2="310" stroke="#d6eaf8" stroke-width="1.2" stroke-opacity="0.8"/>
+
+<!-- Link distance labels on key links -->
+<text x="375" y="137" text-anchor="middle" font-size="8.5" fill="#1a5276" font-family="Georgia" font-style="italic">1,200 km</text>
+<text x="232" y="132" text-anchor="middle" font-size="8.5" fill="#777" font-family="Georgia" font-style="italic">8,200 km</text>
+<text x="145" y="222" text-anchor="middle" font-size="8.5" fill="#555" font-family="Georgia" font-style="italic">5,500 km</text>
+<text x="350" y="230" text-anchor="middle" font-size="8.5" fill="#555" font-family="Georgia" font-style="italic">5,800 km</text>
+<text x="350" y="262" text-anchor="middle" font-size="8.5" fill="#aaa" font-family="Georgia" font-style="italic">11,000 km</text>
+<text x="505" y="210" text-anchor="middle" font-size="8.5" fill="#aaa" font-family="Georgia" font-style="italic">12,000 km</text>
+
+<!-- NODES -->
+<!-- Beijing: Willow, #1a5276 -->
+<circle cx="310" cy="120" r="32" fill="#1a5276" filter="url(#shadow)"/>
+<text x="310" y="115" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff" font-family="Georgia">Beijing</text>
+<text x="310" y="128" text-anchor="middle" font-size="9" fill="#aed6f1" font-family="Georgia">Willow</text>
+<text x="310" y="140" text-anchor="middle" font-size="8.5" fill="#7fb3d3" font-family="Georgia">T₂=72ms</text>
+
+<!-- Shanghai: QuEra, #8e44ad -->
+<circle cx="430" cy="175" r="32" fill="#8e44ad" filter="url(#shadow)"/>
+<text x="430" y="170" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff" font-family="Georgia">Shanghai</text>
+<text x="430" y="183" text-anchor="middle" font-size="9" fill="#d7bde2" font-family="Georgia">QuEra</text>
+<text x="430" y="195" text-anchor="middle" font-size="8.5" fill="#bb8fce" font-family="Georgia">T₂=2s</text>
+
+<!-- London: QuEra, #8e44ad (same hardware) -->
+<circle cx="155" cy="145" r="32" fill="#8e44ad" filter="url(#shadow)"/>
+<text x="155" y="140" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff" font-family="Georgia">London</text>
+<text x="155" y="153" text-anchor="middle" font-size="9" fill="#d7bde2" font-family="Georgia">QuEra</text>
+<text x="155" y="165" text-anchor="middle" font-size="8.5" fill="#bb8fce" font-family="Georgia">T₂=2s</text>
+
+<!-- Dubai: NISQ, #d35400 -->
+<circle cx="200" cy="290" r="32" fill="#d35400" filter="url(#shadow)"/>
+<text x="200" y="285" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff" font-family="Georgia">Dubai</text>
+<text x="200" y="298" text-anchor="middle" font-size="9" fill="#fad7a0" font-family="Georgia">NISQ</text>
+<text x="200" y="310" text-anchor="middle" font-size="8.5" fill="#f0b27a" font-family="Georgia">T₂=10ms</text>
+
+<!-- NYC: Helios, #1e8449 -->
+<circle cx="540" cy="310" r="32" fill="#1e8449" filter="url(#shadow)"/>
+<text x="540" y="305" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff" font-family="Georgia">NYC</text>
+<text x="540" y="318" text-anchor="middle" font-size="9" fill="#a9dfbf" font-family="Georgia">Helios</text>
+<text x="540" y="330" text-anchor="middle" font-size="8.5" fill="#7dcea0" font-family="Georgia">T₂=100s</text>
+
+<!-- Legend box -->
+<rect x="48" y="350" width="155" height="115" fill="#f9f9f9" stroke="#ddd" stroke-width="0.8" rx="4"/>
+<text x="125" y="368" text-anchor="middle" font-size="10.5" fill="#333" font-family="Georgia" font-weight="bold">Hardware</text>
+<circle cx="68" cy="383" r="7" fill="#1a5276"/>
+<text x="82" y="387" font-size="10" fill="#333" font-family="Georgia">Willow (Google)</text>
+<circle cx="68" cy="401" r="7" fill="#8e44ad"/>
+<text x="82" y="405" font-size="10" fill="#333" font-family="Georgia">QuEra (neutral atom)</text>
+<circle cx="68" cy="419" r="7" fill="#d35400"/>
+<text x="82" y="423" font-size="10" fill="#333" font-family="Georgia">NISQ</text>
+<circle cx="68" cy="437" r="7" fill="#1e8449"/>
+<text x="82" y="441" font-size="10" fill="#333" font-family="Georgia">Helios (trapped ion)</text>
+
+<!-- Link distance Legend -->
+<rect x="220" y="350" width="145" height="115" fill="#f9f9f9" stroke="#ddd" stroke-width="0.8" rx="4"/>
+<text x="292" y="368" text-anchor="middle" font-size="10.5" fill="#333" font-family="Georgia" font-weight="bold">Link Distance</text>
+<line x1="235" y1="388" x2="275" y2="388" stroke="#1a5276" stroke-width="2.8" stroke-opacity="0.7"/>
+<text x="283" y="392" font-size="9.5" fill="#333" font-family="Georgia">&lt; 2,000 km</text>
+
+<line x1="235" y1="413" x2="275" y2="413" stroke="#5dade2" stroke-width="1.8" stroke-opacity="0.8"/>
+<text x="283" y="417" font-size="9.5" fill="#333" font-family="Georgia">2,000–8,000 km</text>
+
+<line x1="235" y1="438" x2="275" y2="438" stroke="#d6eaf8" stroke-width="1.2" stroke-opacity="0.9"/>
+<text x="283" y="442" font-size="9.5" fill="#333" font-family="Georgia">&gt; 8,000 km</text>
+
+<!-- Fidelity outcome and Quorum properties -->
+<rect x="380" y="350" width="295" height="115" fill="#fdf9f9" stroke="#eee" stroke-width="0.8" rx="4"/>
+<text x="527" y="367" text-anchor="middle" font-size="10.5" fill="#333" font-family="Georgia" font-weight="bold">No-Cloning Gap Closure</text>
+<text x="527" y="381" text-anchor="middle" font-size="10" fill="#c0392b" font-family="Georgia">Quantum P2P:  0.0005% availability</text>
+<text x="527" y="395" text-anchor="middle" font-size="10" fill="#1e8449" font-family="Georgia">Quantum Mesh: 99.97% availability</text>
+
+<line x1="410" y1="408" x2="644" y2="408" stroke="#ddd" stroke-width="0.8" stroke-dasharray="2,2"/>
+
+<text x="527" y="425" text-anchor="middle" font-size="10.5" fill="#555" font-family="Georgia" font-style="italic">
+  3-of-5 Byzantine consensus · 10 links
+</text>
+<text x="527" y="442" text-anchor="middle" font-size="9.5" fill="#777" font-family="Georgia">
+  share_i = 1/|active| on failure/recovery
+</text>
+
+</svg>
+
+<div class="caption">
+  <strong>Figure 4.</strong> Five-node Byzantine mesh quorum topology. Nodes are placed at
+  geographic-approximate positions; link weight indicates distance (darker = shorter). All
+  C(5,2)&nbsp;=&nbsp;10 links are maintained as latent Bell pair channels. The four hardware platforms
+  span a 10,000× range in T₂ (NISQ: 10&nbsp;ms → Helios: 100&nbsp;s), providing heterogeneous redundancy.
+  The 3-of-5 crash-fault-tolerant quorum tolerates any two simultaneous node failures, covering
+  all crisis types (fiber cut, power outage, solar flare, cyber intrusion, seismic event).
+  Identity shares are redistributed equally among active-above-threshold nodes on each quorum tick.
+  This architecture closes the No-Cloning Gap from 0.0005% to 99.97% steady-state availability —
+  without copying quantum state and without violating the no-cloning theorem.
+</div>
+</div>
+</body>
+</html>

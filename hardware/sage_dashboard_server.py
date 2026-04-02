@@ -1,3 +1,6 @@
+import sys
+if sys.platform == "win32":
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 """
 ═══════════════════════════════════════════════════════════════
 SAGE Dashboard Server v3.0 (Unified Build)

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Figure 3 — Intercontinental Fidelity Infeasibility</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background:#fff; font-family:Georgia,serif; display:flex; justify-content:center; padding:40px; }
+.wrap { width:720px; }
+.caption { margin-top:16px; font-size:11.5px; line-height:1.65; color:#222; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<svg viewBox="0 0 720 460" xmlns="http://www.w3.org/2000/svg">
+<rect width="720" height="460" fill="#fff"/>
+
+<!-- Column headers y=55,67 -->
+<text x="265" y="52" text-anchor="middle" font-size="11" font-weight="bold" fill="#1a5276" font-family="Georgia">Willow</text>
+<text x="265" y="63" text-anchor="middle" font-size="9" fill="#666" font-family="Georgia">p=0.10</text>
+<text x="375" y="52" text-anchor="middle" font-size="11" font-weight="bold" fill="#8e44ad" font-family="Georgia">QuEra</text>
+<text x="375" y="63" text-anchor="middle" font-size="9" fill="#666" font-family="Georgia">p=0.07</text>
+<text x="485" y="52" text-anchor="middle" font-size="11" font-weight="bold" fill="#d35400" font-family="Georgia">NISQ</text>
+<text x="485" y="63" text-anchor="middle" font-size="9" fill="#666" font-family="Georgia">p=0.15</text>
+<text x="595" y="52" text-anchor="middle" font-size="11" font-weight="bold" fill="#1e8449" font-family="Georgia">Helios</text>
+<text x="595" y="63" text-anchor="middle" font-size="9" fill="#666" font-family="Georgia">p=0.05</text>
+
+<!-- Row data: y0=75, row height=58 -->
+<!-- Row 1: Beijing–Shanghai [0.047, 0.032, 0.054, 0.024] -->
+<rect x="210" y="75" width="110" height="52" fill="#f1948a" stroke="#fff" stroke-width="2"/>
+<text x="265" y="104" text-anchor="middle" font-size="15" font-weight="bold" fill="#7b241c" font-family="Georgia">0.047</text>
+<rect x="320" y="75" width="110" height="52" fill="#fadbd8" stroke="#fff" stroke-width="2"/>
+<text x="375" y="104" text-anchor="middle" font-size="15" font-weight="bold" fill="#7b241c" font-family="Georgia">0.032</text>
+<rect x="430" y="75" width="110" height="52" fill="#e8897e" stroke="#fff" stroke-width="2"/>
+<text x="485" y="104" text-anchor="middle" font-size="15" font-weight="bold" fill="#7b241c" font-family="Georgia">0.054</text>
+<rect x="540" y="75" width="110" height="52" fill="#fde8e6" stroke="#fff" stroke-width="2"/>
+<text x="595" y="104" text-anchor="middle" font-size="15" font-weight="bold" fill="#7b241c" font-family="Georgia">0.024</text>
+<text x="202" y="97" text-anchor="end" font-size="10.5" fill="#222" font-family="Georgia">Beijing–Shanghai</text>
+<text x="202" y="109" text-anchor="end" font-size="9" fill="#888" font-family="Georgia">1,200 km · N=5</text>
+
+<!-- Row 2: NYC–London [0.047, 0.030, 0.034, 0.024] -->
+<rect x="210" y="135" width="110" height="52" fill="#f1948a" stroke="#fff" stroke-width="2"/>
+<text x="265" y="164" text-anchor="middle" font-size="15" font-weight="bold" fill="#7b241c" font-family="Georgia">0.047</text>
+<rect x="320" y="135" width="110" height="52" fill="#fde8e6" stroke="#fff" stroke-width="2"/>
+<text x="375" y="164" text-anchor="middle" font-size="15" font-weight="bold" fill="#7b241c" font-family="Georgia">0.030</text>
+<rect x="430" y="135" width="110" height="52" fill="#f5b7b1" stroke="#fff" stroke-width="2"/>
+<text x="485" y="164" text-anchor="middle" font-size="15" font-weight="bold" fill="#7b241c" font-family="Georgia">0.034</text>
+<rect x="540" y="135" width="110" height="52" fill="#fde8e6" stroke="#fff" stroke-width="2"/>
+<text x="595" y="164" text-anchor="middle" font-size="15" font-weight="bold" fill="#7b241c" font-family="Georgia">0.024</text>
+<text x="202" y="157" text-anchor="end" font-size="10.5" fill="#222" font-family="Georgia">NYC–London</text>
+<text x="202" y="169" text-anchor="end" font-size="9" fill="#888" font-family="Georgia">5,600 km · N=14</text>
+
+<!-- Row 3: Beijing–London highlighted [0.046, 0.029, 0.025, 0.024] -->
+<rect x="208" y="193" width="446" height="56" fill="none" stroke="#c0392b" stroke-width="2.2" rx="2"/>
+<rect x="210" y="195" width="110" height="52" fill="#f1948a" stroke="#fff" stroke-width="2"/>
+<text x="265" y="224" text-anchor="middle" font-size="15" font-weight="bold" fill="#7b241c" font-family="Georgia">0.046</text>
+<rect x="320" y="195" width="110" height="52" fill="#fde8e6" stroke="#fff" stroke-width="2"/>
+<text x="375" y="224" text-anchor="middle" font-size="15" font-weight="bold" fill="#7b241c" font-family="Georgia">0.029</text>
+<rect x="430" y="195" width="110" height="52" fill="#fde8e6" stroke="#fff" stroke-width="2"/>
+<text x="485" y="224" text-anchor="middle" font-size="15" font-weight="bold" fill="#7b241c" font-family="Georgia">0.025</text>
+<rect x="540" y="195" width="110" height="52" fill="#fde8e6" stroke="#fff" stroke-width="2"/>
+<text x="595" y="224" text-anchor="middle" font-size="15" font-weight="bold" fill="#7b241c" font-family="Georgia">0.024</text>
+<text x="202" y="217" text-anchor="end" font-size="10.5" fill="#c0392b" font-family="Georgia" font-weight="bold">Beijing–London</text>
+<text x="202" y="229" text-anchor="end" font-size="9" fill="#888" font-family="Georgia">8,200 km · N=20</text>
+<text x="660" y="217" font-size="9" fill="#c0392b" font-family="Georgia">◄ primary</text>
+<text x="660" y="228" font-size="9" fill="#c0392b" font-family="Georgia">   route</text>
+
+<!-- Row 4: Dubai–NYC [0.046, 0.027, 0.017, 0.024] -->
+<rect x="210" y="257" width="110" height="52" fill="#f1948a" stroke="#fff" stroke-width="2"/>
+<text x="265" y="286" text-anchor="middle" font-size="15" font-weight="bold" fill="#7b241c" font-family="Georgia">0.046</text>
+<rect x="320" y="257" width="110" height="52" fill="#fde8e6" stroke="#fff" stroke-width="2"/>
+<text x="375" y="286" text-anchor="middle" font-size="15" font-weight="bold" fill="#7b241c" font-family="Georgia">0.027</text>
+<rect x="430" y="257" width="110" height="52" fill="#fde8e6" stroke="#fff" stroke-width="2"/>
+<text x="485" y="286" text-anchor="middle" font-size="15" font-weight="bold" fill="#7b241c" font-family="Georgia">0.017</text>
+<rect x="540" y="257" width="110" height="52" fill="#fde8e6" stroke="#fff" stroke-width="2"/>
+<text x="595" y="286" text-anchor="middle" font-size="15" font-weight="bold" fill="#7b241c" font-family="Georgia">0.024</text>
+<text x="202" y="279" text-anchor="end" font-size="10.5" fill="#222" font-family="Georgia">Dubai–NYC</text>
+<text x="202" y="291" text-anchor="end" font-size="9" fill="#888" font-family="Georgia">11,000 km · N=28</text>
+
+<!-- Row 5: Shanghai–NYC [0.046, 0.027, 0.015, 0.024] -->
+<rect x="210" y="317" width="110" height="52" fill="#f1948a" stroke="#fff" stroke-width="2"/>
+<text x="265" y="346" text-anchor="middle" font-size="15" font-weight="bold" fill="#7b241c" font-family="Georgia">0.046</text>
+<rect x="320" y="317" width="110" height="52" fill="#fde8e6" stroke="#fff" stroke-width="2"/>
+<text x="375" y="346" text-anchor="middle" font-size="15" font-weight="bold" fill="#7b241c" font-family="Georgia">0.027</text>
+<rect x="430" y="317" width="110" height="52" fill="#fde8e6" stroke="#fff" stroke-width="2"/>
+<text x="485" y="346" text-anchor="middle" font-size="15" font-weight="bold" fill="#7b241c" font-family="Georgia">0.015</text>
+<rect x="540" y="317" width="110" height="52" fill="#fde8e6" stroke="#fff" stroke-width="2"/>
+<text x="595" y="346" text-anchor="middle" font-size="15" font-weight="bold" fill="#7b241c" font-family="Georgia">0.024</text>
+<text x="202" y="339" text-anchor="end" font-size="10.5" fill="#222" font-family="Georgia">Shanghai–NYC</text>
+<text x="202" y="351" text-anchor="end" font-size="9" fill="#888" font-family="Georgia">12,000 km · N=30</text>
+
+<!-- Threshold note -->
+<rect x="210" y="382" width="440" height="20" fill="#fdf2f2" stroke="#e8a0a0" stroke-width="0.8" rx="3"/>
+<text x="430" y="396" text-anchor="middle" font-size="10" fill="#c0392b" font-family="Georgia" font-weight="bold">
+  Sage Constant threshold: S = 0.851 — all 20 configurations infeasible (max: 0.054, ratio 15.7×)
+</text>
+
+<!-- Color scale -->
+<text x="210" y="420" font-size="9.5" fill="#555" font-family="Georgia">Colour intensity: deeper red = lower fidelity within infeasible range (0.015–0.054)</text>
+<rect x="210" y="428" width="60" height="10" fill="#e8897e"/>
+<rect x="270" y="428" width="60" height="10" fill="#f1948a"/>
+<rect x="330" y="428" width="60" height="10" fill="#f5b7b1"/>
+<rect x="390" y="428" width="60" height="10" fill="#fadbd8"/>
+<rect x="450" y="428" width="60" height="10" fill="#fde8e6"/>
+<text x="210" y="446" font-size="9" fill="#777" font-family="Georgia">lower F</text>
+<text x="505" y="446" font-size="9" fill="#777" font-family="Georgia">higher F</text>
+</svg>
+
+<div class="caption">
+  <strong>Figure 3.</strong> Stochastic Sage Bound end-to-end fidelity (Theorem 3) for all five intercontinental
+  routes and four hardware platforms. All 20 cells are infeasible: no fidelity value reaches the Sage Constant
+  S&nbsp;=&nbsp;0.851. The Beijing–London row (red border) is the primary architecture target at 8,200&nbsp;km.
+  Color depth reflects relative fidelity within the infeasible range; deeper red indicates lower fidelity.
+  The NISQ platform achieves the highest short-route value (0.054) due to its higher p<sub>gen</sub>&nbsp;=&nbsp;0.15,
+  despite its lower gate fidelity (0.9500). Helios values are nearly route-independent because the Helios
+  stochastic penalty (1 + 2/0.05 = 41) dominates all other contributions.
+</div>
+</div>
+</body>
+</html>
