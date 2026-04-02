@@ -7,8 +7,8 @@ authors:
     email: "innerpeacesage@gmail.com"
     orcid: "https://orcid.org/0009-0008-5448-0405"
 title: "SAGE Framework: Distributed Quantum Identity via Byzantine Fault-Tolerant Quorum Consensus"
-version: 7.0.0
-date-released: 2026-03-23
+version: 7.1.0
+date-released: 2026-04-02
 url: "https://github.com/Quantum-Sage/sage-framework"
 keywords:
   - quantum-repeater-networks
