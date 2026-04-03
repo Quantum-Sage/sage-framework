@@ -95,8 +95,19 @@ TIERS = {
 
 app = Flask(__name__)
 
-# Load API Keys from local JSON database
-API_KEYS_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "api_keys.json")
+# Load API Keys from persistent disk (Render) or local
+PERSISTENT_DATA_DIR = "/data"
+if os.path.exists(PERSISTENT_DATA_DIR):
+    API_KEYS_FILE = os.path.join(PERSISTENT_DATA_DIR, "api_keys.json")
+    # If the disk is empty, initialize it from the local template
+    if not os.path.exists(API_KEYS_FILE):
+        local_template = os.path.join(os.path.dirname(os.path.abspath(__file__)), "api_keys.json")
+        if os.path.exists(local_template):
+            with open(local_template, "r") as src, open(API_KEYS_FILE, "w") as dst:
+                dst.write(src.read())
+else:
+    API_KEYS_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "api_keys.json")
+
 if os.path.exists(API_KEYS_FILE):
     with open(API_KEYS_FILE, "r", encoding="utf-8") as f:
         API_KEYS = json.load(f)
