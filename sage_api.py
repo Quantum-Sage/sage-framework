@@ -26,11 +26,10 @@ Usage:
   #            -d '{"budget": 2000}'
 """
 
-import json
-import time
 import sys
 import os
-import calendar
+import json
+import time
 from datetime import datetime
 from functools import wraps
 from collections import defaultdict
@@ -47,6 +46,11 @@ from run_network_planner import analyze_route, PRESET_ROUTES, SATELLITE_TIERS
 from run_tournament import run_tournament, MockHardwareInterface
 
 import stripe
+from dotenv import load_dotenv
+
+# Load .env file if it exists
+load_dotenv()
+
 stripe.api_key = os.environ.get("STRIPE_API_KEY")
 
 # ============================================================================

@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: sage-api
+    runtime: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn sage_api:app --bind 0.0.0.0:$PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.12
+      - key: STRIPE_API_KEY
+        sync: false
+      - key: SAGE_API_KEY
+        sync: false
+      - key: SAGE_PORT
+        value: 8000
+    # For persistence (Starter tier only - $7/mo)
+    # disk:
+    #   name: sage-data
+    #   mountPath: /data
+    #   sizeGB: 1

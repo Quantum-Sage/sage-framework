@@ -23,6 +23,10 @@ streamlit>=1.24
 plotly>=5.0.0
 networkx>=2.0
 
+# Deployment
+gunicorn>=21.0
+python-dotenv>=1.0
+
 # Testing
 pytest>=7.0
 
