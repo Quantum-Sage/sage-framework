@@ -8,7 +8,6 @@ Run:  pytest tests/test_extended.py -v
 """
 
 import sys
-import math
 import numpy as np
 
 sys.path.insert(0, ".")

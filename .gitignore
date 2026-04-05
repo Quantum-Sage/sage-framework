@@ -21,11 +21,10 @@ build/
 
 # 3. Exclude internal dev files and local archives
 99_archives/
+archive/
 (not for github)/
 .vscode/
 .antigravity/
 .gemini/
 mirror_daemon_data/
-
-# 4. White-list specific required config files (if any)
-!CONSCIOUSNESS_MANIFEST.json
+api_keys.json

@@ -23,14 +23,9 @@ import argparse
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
-from matplotlib.patches import Circle, FancyArrowPatch, Wedge
-from matplotlib.collections import LineCollection
-import matplotlib.patheffects as pe
-from datetime import datetime
+from matplotlib.patches import Circle
 
 # Add src to path
-import sys
-import os
 
 from src.sage_mesh_nodes import (
     create_mesh_nodes,
@@ -40,7 +35,6 @@ from src.sage_mesh_nodes import (
     F_CRITICAL,
     QUORUM_THRESHOLD,
     TOTAL_NODES,
-    CrisisType,
 )
 from src.sage_mesh_quorum import (
     MeshNetwork,
@@ -512,7 +506,7 @@ def print_telemetry(network: MeshNetwork, p2p_results: dict):
         "  +-------------------------------------------------------------------------+"
     )
 
-    print(f"""
+    print("""
   +-------------------------------------------------------------------------+
   |  MESH vs POINT-TO-POINT COMPARISON                                      |
   +-------------------------------------------------------------------------+

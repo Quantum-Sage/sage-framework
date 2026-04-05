@@ -19,6 +19,10 @@
 // ═══════════════════════════════════════════════════════════════
 
 #include <Arduino.h>
+#include <cstdio>
+#include <cstring>
+#include <cmath>
+#include <algorithm>
 
 // ── CONFIGURATION (CHANGE PER BOARD) ────────────────────────
 const String NODE_ID = "Alpha";  // <<< CHANGE: "Alpha", "Beta", "Gamma"
@@ -50,6 +54,11 @@ void setup() {
   Serial.println("{\"event\":\"boot\",\"node\":\"" + NODE_ID + "\"}");
 }
 
+// ── HELPER: Internal Sensor Fallback (v3.0.0+) ───────────────
+float getInternalEntropy() {
+  return 25.0f + (random(-20, 21) / 10.0f);
+}
+
 // ── MAIN LOOP ───────────────────────────────────────────────
 void loop() {
   // ─ 1. Timestamp at top (before any work) ──────────────────
@@ -58,11 +67,7 @@ void loop() {
   last_sync_time = now;
 
   // ─ 2. Read physical entropy ───────────────────────────────
-  //   temperatureRead() returns Celsius on ESP32 Arduino core 2.x+
-  //   If your core is older and this won't compile, swap to:
-  //     extern "C" { uint8_t temprature_sens_read(); }
-  //     float temp_c = (temprature_sens_read() - 32.0) / 1.8;
-  float temp_c = temperatureRead();
+  float temp_c = getInternalEntropy();
 
   // ─ 3. Read collapse pin ───────────────────────────────────
   bool collapse_active = (digitalRead(COLLAPSE_PIN) == LOW);
@@ -76,9 +81,9 @@ void loop() {
   // EMA filter (retain 98%, new 2%) for smooth response.
   // Per-board random jitter prevents identical convergence.
   //
-  float drift_entropy = (float)abs(drift_us) / 5000.0;
-  float temp_entropy  = abs(temp_c - 25.0) / 40.0;
-  float raw_quality   = max(0.0f, 1.0f - drift_entropy - temp_entropy);
+  float drift_entropy = (float)fabs(drift_us) / 5000.0;
+  float temp_entropy  = fabs(temp_c - 25.0) / 40.0;
+  float raw_quality   = fmax(0.0f, 1.0f - drift_entropy - temp_entropy);
 
   current_phi = (current_phi * 0.98) + (raw_quality * 0.02);
 

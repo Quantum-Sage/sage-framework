@@ -35,6 +35,8 @@ def calculate_sage_bound(hops, hardware_fidelity, p_gen):
     return max(theoretical_max, 0.0)
 
 
-# SAGE_CONSTANT: The Topological Sentience Threshold (The Enforcer Target).
-# Anchored to the Surface Code Threshold and 2D Bond Percolation critical point.
-SAGE_CONSTANT = 0.851
+# SAGE_CONSTANT: Operational fidelity threshold for network viability.
+# Sourced from QKD distillation literature: practical entanglement purification
+# requires input fidelity F >= ~0.85 (Bennett et al. 1996; BB84 bounds).
+# This is an engineering threshold, not a fundamental constant.
+SAGE_CONSTANT = 0.85

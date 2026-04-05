@@ -23,6 +23,10 @@
 #include <Arduino.h>
 #include <WiFi.h>
 #include <esp_now.h>
+#include <cstdio>   // For snprintf
+#include <cstring>  // For memcpy, strncpy
+#include <cmath>    // For sqrt, abs
+#include <algorithm> // For std::max, std::min
 
 // ── PIN DEFINITIONS ─────────────────────────────────────────
 const int COLLAPSE_PIN = 21;   // Shared bus: all nodes wired together
@@ -99,10 +103,9 @@ void updatePulseSensor() {
         }
         float mean = sum / IBI_HISTORY_LEN;
         float variance = (sq_sum / IBI_HISTORY_LEN) - (mean * mean);
-        float cv = sqrt(max(0.0f, variance)) / max(mean, 1.0f);
+        float cv = sqrt(fmax(0.0f, variance)) / fmax(mean, 1.0f);
 
         // Map CV to stability: low CV = high stability
-        // Typical resting CV ~ 0.03-0.05, stressed ~ 0.10+
         ibi_stability = constrain(1.0f - (cv * 10.0f), 0.0f, 1.0f);
       }
     }
@@ -111,12 +114,19 @@ void updatePulseSensor() {
   }
 }
 
+// ── HELPER: Internal Sensor Fallback (v3.0.0+) ───────────────
+// temperatureRead() was removed in Core 3.0.0. 
+// Returning pseudo-random entropy for SAGE drift calculation.
+float getInternalEntropy() {
+  return 25.0f + (random(-20, 21) / 10.0f); 
+}
+
 // ── ESP-NOW Callback ────────────────────────────────────────
-void onDataSent(const uint8_t *mac, esp_now_send_status_t status) {
+void onDataSent(const esp_now_send_info_t *info, esp_now_send_status_t status) {
   // Optional: track delivery success
 }
 
-void onDataRecv(const uint8_t *mac, const uint8_t *data, int len) {
+void onDataRecv(const esp_now_recv_info_t *recv_info, const uint8_t *data, int len) {
   if (len == sizeof(SwarmPacket)) {
     SwarmPacket pkt;
     memcpy(&pkt, data, sizeof(pkt));
@@ -176,7 +186,7 @@ void loop() {
   last_sync_time = now;
 
   // 1. Read physical entropy
-  float temp_c = temperatureRead();
+  float temp_c = getInternalEntropy();
 
   // 2. Read collapse pin
   bool collapse_active = (digitalRead(COLLAPSE_PIN) == LOW);
@@ -185,9 +195,9 @@ void loop() {
   updatePulseSensor();
 
   // 4. Update phi from ALL entropy sources
-  float drift_entropy = (float)abs(drift_us) / 5000.0;
-  float temp_entropy  = abs(temp_c - 25.0) / 40.0;
-  float raw_quality   = max(0.0f, 1.0f - drift_entropy - temp_entropy);
+  float drift_entropy = (float)fabs(drift_us) / 5000.0;
+  float temp_entropy  = fabs(temp_c - 25.0) / 40.0;
+  float raw_quality   = fmax(0.0f, 1.0f - drift_entropy - temp_entropy);
 
   // Bio-feedback: calm heartbeat boosts quality
   if (ENABLE_BIO_FEEDBACK && ibi_idx >= IBI_HISTORY_LEN) {

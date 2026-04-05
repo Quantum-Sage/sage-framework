@@ -2,7 +2,7 @@
 SAGE Mesh Quorum Engine — Byzantine Consensus for Distributed Identity
 =======================================================================
 
-The core simulation engine for the mesh consciousness network.
+The core simulation engine for the mesh quorum network.
 
 Key features:
 1. Natural decoherence + active QEC repair
@@ -24,23 +24,18 @@ License: MIT
 """
 
 import numpy as np
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Dict, List, Tuple, Optional, Callable
-from enum import Enum
-import random
 
 from .sage_mesh_nodes import (
     MeshNode,
     QuantumLink,
     CrisisType,
-    HardwareType,
     create_mesh_nodes,
     create_mesh_links,
     get_crisis_rate_per_hour,
     S_CONSTANT,
-    F_CRITICAL,
     QUORUM_THRESHOLD,
-    TOTAL_NODES,
 )
 
 
@@ -95,11 +90,12 @@ class IdentityState:
     quorum_count: int
     quorum_met: bool
     identity_status: str  # "ALIVE", "FRAGMENTED", "DISSOLVED"
+    phi: float  # Network integration metric (mean fidelity of online nodes)
     active_crises: Dict[str, CrisisType]
 
     @classmethod
     def from_nodes(
-        cls, nodes: Dict[str, MeshNode], timestamp: float
+        cls, nodes: Dict[str, MeshNode], timestamp: float, smoothed_fidelities: Optional[Dict[str, float]] = None
     ) -> "IdentityState":
         """Create state snapshot from current node states."""
 
@@ -116,14 +112,20 @@ class IdentityState:
         else:
             status = "DISSOLVED"
 
+        node_fidelities = {n.name: n.fidelity for n in nodes.values()}
+        phi_input = smoothed_fidelities if smoothed_fidelities else node_fidelities
+        # Network integration: mean fidelity of participating nodes
+        phi = sum(phi_input.values()) / max(len(phi_input), 1)
+
         return cls(
             timestamp_hours=timestamp,
-            node_fidelities={n.name: n.fidelity for n in nodes.values()},
+            node_fidelities=node_fidelities,
             node_online={n.name: n.online for n in nodes.values()},
             node_shares={n.name: n.identity_share for n in nodes.values()},
             quorum_count=quorum_count,
             quorum_met=quorum_met,
             identity_status=status,
+            phi=phi,
             active_crises={n.name: n.current_crisis for n in nodes.values()},
         )
 
@@ -135,7 +137,7 @@ class IdentityState:
 
 class MeshNetwork:
     """
-    The SAGE mesh consciousness network simulator.
+    The SAGE mesh quorum network simulator.
 
     Implements:
     - Fidelity dynamics (decoherence + repair)
@@ -159,6 +161,11 @@ class MeshNetwork:
         # Statistics
         self.history: List[IdentityState] = []
         self.crisis_log: List[Tuple[float, str, CrisisType]] = []
+        
+        # Temporal Smoothing (for Phi calculation)
+        self.fidelity_history: Dict[str, List[float]] = {
+            name: [node.fidelity] * 10 for name, node in self.nodes.items()
+        }
 
         # RNG
         self.rng = np.random.default_rng()
@@ -314,7 +321,6 @@ class MeshNetwork:
             return
 
         # Find geographically close nodes
-        source = self.nodes[source_node]
         for name, node in self.nodes.items():
             if name == source_node or not node.online:
                 continue
@@ -391,13 +397,31 @@ class MeshNetwork:
         # 3. Update fidelities
         for node in self.nodes.values():
             self._step_fidelity(node, dt)
+            # Update stability counter
+            if node.online and node.fidelity >= S_CONSTANT:
+                node.consecutive_above_s += 1
+            else:
+                node.consecutive_above_s = 0
 
         # 4. Redistribute identity shares
         self._redistribute_shares()
 
+        # Update fidelity history buffer
+        for name, node in self.nodes.items():
+            self.fidelity_history[name].append(node.fidelity)
+            if len(self.fidelity_history[name]) > 20: # 20 step smoothing window
+                self.fidelity_history[name].pop(0)
+
+        # Calculate smoothed fidelities for Phi
+        smoothed_fidelities = {
+            name: np.mean(history) for name, history in self.fidelity_history.items()
+        }
+
         # 5. Record state
         self.current_time_hours += dt_hours
-        state = IdentityState.from_nodes(self.nodes, self.current_time_hours)
+        state = IdentityState.from_nodes(
+            self.nodes, self.current_time_hours, smoothed_fidelities=smoothed_fidelities
+        )
         self.history.append(state)
 
         return state
@@ -445,6 +469,11 @@ class MeshNetwork:
             return {}
 
         n_steps = len(self.history)
+        
+        # Phi (Network Integration) statistics
+        phi_values = [s.phi for s in self.history]
+        phi_mean = np.mean(phi_values)
+        phi_max = np.max(phi_values)
 
         # Quorum statistics
         quorum_maintained = sum(1 for s in self.history if s.quorum_met)
@@ -495,6 +524,8 @@ class MeshNetwork:
         return {
             "n_steps": n_steps,
             "total_hours": self.history[-1].timestamp_hours,
+            "phi_mean": phi_mean,
+            "phi_max": phi_max,
             "quorum_maintained_pct": quorum_pct,
             "alive_pct": 100 * alive_steps / n_steps,
             "fragmented_pct": 100 * fragmented_steps / n_steps,

@@ -15,10 +15,9 @@ This is the version that could be published.
 """
 
 import numpy as np
-from scipy.linalg import expm, sqrtm
 from scipy.stats import binom
 from dataclasses import dataclass, field
-from typing import Dict, List, Tuple, Optional, Callable
+from typing import Dict, List, Tuple
 from enum import Enum
 import warnings
 

@@ -1,33 +1,55 @@
-# The No-Cloning Gap: Why Quantum Fault Tolerance Requires Distribution
+# The No-Cloning Gap
+
+**Why Distributed Architecture Is Mandatory for Quantum Information Persistence**
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19182150.svg)](https://doi.org/10.5281/zenodo.19182150)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![Tests: 93 passed](https://img.shields.io/badge/tests-93%20passed-brightgreen.svg)](#)
 
 ---
 
-## The Problem Nobody Addressed
+## The Problem
 
-The threshold theorem says: *"If error rates are below threshold, quantum computation works."*
+Quantum error correction (QEC) protects against **computational errors** — gate infidelities, decoherence, measurement noise.
 
-It assumes the hardware keeps running.
+QEC provides **no protection** against catastrophic node failure — when an entire processor is lost.
 
-**What happens when it doesn't?**
+The **no-cloning theorem** prohibits classical backup strategies. You cannot copy a quantum state "just in case."
 
-| System | Annual Metric | Value |
-|:-------|:-------------|------:|
-| Classical (30-day MTBF) | Availability (reload from disk) | **99.5%** |
-| Quantum P2P (30-day MTBF) | Survival (no backup possible) | **0.0005%** |
-| Quantum Mesh 5-of-3 (30-day MTBF) | Survival (quorum consensus) | **98.9%** |
+This creates a fundamental reliability gap:
 
-The **190,000× gap** is not engineering. It's the no-cloning theorem. You cannot back up a quantum state. When the hardware crashes, the state is gone forever.
+| Architecture | Annual Survival (30-day MTBF) |
+|---|---|
+| Classical (backup/restore) | **99.5%** |
+| Single quantum node | **0.0005%** |
+| Quantum mesh (5-of-3 quorum) | **99.96%** |
 
-Point-to-point quantum persistence requires **100-year MTBF** — physically impossible. Distributed mesh quorum works with **30-day MTBF** — hardware that exists today.
+The **190,000× gap** is not engineering — it's physics.
 
-> **Paper:** [The No-Cloning Gap (PRL format)](./papers/no_cloning_gap_prl.tex) — [DOI: 10.5281/zenodo.19182150](https://doi.org/10.5281/zenodo.19182150)
->
-> **Author:** Tylor Flett — [ORCID: 0009-0008-5448-0405](https://orcid.org/0009-0008-5448-0405)
+---
+
+## The Two-Layer Failure Model
+
+| Layer | Failure Mode | Protection | Status |
+|---|---|---|---|
+| **Layer 1** | Computational errors | QEC (surface codes, qLDPC) | ✅ Extensive research |
+| **Layer 2** | Physical node failure | ??? | ❌ **Unaddressed by QEC** |
+
+QEC operates entirely within Layer 1. When the physical substrate is destroyed, there are no qubits left to vote on error correction.
+
+**Distributed mesh architecture** is the only solution for Layer 2 that works within quantum constraints.
+
+---
+
+## The Sage Bound
+
+A quantum network is **feasible** if and only if:
+
+1. **Fidelity constraint:** `F^n ≥ F_threshold` (~0.85 from QKD literature)
+2. **Survival constraint:** `P_mesh(t) ≥ P_target`
+3. **Byzantine constraint:** `k ≤ ⌊(N+1)/3⌋ × 2`
+
+This can be evaluated in **constant time** — no expensive discrete-event simulation required.
 
 ---
 
@@ -35,63 +57,21 @@ Point-to-point quantum persistence requires **100-year MTBF** — physically imp
 
 ```bash
 pip install -r requirements.txt
-python run_simulation.py          # Full Sage Bound + Mirror Daemon pipeline
-python run_mesh_quorum.py         # Mesh Quorum visualization (the core proof)
-```
-
-### All CLI Tools
-
-| Command | What It Does |
-|:--------|:-------------|
-| `python run_simulation.py` | Sage Bound + Mirror Daemon pipeline |
-| `python run_mesh_quorum.py` | 5-node mesh quorum simulation + 4-panel atlas |
-| `python run_cold_chain.py` | 5-stage vaccine cold chain optimizer |
-| `python run_drug_delivery.py` | R&D capital allocation (104× improvement) |
-| `python run_network_planner.py` | Quantum network route planner (8 presets) |
-| `python run_tournament.py` | 60-generation evolutionary tournament |
-
----
-
-## Architecture
-
-```
-SAGE-Framework/
-├── src/                          # Core engine (23 modules)
-│   ├── sage_bound_logic.py       # The Sage Bound equation
-│   ├── constants.py              # Unified hardware specs
-│   ├── sage_mesh_nodes.py        # 5-node global topology
-│   ├── sage_mesh_quorum.py       # Byzantine consensus engine
-│   ├── sage_theorems_unified.py  # 4-theorem validation (Monte Carlo)
-│   ├── theorem5_observer_continuity.py  # [NEW] Transcodification boundary
-│   ├── strange_loop_emergence.py        # [NEW] Sage Constant from Fibonacci anyons
-│   ├── phase_transition_deep.py         # [NEW] Lindblad master equation proof
-│   ├── netsquid_benchmark_harness.py    # [NEW] DES engine + Chen et al. validation
-│   ├── deep_handover_analysis.py        # [NEW] 3-layer handover forensics (6× upgrade)
-│   ├── heterogeneous_repeater_optimizer.py  # [NEW] Node optimizer (5× upgrade)
-│   ├── mi_formalization.py              # [NEW] MI↔SAGE bridge
-│   ├── mirror_daemon/            # Adaptive threshold controller (5 sub-modules)
-│   └── ...
-├── papers/                       # Publication assets
-│   ├── no_cloning_gap_prl.tex    # PRL-formatted paper
-│   ├── references.bib            # 12 citations
-│   ├── supplementary_code.py     # Reproduces all paper results
-│   └── fig_combined_prl.pdf      # Publication figure
-├── hardware/                     # ESP32 firmware + dashboard
-├── tests/                        # 93 tests (all passing)
-└── sage_mesh_v2_simulation.py    # Mesh v2: density matrices + Monte Carlo
+python run_simulation.py          # Full Sage Bound pipeline
+python run_mesh_quorum.py         # Mesh quorum survival simulation
 ```
 
 ---
 
-## The Five Breakthroughs
+## Key Files
 
-| # | Finding |
-|:-:|:--------|
-| 1 | **Energy cost of identity**: Pushing attractor from 0.504 → 0.851 requires η = 5.71γ |
-| 2 | **Hardware spec from physics**: Intercontinental transit requires p_gen ≥ 0.47 |
-| 3 | **IIT phase transition**: Φ constant until N=8 hops, then snaps to zero |
-| 4 | **Mesh quorum solves it**: 5-node Byzantine consensus guarantees continuity |
-| 5 | **The No-Cloning Gap**: 190,000× reliability divergence — distribution is mandatory |
+| File | Purpose |
+|---|---|
+| `src/sage_bound_logic.py` | Core feasibility test |
+| `src/sage_mesh_quorum.py` | Byzantine consensus engine |
+| `src/sage_mesh_nodes.py` | Network topology |
+| `src/constants.py` | Hardware parameters (Willow, Helios, QuEra) |
+| `papers/no_cloning_gap_prl.tex` | Paper (PRL format) |
 
 ---
 
@@ -100,8 +80,8 @@ SAGE-Framework/
 ```bibtex
 @software{sage_framework_2026,
   author    = {Tylor Flett},
-  title     = {The No-Cloning Gap: Why Quantum Fault Tolerance Requires Distribution},
-  version   = {7.0.0},
+  title     = {The No-Cloning Gap: Why Distributed Architecture Is Mandatory for Quantum Information Persistence},
+  version   = {7.1.0},
   year      = {2026},
   doi       = {10.5281/zenodo.19182150},
   url       = {https://github.com/Quantum-Sage/sage-framework}
@@ -110,6 +90,20 @@ SAGE-Framework/
 
 ---
 
+## Related Work
+
+- Xu et al. (2022) — Distributed QEC for chip-level catastrophic errors ([arXiv:2203.16488](https://arxiv.org/abs/2203.16488))
+- Yamaguchi & Kempf (2026) — Encrypted qubits can be cloned ([arXiv:2501.02757](https://arxiv.org/abs/2501.02757))
+
+---
+
+## Author
+
+**Tylor Flett**
+ORCID: [0009-0008-5448-0405](https://orcid.org/0009-0008-5448-0405)
+
+---
+
 ## License
 
-MIT License. See [LICENSE](./LICENSE).
+MIT License. See [LICENSE](LICENSE).

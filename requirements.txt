@@ -16,6 +16,7 @@ pandas>=2.0
 
 # Commercial API
 flask>=2.3
+flask-cors>=4.0
 stripe>=10.0
 
 # Dashboard (required for Streamlit app deployment)

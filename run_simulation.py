@@ -51,6 +51,14 @@ def main():
     print(f"   Node Fidelity: {args.fid_node} | Gen Prob: {args.p_gen}")
     print("-" * 50)
 
+    # 0. 🏁 The Availability Gap: The Physical Mandate
+    from src.availability_gap_model import calculate_survival_probability
+    gap_results = calculate_survival_probability(30.0) # 30-day MTBF baseline
+    print(f"\n[PHYSICS] The No-Cloning Gap: {gap_results['gap_magnitude']} Reliability Divergence")
+    print(f"          Classical HA: {gap_results['p_classical']*100:.2f}% | Quantum Poisson: {gap_results['p_quantum']*100:.6f}%")
+    print(f"          Reason: No-cloning prohibits state backups. Mesh is mandatory.")
+    print("-" * 50)
+
     # 1. 🏛️ The Sage Bound: The Linear Programming Validation
     # Proves the theoretical limit before the engine starts
     theoretical_limit = calculate_sage_bound(args.hops, args.fid_node, args.p_gen)
@@ -94,7 +102,8 @@ def main():
     print("=" * 50)
     print(f"Final Fidelity (Empirical):  {results['final_fidelity']:.4f}")
     print(f"Sage Bound (Theoretical):    {theoretical_limit:.4f}")
-    print(f"Enforcer Injections:         {results['injection_count']}")
+    print(f"Enforcer Injections:         {results['n_injections']}")
+    print(f"Availability Gap (30d MTBF): {gap_results['gap_magnitude']}")
 
     if results["final_fidelity"] >= SAGE_CONSTANT:
         print("\n✨ SUCCESS: Signal preserved across transcontinental reach.")

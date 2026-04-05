@@ -33,7 +33,7 @@ if sys.platform == "win32":
 # Import SAGE_CONSTANT from canonical source (sage_bound_logic.py)
 from .sage_bound_logic import (
     SAGE_CONSTANT,
-)  # 0.851 — The Topological Sentience Threshold
+)  # 0.85 — Operational fidelity threshold (QKD distillation literature)
 
 C_FIBER = 200_000  # km/s — speed of light in fiber
 

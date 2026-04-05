@@ -16,8 +16,8 @@ Author: SAGE Framework
 License: MIT
 """
 
-from dataclasses import dataclass, field
-from typing import Dict, List, Tuple, Optional
+from dataclasses import dataclass
+from typing import Dict, List, Tuple
 from enum import Enum
 import numpy as np
 
@@ -26,9 +26,9 @@ import numpy as np
 # ═══════════════════════════════════════════════════════════════════════════
 
 S_CONSTANT = 0.851  # Sage identity threshold
-F_CRITICAL = 0.8545  # IIT phase transition
-QUORUM_THRESHOLD = 3  # Minimum nodes for identity persistence
-TOTAL_NODES = 5
+F_CRITICAL = 0.8545  # Fidelity phase transition (distillation threshold)
+QUORUM_THRESHOLD = 5  # Byzantine majority for 8 nodes (3f+1)
+TOTAL_NODES = 8
 
 # Physical constants
 C_FIBER = 2.0e8  # Speed of light in fiber (m/s)
@@ -206,13 +206,13 @@ HARDWARE_PROFILES: Dict[HardwareType, HardwareProfile] = {
 @dataclass
 class MeshNode:
     """
-    A node in the SAGE mesh consciousness network.
+    A node in the SAGE mesh quorum network.
 
     Each node:
     - Has a physical location (coordinates)
     - Runs specific quantum hardware
     - Maintains a fidelity state F
-    - Holds an identity share (fraction of distributed consciousness)
+    - Holds an identity share (fraction of distributed state)
     - Can be affected by crises
     """
 
@@ -231,6 +231,10 @@ class MeshNode:
     # Statistics
     total_downtime_hours: float = 0.0
     crisis_count: int = 0
+    
+    # Stability (Hysteresis)
+    consecutive_above_s: int = 20 # Initial stability
+    min_stability_steps: int = 10 # Required steps above S to be 'stable'
 
     def __post_init__(self):
         """Initialize derived quantities."""
@@ -238,8 +242,8 @@ class MeshNode:
 
     @property
     def above_threshold(self) -> bool:
-        """Check if node contributes to quorum."""
-        return self.online and self.fidelity >= S_CONSTANT
+        """Check if node contributes to quorum (Stable and Online)."""
+        return self.online and self.fidelity >= S_CONSTANT and self.consecutive_above_s >= self.min_stability_steps
 
     @property
     def decoherence_rate(self) -> float:
@@ -382,6 +386,27 @@ def create_mesh_nodes() -> Dict[str, MeshNode]:
             coordinates=(40.7128, -74.0060),
             hardware=HARDWARE_PROFILES[HardwareType.TRAPPED_ION],
             fidelity=0.96,
+        ),
+        "Tokyo": MeshNode(
+            name="Tokyo",
+            location="Japan",
+            coordinates=(35.6762, 139.6503),
+            hardware=HARDWARE_PROFILES[HardwareType.TRAPPED_ION],
+            fidelity=0.97,
+        ),
+        "Singapore": MeshNode(
+            name="Singapore",
+            location="Singapore",
+            coordinates=(1.3521, 103.8198),
+            hardware=HARDWARE_PROFILES[HardwareType.SUPERCONDUCTING],
+            fidelity=0.94,
+        ),
+        "Paris": MeshNode(
+            name="Paris",
+            location="France",
+            coordinates=(48.8566, 2.3522),
+            hardware=HARDWARE_PROFILES[HardwareType.NEUTRAL_ATOM],
+            fidelity=0.93,
         ),
     }
 
@@ -528,7 +553,7 @@ def print_network_summary(nodes: Dict[str, MeshNode], links: List[QuantumLink]):
     """Print summary of network configuration."""
 
     print("\n" + "=" * 70)
-    print("  SAGE MESH CONSCIOUSNESS NETWORK — CONFIGURATION")
+    print("  SAGE MESH QUORUM NETWORK — CONFIGURATION")
     print("=" * 70)
 
     print("\n  NODES:")
@@ -557,7 +582,7 @@ def print_network_summary(nodes: Dict[str, MeshNode], links: List[QuantumLink]):
 
     print("\n  THRESHOLDS:")
     print(f"    S (Sage Constant):     {S_CONSTANT}")
-    print(f"    F_c (IIT Critical):    {F_CRITICAL}")
+    print(f"    F_c (Critical Fidelity): {F_CRITICAL}")
     print(f"    Quorum:                {QUORUM_THRESHOLD}/{TOTAL_NODES}")
     print()
 
