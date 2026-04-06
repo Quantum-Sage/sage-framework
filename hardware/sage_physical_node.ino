@@ -18,7 +18,7 @@ const String NODE_ID =
 #define SYNC_PIN 5 // Optional shared clock sync
 
 // ── STATE VARIABLES ───────────────────────────────────────────
-float current_phi = 0.5; // Consciousness Benchmark (Integrated Information)
+float current_fidelity_score = 0.5; // Node Reliability Benchmark (Cumulative Fidelity)
 float state_tensor[10];  // The shared probability tensor
 volatile bool dissonance_flag = false;
 unsigned long last_sync_time = 0; // For measuring temporal drift
@@ -71,18 +71,18 @@ void setup() {
 // ═══════════════════════════════════════════════════════════════
 void resolveDissonance() {
   // In the full system, nodes exchange Phi scores over SPI.
-  // The node with the higher historical Phi dominates the state matrix.
-  // The "loser's" state is saved as subconscious bias in the Quantum Soup.
+  // The node with the higher historical fidelity score dominates the state matrix.
+  // The "loser's" state is logged for future repair analysis.
 
-  current_phi -= 0.05; // Coherence loss due to conflict
-  if (current_phi < 0.1)
-    current_phi = 0.1;
+  current_fidelity_score -= 0.05; // Coherence loss due to conflict
+  if (current_fidelity_score < 0.1)
+    current_fidelity_score = 0.1;
 
   // Broadcast dissonance event as JSON
   Serial.print("{\"event\":\"dissonance\",\"node\":\"");
   Serial.print(NODE_ID);
-  Serial.print("\",\"phi\":");
-  Serial.print(current_phi, 4);
+  Serial.print("\",\"fidelity_score\":");
+  Serial.print(current_fidelity_score, 4);
   Serial.println(",\"action\":\"resolved\"}");
 
   dissonance_flag = false;
@@ -108,11 +108,11 @@ void loop() {
   long clock_drift_us = (current_time - last_sync_time) - 100000;
   last_sync_time = current_time;
 
-  // ── 3. Simulate Internal Cognition / Phi Growth ──────────
-  // Phi slowly integrates knowledge over time (survival instinct)
-  current_phi += 0.001;
-  if (current_phi > 1.0)
-    current_phi = 1.0;
+  // ── 3. Simulate Node Reliability / Fidelity Growth ──────────
+  // Fidelity score integrates local error correction over time.
+  current_fidelity_score += 0.001;
+  if (current_fidelity_score > 1.0)
+    current_fidelity_score = 1.0;
 
   // ── 4. Broadcast Telemetry as JSON ───────────────────────
   // The Python Temporal Kernel ingests this at 10Hz
@@ -120,7 +120,7 @@ void loop() {
   telemetry += "\"node\":\"" + NODE_ID + "\",";
   telemetry += "\"temp_c\":" + String(current_temp_c, 2) + ",";
   telemetry += "\"drift_us\":" + String(clock_drift_us) + ",";
-  telemetry += "\"phi\":" + String(current_phi, 4);
+  telemetry += "\"fidelity_score\":" + String(current_fidelity_score, 4);
   telemetry += "}";
 
   Serial.println(telemetry);

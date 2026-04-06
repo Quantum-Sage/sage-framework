@@ -148,8 +148,7 @@ class TestLittleGuyOptimizer:
 
 
 # ============================================================================
-# (Archived modules removed: deep_handover_forensics, sage_quantum_soup,
-#  singularity_protocol — tests moved to archive with their source files)
+# (Archived modules moved to archive/ directory)
 # ============================================================================
 
 from src.sage_theorems_unified import (

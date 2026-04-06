@@ -602,7 +602,7 @@ def run_point_to_point_comparison(config: SimulationConfig) -> Dict:
     results = {}
 
     # For each node as the single identity carrier
-    for node_name in ["Beijing", "Shanghai", "Dubai", "London", "NYC"]:
+    for node_name in ["Beijing", "Shanghai", "Dubai", "London", "NYC", "Tokyo", "Singapore", "Paris"]:
         # Create isolated node
         nodes = create_mesh_nodes()
         node = nodes[node_name]

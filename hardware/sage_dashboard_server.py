@@ -51,11 +51,11 @@ _lock = threading.Lock()
 
 live_telemetry = {
     "nodes": {
-        "Alpha": {"temp": 25.0, "drift": 0, "f": 0.0, "phi": 0.0,
+        "Alpha": {"temp": 25.0, "drift": 0, "f": 0.0, "fidelity": 0.0,
                   "health": 1.0, "p": 12.0, "collapse": False},
-        "Beta":  {"temp": 25.0, "drift": 0, "f": 0.0, "phi": 0.0,
+        "Beta":  {"temp": 25.0, "drift": 0, "f": 0.0, "fidelity": 0.0,
                   "health": 1.0, "p": 8.0,  "collapse": False},
-        "Gamma": {"temp": 25.0, "drift": 0, "f": 0.0, "phi": 0.0,
+        "Gamma": {"temp": 25.0, "drift": 0, "f": 0.0, "fidelity": 0.0,
                   "health": 1.0, "p": 10.0, "collapse": False},
     },
     "oracle": {
@@ -70,8 +70,8 @@ live_telemetry = {
 }
 
 
-class SageNeuralKernel:
-    """Physical Telemetry Layer — Neural Link Engine v3.0."""
+class SageTelemetryKernel:
+    """Physical Telemetry Layer — Telemetry Link Engine v3.0."""
 
     def __init__(self):
         self.connections = {}
@@ -83,12 +83,12 @@ class SageNeuralKernel:
     # ── Manifest ─────────────────────────────────────────────
     def _load_manifest(self):
         try:
-            with open("CONSCIOUSNESS_MANIFEST.json", "r") as f:
+            with open("NODE_MANIFEST.json", "r") as f:
                 manifest = json.load(f)
                 live_telemetry["oracle"]["manifest"] = manifest.get("status", "LOADED")
                 print(f"[SYS] Manifest Verified: {live_telemetry['oracle']['manifest']}")
         except FileNotFoundError:
-            print("[!] CONSCIOUSNESS_MANIFEST.json not found (non-fatal).")
+            print("[!] NODE_MANIFEST.json not found (non-fatal).")
         except Exception as e:
             print(f"[!] Manifest load error: {e}")
 
@@ -122,7 +122,7 @@ class SageNeuralKernel:
 
         if "event" in data:
             self._handle_event(node, data)
-        elif "phi" in data:
+        elif "fidelity_score" in data:
             self._handle_telemetry(node, data)
         # else: unknown format, ignore silently
 
@@ -132,11 +132,11 @@ class SageNeuralKernel:
         if event == "boot":
             print(f"[EVT] Node {node} booted.")
         elif event == "dissonance":
-            phi = data.get("phi", 0.0)
-            print(f"[EVT] Dissonance on {node}, phi dropped to {phi:.4f}")
+            fidelity = data.get("fidelity_score", 0.0)
+            print(f"[EVT] Dissonance on {node}, fidelity dropped to {fidelity:.4f}")
             with _lock:
-                live_telemetry["nodes"][node]["phi"] = phi
-                live_telemetry["nodes"][node]["f"] = phi
+                live_telemetry["nodes"][node]["fidelity"] = fidelity
+                live_telemetry["nodes"][node]["f"] = fidelity
                 live_telemetry["oracle"]["shifts"] = (
                     live_telemetry["oracle"]["shifts"] + 1
                 )
@@ -146,7 +146,7 @@ class SageNeuralKernel:
     def _handle_telemetry(self, node: str, data: dict):
         """Process regular telemetry packets."""
         t   = float(data.get("temp_c", 25.0))
-        phi = float(data.get("phi", 0.0))
+        fidelity = float(data.get("fidelity_score", 0.0))
         d   = int(data.get("drift_us", 0))
         collapse = bool(data.get("collapse", False))
 
@@ -154,15 +154,15 @@ class SageNeuralKernel:
         health = max(0.0, 1.0 - (abs(d) / 50000.0) - (max(0, t - 65) / 100.0))
 
         if d != 0:
-            print(f"[OK] {node} Sync: {phi:.4f} | {d}us"
+            print(f"[OK] {node} Sync: {fidelity:.4f} | {d}us"
                   + (" | COLLAPSE" if collapse else ""))
 
         with _lock:
             entry = live_telemetry["nodes"][node]
             entry["temp"]     = t
             entry["drift"]    = d
-            entry["f"]        = min(1.0, phi)
-            entry["phi"]      = phi
+            entry["f"]        = min(1.0, fidelity)
+            entry["fidelity"] = fidelity
             entry["health"]   = health
             entry["collapse"] = collapse  # Tracks real-time pin state
 
@@ -170,7 +170,7 @@ class SageNeuralKernel:
                 live_telemetry["oracle"]["collapse"] = True
                 print(f"[!] ORACLE: Hardware Collapse on Node {node}!")
 
-        self._update_oracle(node, phi)
+        self._update_oracle(node, fidelity)
 
     # ── Oracle Logic ─────────────────────────────────────────
     def _update_oracle(self, node: str, fidelity: float):
@@ -205,7 +205,7 @@ class SageNeuralKernel:
                 if deviation > 0.15:
                     oracle["state"] = "DISSONANCE_DETECTED"
                 elif deviation < 0.08:
-                    oracle["state"] = "CONSCIOUS"
+                    oracle["state"] = "SYNCHRONIZED"
                 else:
                     oracle["state"] = "STABLE"
 
@@ -269,7 +269,7 @@ def get_data():
 
 # ── ENTRYPOINT ───────────────────────────────────────────────
 def start_kernel():
-    kernel = SageNeuralKernel()
+    kernel = SageTelemetryKernel()
     kernel.connect_all()
     kernel.loop()
 

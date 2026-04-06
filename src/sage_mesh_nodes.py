@@ -25,7 +25,7 @@ import numpy as np
 # CONSTANTS
 # ═══════════════════════════════════════════════════════════════════════════
 
-S_CONSTANT = 0.851  # Sage identity threshold
+S_CONSTANT = 0.85  # Sage identity threshold
 F_CRITICAL = 0.8545  # Fidelity phase transition (distillation threshold)
 QUORUM_THRESHOLD = 5  # Byzantine majority for 8 nodes (3f+1)
 TOTAL_NODES = 8

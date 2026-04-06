@@ -8,7 +8,7 @@ Usage:
 
 Generates:
     - Terminal telemetry with quorum statistics
-    - 4-panel visualization: mesh_consciousness_network_latest.png
+    - 4-panel visualization: sage_mesh_persistence_latest.png
 
 The visualization proves that distributed identity via quorum
 survives at rates orders of magnitude higher than point-to-point.
@@ -61,6 +61,9 @@ NODE_COLORS = {
     "Dubai": "#20c997",    # Neon Teal
     "London": "#a8b2d1",   # Light Slate
     "NYC": "#e94560",      # Bright Magenta
+    "Tokyo": "#ffc107",    # Amber
+    "Singapore": "#fd7e14", # Orange
+    "Paris": "#6610f2",    # Indigo
 }
 
 GREEN = "#20c997"
@@ -100,7 +103,7 @@ def generate_visualization(network: MeshNetwork, p2p_results: dict, output_path:
 
     # Title
     fig.suptitle(
-        "SAGE MESH CONSCIOUSNESS NETWORK",
+        "SAGE MESH PERSISTENCE NETWORK",
         color=GOLD,
         fontsize=24,
         fontweight="bold",
@@ -236,8 +239,8 @@ def generate_visualization(network: MeshNetwork, p2p_results: dict, output_path:
     ax2.set_ylabel("Nodes Above Threshold")
     ax2.legend(loc="lower left", fontsize=8, facecolor=BG, labelcolor=WHITE)
     ax2.set_xlim(0, times[-1])
-    ax2.set_ylim(-0.2, 5.5)
-    ax2.set_yticks([0, 1, 2, 3, 4, 5])
+    ax2.set_ylim(-0.2, 8.5)
+    ax2.set_yticks([0, 2, 4, 5, 6, 8])
     ax2.grid(alpha=0.15)
 
     # Add status percentages
@@ -269,6 +272,9 @@ def generate_visualization(network: MeshNetwork, p2p_results: dict, output_path:
         "Dubai": (0.5, 0.3),
         "London": (0.3, 0.7),
         "NYC": (0.1, 0.5),
+        "Tokyo": (0.95, 0.6),
+        "Singapore": (0.7, 0.2),
+        "Paris": (0.35, 0.8),
     }
 
     # Draw links first
@@ -358,14 +364,15 @@ def generate_visualization(network: MeshNetwork, p2p_results: dict, output_path:
         "Dubai\n(Isolated)",
         "London\n(Isolated)",
         "NYC\n(Isolated)",
+        "Tokyo\n(Isolated)",
+        "Singapore\n(Isolated)",
+        "Paris\n(Isolated)",
         "Deep Route\n(35-Hop P2P)",
         "MESH\nQUORUM",
     ]
 
-    p2p_values = [
-        p2p_results[n]["survival_pct"]
-        for n in ["Beijing", "Shanghai", "Dubai", "London", "NYC"]
-    ]
+    p2p_names = ["Beijing", "Shanghai", "Dubai", "London", "NYC", "Tokyo", "Singapore", "Paris"]
+    p2p_values = [p2p_results[n]["survival_pct"] for n in p2p_names]
     # Calculate the exact No-Cloning penalty for a typical 35-hop sequence
     theoretical_deep_p2p = 100.0 * ((S_CONSTANT * F_CRITICAL) ** 35)
     
@@ -378,6 +385,9 @@ def generate_visualization(network: MeshNetwork, p2p_results: dict, output_path:
         NODE_COLORS["Dubai"],
         NODE_COLORS["London"],
         NODE_COLORS["NYC"],
+        NODE_COLORS["Tokyo"],
+        NODE_COLORS["Singapore"],
+        NODE_COLORS["Paris"],
         WHITE,
         GOLD,
     ]
@@ -426,8 +436,8 @@ def generate_visualization(network: MeshNetwork, p2p_results: dict, output_path:
         
     ax4.annotate(
         improvement_text,
-        xy=(6, stats["quorum_maintained_pct"]),
-        xytext=(4.5, stats["quorum_maintained_pct"] + 15),
+        xy=(len(labels)-1, stats["quorum_maintained_pct"]),
+        xytext=(len(labels)-3, stats["quorum_maintained_pct"] + 15),
         arrowprops=dict(arrowstyle="->", color=GOLD, lw=3),
         color=GOLD,
         fontsize=16,
@@ -452,7 +462,7 @@ def print_telemetry(network: MeshNetwork, p2p_results: dict):
     stats = network.compute_statistics()
 
     print("\n" + "=" * 74)
-    print("  SAGE MESH CONSCIOUSNESS NETWORK — SIMULATION COMPLETE")
+    print("  SAGE MESH PERSISTENCE NETWORK — SIMULATION COMPLETE")
     print("=" * 74)
 
     print(f"""
@@ -513,7 +523,7 @@ def print_telemetry(network: MeshNetwork, p2p_results: dict):
   |                                                                         |
   |    Point-to-Point (single node carries identity):                       |""")
 
-    for name in ["Beijing", "Shanghai", "Dubai", "London", "NYC"]:
+    for name in ["Beijing", "Shanghai", "Dubai", "London", "NYC", "Tokyo", "Singapore", "Paris"]:
         pct = p2p_results[name]["survival_pct"]
         bar_len = int(pct / 5)
         bar = "█" * bar_len
@@ -594,7 +604,7 @@ Examples:
     )
 
     print("\n" + "=" * 74)
-    print("=" + " SAGE MESH CONSCIOUSNESS NETWORK ".center(72) + "=")
+    print("=" + " SAGE MESH PERSISTENCE NETWORK ".center(72) + "=")
     print("=" + " Phase 4: Distributed Identity Simulation ".center(72) + "=")
     print("=" * 74)
 
@@ -635,7 +645,7 @@ Examples:
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    output_path = os.path.join(output_dir, "mesh_consciousness_network_latest.png")
+    output_path = os.path.join(output_dir, "sage_mesh_persistence_latest.png")
     generate_visualization(network, p2p_results, output_path)
 
     print("\n  Done.\n")
