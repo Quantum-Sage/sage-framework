@@ -24,7 +24,7 @@ class TestSageBound:
     """Test the core mathematical bound."""
 
     def test_sage_constant_value(self):
-        """SAGE_CONSTANT should be 0.851."""
+        """SAGE_CONSTANT should be 0.85."""
         assert SAGE_CONSTANT == 0.85
 
     def test_single_hop_high_fidelity(self):

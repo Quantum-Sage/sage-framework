@@ -33,7 +33,7 @@ warnings.filterwarnings('ignore')
 # CONSTANTS
 # ═══════════════════════════════════════════════════════════════════════════════
 
-SAGE_CONSTANT = 0.851
+SAGE_CONSTANT = 0.85
 P_BOUNDARY_LOW = 0.010
 P_BOUNDARY_HIGH = 0.015
 P_CRITICAL = 0.012  # Midpoint of transition

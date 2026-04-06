@@ -5,8 +5,8 @@ SAGE Framework — Byzantine Fault Injection Test Suite
 Tests the mesh quorum's resilience to adversarial node failures.
 
 Byzantine Fault Tolerance requires: f < N/3 failures for safety
-For our 5-node mesh: f < 5/3 = 1.67, so we tolerate 1 Byzantine node.
-For safety, we actually use 3-of-5 quorum which tolerates 2 crash faults.
+For our 8-node mesh: f < 8/3 = 2.66, so we tolerate 2 Byzantine nodes.
+For safety, we use a 5-of-8 quorum which ensures at least 3 honest nodes in every consensus.
 
 Test categories:
 1. Crash faults (node goes silent)
@@ -27,10 +27,10 @@ from enum import Enum
 # TEST CONFIGURATION
 # ═══════════════════════════════════════════════════════════════════════════════
 
-SAGE_CONSTANT = 0.851
-QUORUM_SIZE = 3  # Need 3 of 5 to agree
-NUM_NODES = 5
-NODE_NAMES = ["Beijing", "Shanghai", "Dubai", "London", "NYC"]
+SAGE_CONSTANT = 0.85
+QUORUM_SIZE = 5  # Need 5 of 8 to agree
+NUM_NODES = 8
+NODE_NAMES = ["Beijing", "Shanghai", "Dubai", "London", "NYC", "Tokyo", "Singapore", "Paris"]
 
 
 class FaultType(Enum):
@@ -67,7 +67,7 @@ class QuorumResult:
 # ═══════════════════════════════════════════════════════════════════════════════
 
 class MockMeshNetwork:
-    """Simulates the 5-node SAGE mesh for testing."""
+    """Simulates the 8-node SAGE mesh for testing."""
     
     def __init__(self, seed: int = 42):
         np.random.seed(seed)
@@ -198,8 +198,8 @@ class TestCrashFaults:
         
         result = mesh.run_quorum_vote()
         
-        assert result.consensus_reached, "Should reach consensus with 4/5 nodes"
-        assert len(result.agreeing_nodes) >= 3, "Should have 3+ agreeing nodes"
+        assert result.consensus_reached, "Should reach consensus with 7/8 nodes"
+        assert len(result.agreeing_nodes) >= 5, "Should have 5+ agreeing nodes"
         assert "Dubai" in result.dissenting_nodes, "Crashed node should be dissenting"
     
     def test_double_crash_survives(self):
@@ -210,11 +210,11 @@ class TestCrashFaults:
         
         result = mesh.run_quorum_vote()
         
-        assert result.consensus_reached, "Should reach consensus with 3/5 nodes"
-        assert len(result.agreeing_nodes) == 3, "Exactly 3 nodes should agree"
+        assert result.consensus_reached, "Should reach consensus with 6/8 nodes"
+        assert len(result.agreeing_nodes) == 6, "Exactly 6 nodes should agree"
     
-    def test_triple_crash_fails(self):
-        """Quorum should FAIL with 3 crashed nodes (only 2 remain)."""
+    def test_triple_crash_survives(self):
+        """Quorum should survive 3 crashed nodes (5 remain)."""
         mesh = MockMeshNetwork()
         mesh.inject_fault("Dubai", FaultType.CRASH)
         mesh.inject_fault("Shanghai", FaultType.CRASH)
@@ -222,7 +222,20 @@ class TestCrashFaults:
         
         result = mesh.run_quorum_vote()
         
-        assert not result.consensus_reached, "Should NOT reach consensus with 2/5 nodes"
+        assert result.consensus_reached, "Should reach consensus with 5/8 nodes"
+        assert len(result.agreeing_nodes) == 5, "Exactly 5 nodes should agree"
+
+    def test_quadruple_crash_fails(self):
+        """Quorum should FAIL with 4 crashed nodes (only 4 remain)."""
+        mesh = MockMeshNetwork()
+        mesh.inject_fault("Dubai", FaultType.CRASH)
+        mesh.inject_fault("Shanghai", FaultType.CRASH)
+        mesh.inject_fault("London", FaultType.CRASH)
+        mesh.inject_fault("NYC", FaultType.CRASH)
+        
+        result = mesh.run_quorum_vote()
+        
+        assert not result.consensus_reached, "Should NOT reach consensus with 4/8 nodes"
         assert not result.identity_preserved, "Identity should NOT be preserved"
 
 
@@ -248,13 +261,10 @@ class TestByzantineFaults:
         
         result = mesh.run_quorum_vote()
         
-        # With 2 Byzantine, median could be corrupted
-        # This is a known limitation of 5-node BFT
-        if result.consensus_reached:
-            # Consensus reached, but fidelity may be corrupted
-            assert True, "Consensus reached but may be incorrect"
-        else:
-            assert True, "No consensus (correct failure mode)"
+        # With 2 Byzantine, we still have 6 honest nodes. 
+        # Quorum is 5. Byzantine can lie but honest majority should prevail.
+        assert result.consensus_reached, "2 Byzantine nodes should not break 8-node quorum"
+        assert result.agreed_fidelity > 0.85, "Median should remain stable"
 
 
 class TestNetworkPartitions:
@@ -264,24 +274,24 @@ class TestNetworkPartitions:
         """Majority partition (3 nodes) should maintain consensus."""
         mesh = MockMeshNetwork()
         mesh.create_partition(
-            group_a=["Beijing", "Shanghai", "NYC"],  # Majority
-            group_b=["Dubai", "London"],              # Minority
+            group_a=["Beijing", "Shanghai", "Dubai", "London", "NYC"],  # Majority 5
+            group_b=["Tokyo", "Singapore", "Paris"],                    # Minority 3
         )
         
         result = mesh.run_quorum_vote(requester="Beijing")
         
         assert result.consensus_reached, "Majority partition should reach consensus"
-        assert len(result.agreeing_nodes) == 3, "3 nodes should agree"
+        assert len(result.agreeing_nodes) == 5, "5 nodes should agree"
     
     def test_minority_partition_fails(self):
         """Minority partition (2 nodes) should NOT reach consensus."""
         mesh = MockMeshNetwork()
         mesh.create_partition(
-            group_a=["Beijing", "Shanghai", "NYC"],
-            group_b=["Dubai", "London"],
+            group_a=["Beijing", "Shanghai", "Dubai", "London", "NYC"],
+            group_b=["Tokyo", "Singapore", "Paris"],
         )
         
-        result = mesh.run_quorum_vote(requester="Dubai")  # In minority
+        result = mesh.run_quorum_vote(requester="Tokyo")  # In minority
         
         assert not result.consensus_reached, "Minority should NOT reach consensus"
     
@@ -320,7 +330,7 @@ class TestTimingAttacks:
         result = mesh.run_quorum_vote()
 
         assert result.consensus_reached, \
-            f"Should reach consensus without stale node (4 honest nodes remain), " \
+            f"Should reach consensus without stale node (7 honest nodes remain), " \
             f"got {len(result.agreeing_nodes)} agreeing"
         assert "Dubai" not in result.agreeing_nodes, \
             "Stale node should be excluded from agreeing set"
@@ -382,7 +392,7 @@ class TestEdgeCases:
         result = mesh.run_quorum_vote()
         
         assert result.consensus_reached
-        assert len(result.agreeing_nodes) == 5, "All 5 should agree"
+        assert len(result.agreeing_nodes) == 8, "All 8 should agree"
         assert len(result.dissenting_nodes) == 0
 
 

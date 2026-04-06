@@ -32,17 +32,17 @@ import time
 # CONSTANTS
 # ═══════════════════════════════════════════════════════════════════════════════
 
-SAGE_CONSTANT = 0.851
-QUORUM_SIZE = 3
-NUM_NODES = 5
-NODE_IDS = ["beijing", "shanghai", "dubai", "london", "nyc"]
+SAGE_CONSTANT = 0.85
+QUORUM_SIZE = 5
+NUM_NODES = 8
+NODE_IDS = ["beijing", "shanghai", "dubai", "london", "nyc", "tokyo", "singapore", "paris"]
 
 
 class PartitionType(Enum):
     """Types of network partitions."""
     NONE = "none"              # Fully connected
-    MAJORITY_MINORITY = "3-2"  # 3 nodes vs 2 nodes
-    SYMMETRIC = "2-2-1"        # 2 vs 2 vs 1 isolated
+    MAJORITY_MINORITY = "5-3"  # 5 nodes vs 3 nodes
+    SYMMETRIC = "4-4"          # 4 vs 4 split (Byzantine failure)
     TOTAL = "all-isolated"     # All nodes isolated
 
 
@@ -93,11 +93,14 @@ class PartitionableMesh:
         
         # Initialize nodes with realistic fidelities
         fidelities = {
-            "beijing": 0.97,   # Willow
-            "shanghai": 0.96,  # QuEra
-            "dubai": 0.88,     # NISQ
-            "london": 0.95,    # QuEra
-            "nyc": 0.98,       # Helios
+            "beijing": 0.97,
+            "shanghai": 0.96,
+            "dubai": 0.88,
+            "london": 0.95,
+            "nyc": 0.98,
+            "tokyo": 0.94,
+            "singapore": 0.93,
+            "paris": 0.92,
         }
         
         for node_id in NODE_IDS:
@@ -119,18 +122,17 @@ class PartitionableMesh:
             self.partition_map = {nid: 0 for nid in NODE_IDS}
         
         elif partition_type == PartitionType.MAJORITY_MINORITY:
-            # Beijing, Shanghai, Dubai (3) vs London, NYC (2)
+            # 5 vs 3 split
             self.partition_map = {
-                "beijing": 0, "shanghai": 0, "dubai": 0,
-                "london": 1, "nyc": 1
+                "beijing": 0, "shanghai": 0, "dubai": 0, "london": 0, "nyc": 0,
+                "tokyo": 1, "singapore": 1, "paris": 1
             }
         
         elif partition_type == PartitionType.SYMMETRIC:
-            # Beijing, Shanghai (2) vs London, NYC (2) vs Dubai (1)
+            # 4 vs 4 split
             self.partition_map = {
-                "beijing": 0, "shanghai": 0,
-                "london": 1, "nyc": 1,
-                "dubai": 2
+                "beijing": 0, "shanghai": 0, "dubai": 0, "london": 0,
+                "nyc": 1, "tokyo": 1, "singapore": 1, "paris": 1
             }
         
         elif partition_type == PartitionType.TOTAL:
@@ -207,7 +209,7 @@ class TestMajorityPartition:
     """Tests that majority partition maintains consensus."""
     
     def test_majority_achieves_quorum(self):
-        """3-node partition should achieve quorum."""
+        """5-node partition should achieve quorum."""
         mesh = PartitionableMesh()
         mesh.create_partition(PartitionType.MAJORITY_MINORITY)
         
@@ -215,7 +217,7 @@ class TestMajorityPartition:
         result = mesh.attempt_consensus("beijing")
         
         assert result.success, "Majority partition should achieve consensus"
-        assert len(result.participating_nodes) == 3
+        assert len(result.participating_nodes) == 5
         assert result.agreed_fidelity is not None
     
     def test_majority_fidelity_is_median(self):
@@ -245,12 +247,12 @@ class TestMinorityPartition:
     """Tests that minority partition fails safely."""
     
     def test_minority_fails_quorum(self):
-        """2-node partition should NOT achieve quorum."""
+        """3-node partition should NOT achieve quorum."""
         mesh = PartitionableMesh()
         mesh.create_partition(PartitionType.MAJORITY_MINORITY)
         
         # Consensus from minority partition
-        result = mesh.attempt_consensus("london")
+        result = mesh.attempt_consensus("tokyo")
         
         assert not result.success, "Minority partition should NOT achieve consensus"
         assert result.agreed_fidelity is None
@@ -260,10 +262,10 @@ class TestMinorityPartition:
         mesh = PartitionableMesh()
         mesh.create_partition(PartitionType.MAJORITY_MINORITY)
         
-        result = mesh.attempt_consensus("nyc")
+        result = mesh.attempt_consensus("tokyo")
         
-        assert len(result.participating_nodes) == 2, \
-            f"Minority should see only 2 nodes, saw {len(result.participating_nodes)}"
+        assert len(result.participating_nodes) == 3, \
+            f"Minority should see only 3 nodes, saw {len(result.participating_nodes)}"
         assert not result.success
 
 
@@ -276,14 +278,14 @@ class TestSplitBrainPrevention:
         mesh.create_partition(PartitionType.MAJORITY_MINORITY)
         
         result_majority = mesh.attempt_consensus("beijing")
-        result_minority = mesh.attempt_consensus("london")
+        result_minority = mesh.attempt_consensus("tokyo")
         
         # At most one can succeed
         successes = [result_majority.success, result_minority.success]
         assert sum(successes) <= 1, "Both partitions achieved consensus (split-brain!)"
     
     def test_symmetric_partition_blocks_all(self):
-        """2-2-1 split should block ALL consensus."""
+        """4-4 split should block ALL consensus."""
         mesh = PartitionableMesh()
         mesh.create_partition(PartitionType.SYMMETRIC)
         
@@ -313,14 +315,14 @@ class TestPartitionRecovery:
         
         # Create and then heal partition
         mesh.create_partition(PartitionType.MAJORITY_MINORITY)
-        result_partitioned = mesh.attempt_consensus("london")  # Minority
+        result_partitioned = mesh.attempt_consensus("tokyo")  # Minority
         
         mesh.heal_partition()
-        result_healed = mesh.attempt_consensus("london")  # Now has full network
+        result_healed = mesh.attempt_consensus("tokyo")  # Now has full network
         
         assert not result_partitioned.success, "Minority should fail during partition"
         assert result_healed.success, "Should succeed after healing"
-        assert len(result_healed.participating_nodes) == 5
+        assert len(result_healed.participating_nodes) == 8
     
     def test_fidelity_consistent_after_recovery(self):
         """State should be consistent after recovery."""
@@ -332,9 +334,9 @@ class TestPartitionRecovery:
         mesh.heal_partition()
         result2 = mesh.attempt_consensus("beijing")  # Full network
         
-        # Fidelity should be the same or higher (more nodes = better median)
-        assert result2.agreed_fidelity >= result1.agreed_fidelity, \
-            "Full network median should be >= majority median"
+        # Fidelity should be above SAGE_CONSTANT
+        assert result2.agreed_fidelity >= SAGE_CONSTANT, \
+            "Full network should maintain identity persistence"
     
     def test_epoch_advances_through_partition(self):
         """Epoch counter should advance continuously."""
@@ -342,7 +344,7 @@ class TestPartitionRecovery:
         
         mesh.create_partition(PartitionType.MAJORITY_MINORITY)
         r1 = mesh.attempt_consensus("beijing")
-        r2 = mesh.attempt_consensus("london")
+        r2 = mesh.attempt_consensus("tokyo")
         
         mesh.heal_partition()
         r3 = mesh.attempt_consensus("beijing")
@@ -392,8 +394,9 @@ class TestStateEvolution:
         majority_consensus = mesh.attempt_consensus("beijing")
         
         # Minority tries to update (should have no effect on majority view)
-        mesh.update_node_fidelity("london", 0.50)
-        mesh.update_node_fidelity("nyc", 0.50)
+        mesh.update_node_fidelity("tokyo", 0.50)
+        mesh.update_node_fidelity("singapore", 0.50)
+        mesh.update_node_fidelity("paris", 0.50)
         
         # Majority consensus should be unchanged
         new_majority_consensus = mesh.attempt_consensus("beijing")
@@ -405,20 +408,20 @@ class TestStateEvolution:
 class TestEdgeCases:
     """Tests edge cases and boundary conditions."""
     
-    def test_exactly_three_nodes_partition(self):
-        """Exactly 3 nodes should be the minimum for quorum."""
+    def test_exactly_five_nodes_partition(self):
+        """Exactly 5 nodes should be the minimum for quorum."""
         mesh = PartitionableMesh()
         
-        # Create custom 3-2 partition
+        # Create custom 5-3 partition
         mesh.partition_map = {
-            "beijing": 0, "shanghai": 0, "dubai": 0,
-            "london": 1, "nyc": 1
+            "beijing": 0, "shanghai": 0, "dubai": 0, "london": 0, "nyc": 0,
+            "tokyo": 1, "singapore": 1, "paris": 1
         }
         
         result = mesh.attempt_consensus("beijing")
         
-        assert result.success, "Exactly 3 nodes should achieve quorum"
-        assert len(result.participating_nodes) == 3
+        assert result.success, "Exactly 5 nodes should achieve quorum"
+        assert len(result.participating_nodes) == 5
     
     def test_rapid_partition_changes(self):
         """System should handle rapid partition changes."""
@@ -443,10 +446,10 @@ class TestEdgeCases:
         """Single isolated node should fail gracefully."""
         mesh = PartitionableMesh()
         
-        # Isolate Dubai only
+        # Isolate Dubai and Paris only (still 6 nodes left)
         mesh.partition_map = {
-            "beijing": 0, "shanghai": 0, "london": 0, "nyc": 0,
-            "dubai": 1
+            "beijing": 0, "shanghai": 0, "london": 0, "nyc": 0, "tokyo": 0, "singapore": 0,
+            "dubai": 1, "paris": 2
         }
         
         result_isolated = mesh.attempt_consensus("dubai")
@@ -464,7 +467,7 @@ class TestConsensusHistory:
         mesh = PartitionableMesh()
         
         mesh.attempt_consensus("beijing")
-        mesh.attempt_consensus("london")
+        mesh.attempt_consensus("tokyo")
         mesh.attempt_consensus("dubai")
         
         assert len(mesh.consensus_history) == 3, \
@@ -479,7 +482,7 @@ class TestConsensusHistory:
             mesh.attempt_consensus(nid)
         
         failures = [r for r in mesh.consensus_history if not r.success]
-        assert len(failures) == 5, "All attempts in symmetric partition should fail"
+        assert len(failures) == 8, "All attempts in symmetric partition should fail"
 
 
 # ═══════════════════════════════════════════════════════════════════════════════

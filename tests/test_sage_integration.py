@@ -53,7 +53,7 @@ from src.sage_mesh_quorum import (
 
 # ─── Constants ────────────────────────────────────────────────────────────────
 
-S = SAGE_CONSTANT  # 0.851
+S = SAGE_CONSTANT  # 0.85
 N_NODES = 8
 QUORUM = 5
 
@@ -67,9 +67,9 @@ class TestSageBoundLogic:
     """Validate the Sage Bound calculation from sage_bound_logic.py."""
 
     def test_sage_constant_value(self):
-        """SAGE_CONSTANT must equal 0.851 (one source of truth)."""
+        """SAGE_CONSTANT must equal 0.85 (one source of truth)."""
         assert SAGE_CONSTANT == 0.85
-        assert S_CONSTANT == 0.851
+        assert S_CONSTANT == 0.85
 
     def test_perfect_hardware_perfect_fidelity(self):
         """F_gate=1.0, p_gen=1.0 → fidelity = 1/(1+2/p) = 1/3 (stochastic penalty applies).
