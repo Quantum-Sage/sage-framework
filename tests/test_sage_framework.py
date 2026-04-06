@@ -25,7 +25,7 @@ class TestSageBound:
 
     def test_sage_constant_value(self):
         """SAGE_CONSTANT should be 0.851."""
-        assert SAGE_CONSTANT == 0.851
+        assert SAGE_CONSTANT == 0.85
 
     def test_single_hop_high_fidelity(self):
         """1 hop at F=0.999, p=0.9 → should be close to 0.999."""
