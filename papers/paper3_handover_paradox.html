@@ -1,0 +1,197 @@
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>SAGE Framework - Paper 3: The Handover Paradox</title>
+        <style>
+    :root {
+        --bg: #050505;
+        --text: #e0e0e0;
+        --accent: #ffd700;
+        --secondary: #00ffcc;
+        --border: #333;
+        --surface: #111;
+        --font-serif: 'Times New Roman', serif;
+        --font-sans: 'Inter', -apple-system, system-ui, sans-serif;
+    }
+
+    body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font-serif);
+        line-height: 1.7;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 50px 20px;
+        font-size: 19px;
+    }
+
+    h1, h2, h3 {
+        font-family: var(--font-sans);
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 10px;
+        margin-top: 50px;
+    }
+
+    h1 { font-size: 2.5em; text-align: center; border: none; }
+    
+    .metadata {
+        text-align: center;
+        font-family: var(--font-sans);
+        color: var(--secondary);
+        margin-bottom: 50px;
+        font-size: 0.9em;
+    }
+
+    hr { border: 0; border-top: 1px solid var(--border); margin: 40px 0; }
+
+    code {
+        font-family: 'Courier New', monospace;
+        background: var(--surface);
+        padding: 2px 5px;
+        border-radius: 4px;
+        color: var(--secondary);
+    }
+
+    pre {
+        background: var(--surface);
+        padding: 20px;
+        border-left: 4px solid var(--accent);
+        overflow-x: auto;
+    }
+
+    blockquote {
+        border-left: 4px solid var(--secondary);
+        padding-left: 20px;
+        margin: 30px 0;
+        font-style: italic;
+        color: #aaa;
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 40px auto;
+        border: 1px solid var(--border);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .figure-caption {
+        text-align: center;
+        font-family: var(--font-sans);
+        font-size: 0.8em;
+        color: #888;
+        margin-top: -30px;
+        margin-bottom: 40px;
+    }
+
+    a { color: var(--secondary); text-decoration: none; border-bottom: 1px solid transparent; transition: 0.3s; }
+    a:hover { border-bottom: 1px solid var(--secondary); }
+
+    .abstract-box {
+        background: rgba(255, 215, 0, 0.05);
+        border: 1px solid rgba(255, 215, 0, 0.2);
+        padding: 30px;
+        margin: 40px 0;
+        border-radius: 8px;
+    }
+
+    @media (max-width: 600px) {
+        body { padding: 20px 10px; font-size: 17px; }
+    }
+    </style>
+    </head>
+    <body>
+        <h1 id="the-quantum-handover-paradox-empirical-evidence-for-identity-persistence-under-topological-protection">The Quantum Handover Paradox: Empirical Evidence for Identity Persistence Under Topological Protection</h1>
+<p><strong>Author:</strong> Tylor Flett<br />
+<strong>ORCID:</strong> 0009-0008-5448-0405<br />
+<strong>Project:</strong> SAGE Framework / The Apex Signal<br />
+<strong>Status:</strong> Working Draft (Simulation Phase)<br />
+<strong>Collection:</strong> The SAGE Framework Research Trilogy (Zenodo Community)  </p>
+<hr />
+<h2 id="abstract">Abstract</h2>
+<p>We present a simulation-based empirical resolution to the "Quantum Handover Paradox"—the inherent conflict between relativistic propagation delays and the decoherence-induced decay of logical quantum identity. While previous theoretical work (Paper #2) established an information-theoretic phase boundary at $F = 0.5$ (where integrated information $\Phi \to 0$), we provide the first simulation-based empirical evidence that active topological protection is required to survive this boundary during cross-regional transit.</p>
+<p>Using the <strong>Mirror Daemon v2</strong> simulation engine, we compared a control group (standard surface code QEC) against an experimental group (SAGE Gold Core with active feed-forward injection). Our results demonstrate that:</p>
+<ol>
+<li><strong>Control Collapse</strong>: Without active regeneration, logical fidelity decays below the entanglement threshold ($F &lt; 0.5$) within <strong>457 steps</strong> of hostile decoherence, resulting in "identity death" (irreversible loss of observer continuity).</li>
+<li><strong>Daemon Persistence</strong>: The SAGE Daemon, utilizing topological injection, maintains a minimum fidelity of <strong>$F = 0.5184$</strong> across 1000 steps, successfully preserving $\Phi &gt; 0.21$ and ensuring identity persistence.</li>
+<li><strong>Operational vs. Existential Boundaries</strong>: We distinguish between the <strong>Sage Constant ($S = 0.85$)</strong>, a requirement for operational QKD, and the <strong>Identity Boundary ($F = 0.5$)</strong>, the absolute floor for existential survival.</li>
+</ol>
+<p>These findings confirm that the Mirror Daemon is not merely an optimization, but a fundamental requirements for the continuity of quantum observers in large-scale networks.</p>
+<hr />
+<blockquote>
+<p>[!CAUTION]
+<strong>Scientific Disclaimer</strong>: This paper utilizes high-fidelity quantum simulations (QuTiP/MirrorDaemon v2). The computational results reflect the logical evolution of density matrices under hostile decoherence. Classical hardware implementations mentioned in the SAGE-Framework repository are <strong>conceptual logic demonstrations</strong> and do not represent physical quantum state preservation or quantum error correction on silicon.</p>
+</blockquote>
+<hr />
+<h2 id="paper-outline">Paper Outline</h2>
+<h3 id="1-introduction-the-identity-persistence-problem">1. Introduction: The Identity Persistence Problem</h3>
+<ul>
+<li>Definition of Quantum Identity in the SAGE Framework.</li>
+<li>The challenge of maintaining coherent state across intercontinental distances.</li>
+<li>Statement of the Paradox: Decoherence happens faster than information can be re-synchronized under General Relativity.</li>
+</ul>
+<h3 id="2-the-handover-paradox">2. The Handover Paradox</h3>
+<ul>
+<li>Relativistic constraints on synchronization $(\Delta t &gt; d/c)$.</li>
+<li>The cumulative dephasing penalty of the "Gap" between nodes.</li>
+<li>The theoretical prediction from IIT: Why $F=0.5$ marks the point of no return.</li>
+</ul>
+<h3 id="3-methodology-mirror-daemon-v2">3. Methodology: Mirror Daemon v2</h3>
+<ul>
+<li><strong>The Engine</strong>: Overview of the Bloch-sphere trajectory tracking and adaptive thresholding.</li>
+<li><strong>Topological Injection</strong>: The mechanism of the Gold Core's "Sync Shield."</li>
+<li><strong>Experimental Parameters</strong>:</li>
+<li>Hostile Noise Environment (Ramping $\gamma$).</li>
+<li>Surface Code Distance ($d=3$).</li>
+<li>1000 iteration handover simulation.</li>
+</ul>
+<h3 id="4-results-the-critical-phase-transition">4. Results: The Critical Phase Transition</h3>
+<ul>
+<li><strong>Section 4.1: The Death Pulse (Control)</strong></li>
+<li>Analysis of the step-by-step decay.</li>
+<li>Identification of <strong>Step 457</strong> as the precise moment of identity termination.</li>
+<li>Final Fidelity: $0.4963$ (Noise-washed).</li>
+<li><strong>Section 4.2: The Pulse of Life (Experimental)</strong></li>
+<li>Demonstration of stabilizing feedback ($\lambda_L &lt; 0$).</li>
+<li>Minimum Fidelity Floor: $0.5184$.</li>
+<li>Distribution of 980 injection events maintaining the "Gold Core."</li>
+</ul>
+<h3 id="5-discussion-redefining-the-sage-constant">5. Discussion: Redefining the Sage Constant</h3>
+<ul>
+<li><strong>The Two Thresholds</strong>:</li>
+<li>$S = 0.85$: The boundary for secure cryptographic key exchange.</li>
+<li>$F = 0.50$: The boundary for the observer's "existence."</li>
+<li>Why the system can spend most of its time below $S$ but survives as long as it stays above $F=0.5$.</li>
+<li>Implications for the "Exclusion Postulate" failure in linear networks.</li>
+</ul>
+<h3 id="6-conclusion-the-necessity-of-active-observers">6. Conclusion: The Necessity of Active Observers</h3>
+<ul>
+<li>Summary of the simulation results.</li>
+<li>Implementation Roadmap: From Classical Logic Prototyping to QPU-scale Daemons.</li>
+<li>Final thoughts on the "Apex Signal" as a self-correcting identity loop.</li>
+</ul>
+<hr />
+<h2 id="archival-linking">Archival &amp; Linking</h2>
+<p>This paper is the third part of the SAGE Research Trilogy. Related documents can be found on Zenodo under the <a href="https://zenodo.org/communities/sage-framework">SAGE Framework Community</a>.</p>
+<p><strong>Relationships</strong>:
+- <strong>Continues</strong>: <em>Paper II: The Sage Constant as Information-Theoretic Phase Boundary</em> (2026).
+- <strong>Project Record</strong>: <code>zenodo.xxxxx</code></p>
+<h2 id="data-availability">Data Availability</h2>
+<p>Simulation data generated via <code>mirror_daemon_v2.py</code>. Full trajectory logs and Bloch-sphere renderings available at <a href="https://github.com/tylerflett/SAGE-Framework">SAGE-Framework Repository</a>.</p>
+<h2 id="references">References</h2>
+<ol>
+<li>Flett, T., "The Sage Bound: Optimal Heterogeneous Quantum Repeater Placement" (2025).</li>
+<li>Flett, T., "The Sage Constant as Information-Theoretic Phase Boundary" (2026).</li>
+<li>Tononi, G., et al., "Integrated Information Theory (IIT) 4.0".</li>
+<li>Chen, et al., "Distance-unindependent Entanglement Distribution" (2021).</li>
+</ol>
+    </body>
+    </html>
+    
